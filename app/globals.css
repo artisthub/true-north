@@ -1292,6 +1292,366 @@ nav a:not(.btn-primary):hover::after {
     margin-top: 12px;
 }
 
+/* About Page */
+.about-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.about-hero {
+    padding: 180px 0 120px;
+    position: relative;
+    text-align: center;
+}
+
+.about-hero-content h1 {
+    font-size: 64px;
+    margin-bottom: 25px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #ffffff 0%, #FF69B4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.about-hero-content p {
+    max-width: 760px;
+    margin: 0 auto;
+    font-size: 20px;
+    color: #ccc;
+    line-height: 1.8;
+}
+
+.about-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: rgba(255, 20, 147, 0.12);
+    border: 1px solid rgba(255, 20, 147, 0.3);
+    color: #FF69B4;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+}
+
+.about-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+    margin-top: 80px;
+}
+
+.about-stat {
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 20, 147, 0.2);
+    border-radius: 24px;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-stat::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 20, 147, 0.1) 0%, transparent 80%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.about-stat:hover::before {
+    opacity: 1;
+}
+
+.about-stat-label {
+    color: #FF69B4;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.about-stat-value {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.about-stat-meta {
+    color: #aaa;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.about-story {
+    padding-top: 0;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    align-items: start;
+}
+
+.about-story-card {
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 20, 147, 0.2);
+    border-radius: 28px;
+    padding: 50px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.about-story-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 20, 147, 0.1) 0%, transparent 85%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.about-story-card:hover {
+    border-color: #FF1493;
+    transform: translateY(-8px);
+}
+
+.about-story-card:hover::before {
+    opacity: 1;
+}
+
+.about-story-card h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+}
+
+.about-story-card p {
+    color: #ccc;
+    margin-bottom: 18px;
+    line-height: 1.8;
+}
+
+.about-story-card ul {
+    margin-top: 20px;
+    padding-left: 20px;
+    color: #bbb;
+    line-height: 1.7;
+}
+
+.about-values {
+    padding-top: 120px;
+}
+
+.about-values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.about-value-card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 20, 147, 0.18);
+    border-radius: 24px;
+    padding: 36px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.about-value-card:hover {
+    transform: translateY(-6px);
+    border-color: #FF69B4;
+}
+
+.about-value-card h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.about-value-card p {
+    color: #bbb;
+    line-height: 1.7;
+}
+
+.about-team-card {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 50px;
+    padding: 60px;
+    border-radius: 32px;
+    background: linear-gradient(135deg, rgba(255, 20, 147, 0.08) 0%, rgba(0, 0, 0, 0.8) 100%);
+    border: 1px solid rgba(255, 20, 147, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.about-team-copy h2 {
+    font-size: 44px;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+}
+
+.about-team-copy p {
+    color: #ccc;
+    line-height: 1.8;
+    margin-bottom: 18px;
+}
+
+.about-team-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    border-radius: 16px;
+    background: rgba(255, 20, 147, 0.12);
+    border: 1px solid rgba(255, 20, 147, 0.3);
+    font-size: 13px;
+    font-weight: 600;
+    color: #FF69B4;
+    margin-bottom: 20px;
+}
+
+.about-team-signoff {
+    color: #FF69B4;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.about-team-meta {
+    display: grid;
+    gap: 20px;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 20, 147, 0.15);
+    align-content: flex-start;
+}
+
+.about-team-meta div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.about-meta-label {
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #999;
+    letter-spacing: 1.5px;
+}
+
+.about-meta-value {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.about-cta-card {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 60px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 20, 147, 0.2);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-cta-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(255, 20, 147, 0.08) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.about-cta-card:hover::before {
+    opacity: 1;
+}
+
+.about-cta-card h2 {
+    font-size: 42px;
+    margin-bottom: 18px;
+}
+
+.about-cta-card p {
+    color: #bbb;
+    font-size: 18px;
+    margin-bottom: 32px;
+    line-height: 1.7;
+}
+
+.about-cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-secondary {
+    border: 1px solid rgba(255, 20, 147, 0.4);
+    border-radius: 30px;
+    padding: 12px 30px;
+    color: #FF69B4;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 20, 147, 0.15);
+    color: #fff;
+}
+
+.about-footer {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 20, 147, 0.1);
+    padding: 40px 0;
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.about-footer .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.about-footer p {
+    color: #777;
+    font-size: 14px;
+}
+
+.about-footer nav {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.about-footer nav a {
+    color: #999;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.about-footer nav a:hover {
+    color: #FF69B4;
+}
+
 /* CTA Section */
 .cta-section {
     text-align: center;
@@ -1417,6 +1777,27 @@ footer {
     .legal-card {
         padding: 36px 30px;
     }
+
+    .about-hero {
+        padding: 140px 0 90px;
+    }
+
+    .about-hero-content h1 {
+        font-size: 48px;
+    }
+
+    .about-hero-content p {
+        font-size: 18px;
+    }
+
+    .about-team-card {
+        grid-template-columns: 1fr;
+        padding: 50px;
+    }
+
+    .about-team-meta {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
 }
 
 @media (max-width: 768px) {
@@ -1473,5 +1854,35 @@ footer {
 
     .legal-card {
         padding: 30px 24px;
+    }
+
+    .about-hero {
+        padding: 120px 0 70px;
+    }
+
+    .about-hero-content h1 {
+        font-size: 40px;
+    }
+
+    .about-hero-stats {
+        gap: 20px;
+    }
+
+    .about-story-card {
+        padding: 36px;
+    }
+
+    .about-team-card,
+    .about-cta-card {
+        padding: 36px;
+    }
+
+    .about-cta-card h2 {
+        font-size: 32px;
+    }
+
+    .about-footer .container {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

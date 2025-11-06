@@ -45,6 +45,7 @@ export default function Home() {
               </div>
               <nav>
                 <a href="#distribution">Distribution</a>
+                <a href="/about">About</a>
                 <a href="#pricing">Pricing</a>
                 <a href="#features">Features</a>
                 <a className="btn-primary" href="#start">Get Started</a>
@@ -536,7 +537,7 @@ export default function Home() {
             </div>
             <div className="footer-section">
               <h4>Company</h4>
-              <a href="#">About</a>
+              <a href="/about">About</a>
               <a href="#">Blog</a>
               <a href="#">Careers</a>
               <a href="#">Contact</a>
