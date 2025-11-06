@@ -181,6 +181,7 @@ export default function AboutPage() {
             <p>© 2025 True North. Built by the team behind ArtistHub.</p>
             <nav>
               <a href="/">Home</a>
+              <a href="/legal/terms">Terms &amp; Conditions</a>
               <a href="/#pricing">Pricing</a>
               <a href="/#dmca-policy">DMCA</a>
               <a href="/#cookie-policy">Cookie Policy</a>

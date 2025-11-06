@@ -549,7 +549,7 @@ export default function Home() {
             </div>
             <div className="footer-section">
               <h4>Legal</h4>
-              <a href="#">Terms of Service</a>
+              <a href="/legal/terms">Terms &amp; Conditions</a>
               <a href="#">Privacy Policy</a>
               <a href="#cookie-policy">Cookie Policy</a>
               <a href="#dmca-policy">DMCA</a>

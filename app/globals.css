@@ -1652,6 +1652,190 @@ nav a:not(.btn-primary):hover::after {
     color: #FF69B4;
 }
 
+.terms-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.terms-hero {
+    padding: 180px 0 120px;
+    text-align: center;
+    position: relative;
+}
+
+.terms-hero h1 {
+    font-size: 64px;
+    margin-bottom: 20px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #ffffff 0%, #FF69B4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.terms-hero p {
+    max-width: 840px;
+    margin: 0 auto;
+    color: #ccc;
+    font-size: 20px;
+    line-height: 1.8;
+}
+
+.terms-effective {
+    color: #FF69B4;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    margin-bottom: 25px;
+}
+
+.terms-content {
+    padding-top: 0;
+}
+
+.terms-content .container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.terms-section {
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 20, 147, 0.18);
+    border-radius: 28px;
+    padding: 48px 44px;
+    position: relative;
+    overflow: hidden;
+}
+
+.terms-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 20, 147, 0.08) 0%, transparent 80%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.terms-section:hover::before {
+    opacity: 1;
+}
+
+.terms-section h2 {
+    font-size: 32px;
+    margin-bottom: 18px;
+    letter-spacing: -0.5px;
+}
+
+.terms-section h3 {
+    font-size: 22px;
+    margin-top: 26px;
+    margin-bottom: 14px;
+    color: #FF69B4;
+    letter-spacing: 0.2px;
+}
+
+.terms-section p {
+    color: #ccc;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.terms-section a {
+    color: #FF69B4;
+    text-decoration: none;
+}
+
+.terms-section a:hover {
+    text-decoration: underline;
+}
+
+.terms-list {
+    list-style: disc;
+    padding-left: 24px;
+    margin: 10px 0 10px 0;
+    color: #bbb;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
+}
+
+.terms-list li {
+    margin-bottom: 12px;
+}
+
+.terms-list li strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+.terms-plan-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.terms-plan-grid h3 {
+    margin-top: 0;
+}
+
+.terms-maintenance {
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: 24px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 20, 147, 0.18);
+}
+
+.terms-signoff {
+    margin-top: 30px;
+    font-weight: 600;
+    color: #FF69B4;
+}
+
+.terms-footer {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 20, 147, 0.1);
+    padding: 40px 0;
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.terms-footer .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.terms-footer p {
+    color: #777;
+    font-size: 14px;
+}
+
+.terms-footer nav {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.terms-footer nav a {
+    color: #999;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.terms-footer nav a:hover {
+    color: #FF69B4;
+}
+
 /* CTA Section */
 .cta-section {
     text-align: center;
@@ -1798,6 +1982,18 @@ footer {
     .about-team-meta {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
+
+    .terms-hero {
+        padding: 140px 0 90px;
+    }
+
+    .terms-hero h1 {
+        font-size: 48px;
+    }
+
+    .terms-section {
+        padding: 40px 32px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1882,6 +2078,23 @@ footer {
     }
 
     .about-footer .container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .terms-hero {
+        padding: 120px 0 70px;
+    }
+
+    .terms-hero h1 {
+        font-size: 40px;
+    }
+
+    .terms-section {
+        padding: 32px 24px;
+    }
+
+    .terms-footer .container {
         flex-direction: column;
         align-items: flex-start;
     }
