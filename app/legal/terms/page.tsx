@@ -366,7 +366,7 @@ export default function TermsPage() {
                 <h2>19. Notices</h2>
                 <p>
                   You may contact us for legal or account notices through the dashboard support channel or via
-                  <a href="mailto:legal@truenorth.io"> legal@truenorth.io</a>. Stripe Connect (Express) is our payment processing
+                  <a href="mailto:legal@truenorthdistro.com"> legal@truenorthdistro.com</a>. Stripe Connect (Express) is our payment processing
                   and payout provider.
                 </p>
               </div>
