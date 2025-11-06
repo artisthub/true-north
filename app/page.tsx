@@ -546,12 +546,6 @@ export default function Home() {
               <h4>Resources</h4>
               <a href="#">Help Center</a>
               <a href="#">Community</a>
-              <a href="#partners">Partners</a>
-            </div>
-            <div className="footer-section" id="partners">
-              <h4>Partners</h4>
-              <a href="https://artisthub.io" target="_blank" rel="noopener noreferrer">ArtistHub — Conversion-optimized smart links that grow fanbases, streams, and sales.</a>
-              <a href="#">Saphire Sync — Sync licensing support coming soon.</a>
             </div>
             <div className="footer-section">
               <h4>Legal</h4>
