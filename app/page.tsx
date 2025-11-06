@@ -482,6 +482,46 @@ export default function Home() {
           <a href="#" className="btn-primary fade-in fade-in-delay-2" style={{ fontSize: '18px', padding: '18px 50px' }}>Get Started Now</a>
         </div>
       </section>
+
+          <section className="section legal-section" id="legal">
+            <div className="container">
+              <div className="section-header fade-in">
+                <h2 className="section-title">Legal Center</h2>
+                <p className="section-desc">Guidelines for submitting DMCA notices and understanding how we use cookies across True North.</p>
+              </div>
+
+              <div className="legal-grid">
+                <div className="legal-card fade-in" id="dmca-policy">
+                  <h3>DMCA Policy</h3>
+                  <p>True North respects the rights of creators. If you believe content distributed through our services violates your copyright, submit a detailed Digital Millennium Copyright Act (DMCA) notice so we can investigate quickly.</p>
+                  <p>Include the following information in your notice:</p>
+                  <ul>
+                    <li>Your full legal name, business affiliation (if applicable), mailing address, phone number, and email.</li>
+                    <li>Clear identification of the copyrighted work you believe has been infringed.</li>
+                    <li>Links or release identifiers that point us to the allegedly infringing material on True North.</li>
+                    <li>A statement, made under penalty of perjury, that you have a good-faith belief the disputed use is not authorized by the copyright owner, its agent, or the law.</li>
+                    <li>A statement that the information in the notice is accurate and that you are authorized to act on behalf of the owner.</li>
+                    <li>Your electronic or physical signature.</li>
+                  </ul>
+                  <p>Send completed notices to <a href="mailto:dmca@truenorthmusic.com">dmca@truenorthmusic.com</a>. We will acknowledge receipt, review the claim, and remove or disable access to the material if appropriate.</p>
+                  <p className="legal-note">If you believe content was removed in error, submit a counter-notice with the details above and a statement consenting to jurisdiction in your residence or our principal place of business.</p>
+                </div>
+
+                <div className="legal-card fade-in fade-in-delay-1" id="cookie-policy">
+                  <h3>Cookie Policy</h3>
+                  <p>We use cookies and similar technologies to keep your account secure, understand release performance, and tailor the experience across dashboards, analytics, and marketing pages.</p>
+                  <ul>
+                    <li><strong>Essential cookies</strong> keep you signed in, maintain session security, and enable core functionality.</li>
+                    <li><strong>Performance cookies</strong> help us measure how artists and teams interact with tools so we can ship better features.</li>
+                    <li><strong>Marketing cookies</strong> power optional campaigns such as smart links and retargeting; these are only activated with your consent.</li>
+                  </ul>
+                  <p>You can adjust preferences at any time through your browser settings or by contacting us. We honor browser-based opt-out signals where supported.</p>
+                  <p className="legal-note">Questions? Email <a href="mailto:privacy@truenorthmusic.com">privacy@truenorthmusic.com</a> and we&apos;ll help configure your workspace.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
       </main>
 
       <footer>
@@ -504,16 +544,20 @@ export default function Home() {
             <div className="footer-section">
               <h4>Resources</h4>
               <a href="#">Help Center</a>
-              <a href="#">API Docs</a>
               <a href="#">Community</a>
-              <a href="#">Partners</a>
+              <a href="#partners">Partners</a>
+            </div>
+            <div className="footer-section" id="partners">
+              <h4>Partners</h4>
+              <a href="https://artisthub.io" target="_blank" rel="noopener noreferrer">ArtistHub — Conversion-optimized smart links that grow fanbases, streams, and sales.</a>
+              <a href="#">Saphire Sync — Sync licensing support coming soon.</a>
             </div>
             <div className="footer-section">
               <h4>Legal</h4>
               <a href="#">Terms of Service</a>
               <a href="#">Privacy Policy</a>
-              <a href="#">Cookie Policy</a>
-              <a href="#">DMCA</a>
+              <a href="#cookie-policy">Cookie Policy</a>
+              <a href="#dmca-policy">DMCA</a>
             </div>
           </div>
           <div className="footer-bottom">
