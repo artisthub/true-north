@@ -345,9 +345,11 @@ const TrueNorthLanding = () => {
                 </div>
               ))}
 
-              <div className="flex flex-col items-center gap-1 p-4 rounded-full bg-[#FF1493]/5 border border-[#FF1493]/30 text-xs font-medium hover:bg-[#FF1493]/10 transition-colors">
-                <span className="text-pink-300 font-bold">+100</span>
-                <span className="text-gray-500">more</span>
+              <div className="col-span-full flex justify-center">
+                <div className="flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-[#FF1493]/5 border border-[#FF1493]/30 text-xs font-medium hover:bg-[#FF1493]/10 transition-colors">
+                  <span className="text-pink-300 font-bold">+50</span>
+                  <span className="text-gray-500">more</span>
+                </div>
               </div>
             </div>
           </div>
