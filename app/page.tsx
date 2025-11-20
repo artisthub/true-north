@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 const TrueNorthLanding = () => {
@@ -136,13 +137,8 @@ const TrueNorthLanding = () => {
         }`}
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-3 group cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white font-bold transform group-hover:rotate-45 transition-transform duration-300 shadow-lg shadow-pink-500/30">
-              ↑
-            </div>
-            <span className="text-lg font-semibold tracking-tight group-hover:text-white transition-colors text-gray-200">
-              True North
-            </span>
+          <div className="flex items-center cursor-pointer">
+            <Image src="/logo.svg" alt="True North logo" width={160} height={160} priority className="w-32 h-auto drop-shadow-[0_0_20px_rgba(236,72,153,0.4)]" />
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
