@@ -37,7 +37,7 @@ const TrueNorthLanding = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-pink-500/30 overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#000000] text-white font-sans selection:bg-pink-500/30 overflow-x-hidden relative">
       {/* --- GLOBAL STYLES & ANIMATIONS --- */}
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap');
@@ -67,14 +67,14 @@ const TrueNorthLanding = () => {
         }
 
         .glass-card {
-          background: rgba(255, 255, 255, 0.03);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+          background: rgba(255, 20, 147, 0.04);
+          backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 20, 147, 0.2);
+          box-shadow: 0 10px 40px rgba(255, 20, 147, 0.12);
         }
 
         .text-glow {
-          text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+          text-shadow: 0 0 50px rgba(255, 105, 180, 0.35);
         }
 
         @keyframes shoot {
@@ -94,7 +94,7 @@ const TrueNorthLanding = () => {
           right: 0;
           width: 100px;
           height: 2px;
-          background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+          background: linear-gradient(90deg, rgba(255, 20, 147, 0), rgba(255, 20, 147, 0.95));
           animation: shoot 4s linear infinite;
           opacity: 0;
         }
@@ -114,13 +114,101 @@ const TrueNorthLanding = () => {
           right: 40%;
           animation-delay: 8s;
         }
+
+        .starfield {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          mix-blend-mode: screen;
+        }
+
+        .starfield-slow {
+          background-image:
+            radial-gradient(rgba(255, 20, 147, 0.25) 1px, transparent 1px),
+            radial-gradient(rgba(255, 105, 180, 0.2) 1px, transparent 1px);
+          background-size: 900px 900px, 700px 700px;
+          background-position: 0 0, 200px 150px;
+          animation: driftStars 160s linear infinite;
+          opacity: 0.45;
+        }
+
+        .starfield-fast {
+          background-image:
+            radial-gradient(rgba(255, 182, 193, 0.65) 1px, transparent 1px),
+            radial-gradient(rgba(255, 69, 160, 0.45) 2px, transparent 1px);
+          background-size: 500px 500px, 650px 650px;
+          background-position: 100px 50px, 300px 200px;
+          animation: driftStars 90s linear infinite reverse, twinkle 6s ease-in-out infinite;
+          opacity: 0.7;
+        }
+
+        .aurora-glow {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: -30vh;
+          height: 70vh;
+          background: radial-gradient(circle at 50% 20%, rgba(255, 85, 185, 0.35), transparent 55%);
+          filter: blur(80px);
+          opacity: 0.7;
+          animation: auroraFloat 18s ease-in-out infinite;
+        }
+
+        @keyframes driftStars {
+          from {
+            transform: translateY(0);
+          }
+          to {
+            transform: translateY(200px);
+          }
+        }
+
+        @keyframes twinkle {
+          0%,
+          100% {
+            opacity: 0.4;
+          }
+          50% {
+            opacity: 0.9;
+          }
+        }
+
+        @keyframes auroraFloat {
+          0% {
+            transform: translateY(0) scaleX(0.9);
+          }
+          50% {
+            transform: translateY(-40px) scaleX(1.1);
+          }
+          100% {
+            transform: translateY(0) scaleX(0.9);
+          }
+        }
+
+        @keyframes gradient {
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+        }
+
+        .animate-gradient {
+          background-size: 200% 200%;
+          animation: gradient 3s ease infinite;
+        }
       `}</style>
 
       {/* --- BACKGROUND ELEMENTS --- */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-noise mix-blend-overlay opacity-20" />
-        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-pink-900/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[10%] right-[-10%] w-[40vw] h-[40vw] bg-rose-900/10 rounded-full blur-[100px]" />
+        <div className="absolute inset-0 bg-noise mix-blend-overlay opacity-10" />
+        <div className="starfield starfield-slow" />
+        <div className="starfield starfield-fast" />
+        <div className="absolute inset-x-0 top-0 h-[45vh] bg-gradient-to-b from-[#FF1493]/20 via-transparent to-transparent" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-[#FF1493]/18 rounded-full blur-[140px]" />
+        <div className="absolute bottom-[5%] right-[-10%] w-[45vw] h-[45vw] bg-[#FF69B4]/18 rounded-full blur-[140px]" />
+        <div className="aurora-glow" />
 
         <div className="shooting-star" />
         <div className="shooting-star" />
@@ -133,7 +221,7 @@ const TrueNorthLanding = () => {
       {/* --- HEADER --- */}
       <header
         className={`fixed w-full top-0 z-50 transition-all duration-500 border-b ${
-          scrolled ? 'bg-black/80 backdrop-blur-md border-white/10 py-4' : 'bg-transparent border-transparent py-6'
+          scrolled ? 'bg-[rgba(5,0,8,0.9)] backdrop-blur-md border-[#FF1493]/30 py-4' : 'bg-transparent border-transparent py-6'
         }`}
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
@@ -146,17 +234,17 @@ const TrueNorthLanding = () => {
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="text-sm font-medium text-gray-400 hover:text-white transition-colors relative group"
+                className="text-sm font-medium text-gray-300 hover:text-[#FF1493] transition-colors relative group"
               >
                 {item}
-                <span className="absolute -bottom-4 left-0 w-0 h-px bg-pink-500 transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100" />
+                <span className="absolute -bottom-4 left-0 w-0 h-[2px] bg-gradient-to-r from-[#FF1493] to-[#FF69B4] transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100" />
               </a>
             ))}
           </nav>
 
           <a
             href="#start"
-            className="hidden md:inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition-all duration-200 bg-white/10 border border-white/10 rounded-full hover:bg-white hover:text-black hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 focus:ring-offset-black"
+            className="hidden md:inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 bg-gradient-to-r from-[#FF1493] to-[#FF69B4] rounded-full shadow-[0_10px_30px_rgba(255,20,147,0.25)] hover:shadow-[0_20px_45px_rgba(255,20,147,0.45)] hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF69B4] focus:ring-offset-[#050005]"
           >
             Get Started
           </a>
@@ -167,19 +255,16 @@ const TrueNorthLanding = () => {
         {/* --- HERO --- */}
         <section className="min-h-screen flex flex-col justify-center pt-20 relative overflow-hidden">
           <div className="container mx-auto px-6 text-center">
-            <div className="inline-block mb-6 px-4 py-1.5 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-300 text-xs font-semibold tracking-widest uppercase fade-trigger opacity-0 translate-y-10 transition-all duration-700">
-              The New Standard in Distribution
-            </div>
 
             <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight mb-8 fade-trigger opacity-0 translate-y-10 transition-all duration-700 delay-100 text-glow">
               Release with <br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-400 via-rose-400 to-red-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFE0F4] to-[#FF69B4]">
                 Direction
               </span>
             </h1>
 
             <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed fade-trigger opacity-0 translate-y-10 transition-all duration-700 delay-200">
-              Global distribution, clean splits, real-time data—no busywork.
+              Global distribution, clean splits, fast data—no busywork.
               <span className="block mt-2 text-gray-500 text-lg">
                 For artists and labels who want less admin and more release days.
               </span>
@@ -188,24 +273,24 @@ const TrueNorthLanding = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 fade-trigger opacity-0 translate-y-10 transition-all duration-700 delay-300">
               <a
                 href="#start"
-                className="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-full font-semibold text-lg hover:bg-gray-200 transition-colors shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]"
+                className="w-full sm:w-auto px-10 py-4 rounded-full font-semibold text-lg bg-gradient-to-r from-[#FF1493] to-[#FF69B4] text-white shadow-[0_20px_60px_rgba(255,20,147,0.25)] hover:-translate-y-0.5 transition-all"
               >
                 Start Distributing
               </a>
               <a
                 href="#features"
-                className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/20 text-white rounded-full font-semibold text-lg hover:bg-white/5 transition-colors"
+                className="w-full sm:w-auto px-10 py-4 bg-transparent border border-[#FF1493]/30 text-[#FFB6DA] rounded-full font-semibold text-lg hover:bg-[#FF1493]/10 transition-colors"
               >
                 View Features
               </a>
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#050005] to-transparent pointer-events-none" />
         </section>
 
         {/* --- DSPS --- */}
-        <section id="distribution" className="py-24 border-t border-white/5 bg-black/50 backdrop-blur-sm">
+        <section id="distribution" className="py-24 border-t border-[#FF1493]/20 bg-[rgba(5,0,5,0.85)] backdrop-blur-sm">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16 fade-trigger opacity-0 translate-y-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Drop once. Live everywhere.</h2>
@@ -260,7 +345,7 @@ const TrueNorthLanding = () => {
                 </div>
               ))}
 
-              <div className="flex flex-col items-center gap-1 p-4 rounded-full bg-white/5 border border-white/10 text-xs font-medium hover:bg-white/10 transition-colors">
+              <div className="flex flex-col items-center gap-1 p-4 rounded-full bg-[#FF1493]/5 border border-[#FF1493]/30 text-xs font-medium hover:bg-[#FF1493]/10 transition-colors">
                 <span className="text-pink-300 font-bold">+100</span>
                 <span className="text-gray-500">more</span>
               </div>
@@ -269,7 +354,7 @@ const TrueNorthLanding = () => {
         </section>
 
         {/* --- FEATURES (BENTO GRID) --- */}
-        <section id="features" className="py-32 bg-gradient-to-b from-black to-slate-900/50">
+        <section id="features" className="py-32 bg-gradient-to-b from-[#050005] via-[#02000A] to-[#000000]">
           <div className="container mx-auto px-6">
             <div className="mb-16">
               <h2 className="text-4xl font-bold mb-4 fade-trigger opacity-0 translate-y-10">Built for modern rights</h2>
@@ -280,7 +365,7 @@ const TrueNorthLanding = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2 glass-card rounded-3xl p-10 relative overflow-hidden group fade-trigger opacity-0 translate-y-10 delay-100">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-pink-600/20 rounded-full blur-[80px] group-hover:bg-pink-600/30 transition-all duration-500" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#FF1493]/20 rounded-full blur-[80px] group-hover:bg-[#FF1493]/30 transition-all duration-500" />
                 <div className="relative z-10">
                   <div className="w-12 h-12 mb-6 rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -319,7 +404,7 @@ const TrueNorthLanding = () => {
               </div>
 
               <div className="md:col-span-1 glass-card rounded-3xl p-8 fade-trigger opacity-0 translate-y-10 delay-100">
-                <div className="w-10 h-10 mb-4 rounded-lg bg-white/10 flex items-center justify-center text-pink-300">
+                <div className="w-10 h-10 mb-4 rounded-lg bg-[#FF1493]/12 border border-[#FF1493]/30 flex items-center justify-center text-[#FFB6DA]">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
@@ -336,7 +421,7 @@ const TrueNorthLanding = () => {
               </div>
 
               <div className="md:col-span-1 glass-card rounded-3xl p-8 fade-trigger opacity-0 translate-y-10 delay-200">
-                <div className="w-10 h-10 mb-4 rounded-lg bg-white/10 flex items-center justify-center text-rose-300">
+                <div className="w-10 h-10 mb-4 rounded-lg bg-[#FF1493]/12 border border-[#FF1493]/30 flex items-center justify-center text-[#FFB6DA]">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
@@ -359,9 +444,9 @@ const TrueNorthLanding = () => {
                   Powered by Revelator. DDEX‑compliant deliveries, UPC/ISRC auto-gen, 99.9% uptime.
                 </p>
                 <div className="flex gap-2">
-                  <span className="px-2 py-1 bg-white/5 rounded text-[10px] text-gray-300 border border-white/5">DDEX</span>
-                  <span className="px-2 py-1 bg-white/5 rounded text-[10px] text-gray-300 border border-white/5">XML</span>
-                  <span className="px-2 py-1 bg-white/5 rounded text-[10px] text-gray-300 border border-white/5">API</span>
+                  <span className="px-2 py-1 rounded text-[10px] text-[#FFE0F4] bg-[#FF1493]/10 border border-[#FF1493]/30">DDEX</span>
+                  <span className="px-2 py-1 rounded text-[10px] text-[#FFE0F4] bg-[#FF1493]/10 border border-[#FF1493]/30">XML</span>
+                  <span className="px-2 py-1 rounded text-[10px] text-[#FFE0F4] bg-[#FF1493]/10 border border-[#FF1493]/30">API</span>
                 </div>
               </div>
             </div>
@@ -370,18 +455,18 @@ const TrueNorthLanding = () => {
 
         {/* --- QUOTE --- */}
         <section className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-pink-900/20 via-black to-rose-900/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FF1493]/20 via-transparent to-[#FF69B4]/15" />
           <div className="container mx-auto px-6 relative z-10 text-center">
-            <p className="text-4xl md:text-6xl font-serif italic text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 fade-trigger opacity-0 translate-y-10 duration-1000">
+            <p className="text-4xl md:text-6xl font-serif italic text-transparent bg-clip-text bg-gradient-to-b from-white to-[#FF9AD5] fade-trigger opacity-0 translate-y-10 duration-1000">
               &quot;Move in the right direction.&quot;
             </p>
           </div>
         </section>
 
         {/* --- STATS --- */}
-        <section className="py-24 border-y border-white/5 bg-black">
+        <section className="py-24 border-y border-[#FF1493]/15 bg-[#050005]">
           <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/10 fade-trigger opacity-0 translate-y-10">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-[#FF1493]/10 fade-trigger opacity-0 translate-y-10">
               {[
                 { val: '100+', label: 'DSPs Worldwide', sub: 'Global Reach' },
                 { val: 'One', label: 'Unified Dashboard', sub: 'Total Control' },
@@ -389,7 +474,7 @@ const TrueNorthLanding = () => {
                 { val: 'DDEX', label: 'Compliant', sub: 'Industry Standard' },
               ].map((stat, i) => (
                 <div key={i} className="pt-8 md:pt-0 px-4">
-                  <div className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-600 mb-2">
+                  <div className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-[#FF9AD5] mb-2">
                     {stat.val}
                   </div>
                   <div className="text-white font-medium mb-1">{stat.label}</div>
@@ -401,8 +486,8 @@ const TrueNorthLanding = () => {
         </section>
 
         {/* --- PRICING --- */}
-        <section id="pricing" className="py-32 bg-slate-950 relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-pink-600/10 rounded-full blur-[120px] pointer-events-none" />
+        <section id="pricing" className="py-32 bg-[#050005] relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#FF1493]/15 rounded-full blur-[140px] pointer-events-none" />
 
           <div className="container mx-auto px-6 relative z-10">
             <h2 className="text-4xl font-bold text-center mb-16 fade-trigger opacity-0 translate-y-10">Transparent Pricing</h2>
@@ -430,7 +515,7 @@ const TrueNorthLanding = () => {
                   </ul>
                   <a
                     href="#start"
-                    className="block w-full py-4 text-center rounded-xl bg-white text-black font-bold hover:bg-gray-200 transition-colors"
+                    className="block w-full py-4 text-center rounded-xl font-bold bg-gradient-to-r from-[#FF1493] to-[#FF69B4] text-white shadow-[0_15px_45px_rgba(255,20,147,0.35)] hover:-translate-y-0.5 transition-all"
                   >
                     Choose Active
                   </a>
@@ -438,7 +523,7 @@ const TrueNorthLanding = () => {
               </div>
 
               <div className="glass-card p-8 rounded-3xl relative fade-trigger opacity-0 translate-y-10 delay-200">
-                <h3 className="text-xl font-medium text-rose-300 mb-4">Partner</h3>
+                <h3 className="text-xl font-medium text-[#FFC4E5] mb-4">Partner</h3>
                 <div className="flex items-baseline gap-1 mb-2">
                   <span className="text-5xl font-bold text-white">15%</span>
                   <span className="text-gray-400">revenue</span>
@@ -449,7 +534,7 @@ const TrueNorthLanding = () => {
                   {['Everything in Active', 'White-label pages', 'Priority Support', 'Ideal for Labels', 'Custom Contracts'].map(
                     (feat) => (
                       <li key={feat} className="flex items-center gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#FF4EBF]" />
                         {feat}
                       </li>
                     ),
@@ -457,7 +542,7 @@ const TrueNorthLanding = () => {
                 </ul>
                 <a
                   href="#start"
-                  className="block w-full py-4 text-center rounded-xl border border-white/10 hover:bg-white/5 transition-colors text-white font-semibold"
+                  className="block w-full py-4 text-center rounded-xl border border-[#FF1493]/30 hover:bg-[#FF1493]/10 transition-colors text-white font-semibold"
                 >
                   Choose Partner
                 </a>
@@ -465,23 +550,23 @@ const TrueNorthLanding = () => {
             </div>
 
             <div className="max-w-3xl mx-auto glass-card rounded-2xl overflow-hidden fade-trigger opacity-0 translate-y-10 delay-300">
-              <div className="p-6 border-b border-white/5 bg-white/5">
+              <div className="p-6 border-b border-[#FF1493]/15 bg-[#FF1493]/5">
                 <h3 className="font-semibold">Add-Ons</h3>
               </div>
-              <div className="divide-y divide-white/5 text-sm text-gray-300">
-                <div className="flex justify-between p-6 hover:bg-white/5 transition-colors">
+              <div className="divide-y divide-[#FF1493]/10 text-sm text-gray-300">
+                <div className="flex justify-between p-6 hover:bg-[#FF1493]/5 transition-colors">
                   <span>YouTube Content ID + UGC</span>
                   <span className="text-white font-mono">30%</span>
                 </div>
-                <div className="flex justify-between p-6 hover:bg-white/5 transition-colors">
+                <div className="flex justify-between p-6 hover:bg-[#FF1493]/5 transition-colors">
                   <span>Video Distribution</span>
                   <span className="text-white font-mono">$100 / video</span>
                 </div>
-                <div className="flex justify-between p-6 hover:bg-white/5 transition-colors">
+                <div className="flex justify-between p-6 hover:bg-[#FF1493]/5 transition-colors">
                   <span>Blog Placement</span>
                   <span className="text-white font-mono">On Request</span>
                 </div>
-                <div className="flex justify-between p-6 hover:bg-white/5 transition-colors">
+                <div className="flex justify-between p-6 hover:bg-[#FF1493]/5 transition-colors">
                   <span>White-label links</span>
                   <span className="text-green-400 font-mono">Included</span>
                 </div>
@@ -492,7 +577,7 @@ const TrueNorthLanding = () => {
 
         {/* --- CTA --- */}
         <section id="start" className="py-32 flex items-center justify-center text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-pink-900/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#FF1493]/25 to-transparent" />
           <div className="container mx-auto px-6 relative z-10">
             <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white fade-trigger opacity-0 translate-y-10">
               Ready when you are.
@@ -502,7 +587,7 @@ const TrueNorthLanding = () => {
             </p>
             <a
               href="#"
-              className="inline-block px-10 py-5 rounded-full bg-white text-black text-xl font-bold hover:scale-105 transition-transform shadow-[0_0_60px_-15px_rgba(255,255,255,0.5)] fade-trigger opacity-0 translate-y-10 delay-200"
+              className="inline-block px-10 py-5 rounded-full text-xl font-bold bg-gradient-to-r from-[#FF1493] to-[#FF69B4] text-white shadow-[0_25px_80px_rgba(255,20,147,0.35)] hover:-translate-y-1 transition-transform fade-trigger opacity-0 translate-y-10 delay-200"
             >
               Get Started Now
             </a>
@@ -510,7 +595,7 @@ const TrueNorthLanding = () => {
         </section>
 
         {/* --- LEGAL (Condensed) --- */}
-        <section className="py-16 border-t border-white/5 bg-black/80 text-gray-500 text-sm">
+        <section className="py-16 border-t border-[#FF1493]/15 bg-[rgba(5,0,5,0.9)] text-gray-400 text-sm">
           <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12">
             <div>
               <h4 className="text-white font-bold mb-4">DMCA Policy</h4>
@@ -539,24 +624,26 @@ const TrueNorthLanding = () => {
       </main>
 
       {/* --- FOOTER --- */}
-      <footer className="bg-black py-12 border-t border-white/10">
+      <footer className="bg-[#050005] py-12 border-t border-[#FF1493]/15">
         <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-xs text-white">↑</div>
+            <div className="w-6 h-6 rounded-full bg-[#FF1493]/20 border border-[#FF1493]/40 flex items-center justify-center text-xs text-[#FF69B4]">
+              ↑
+            </div>
             <span className="font-bold text-white">True North</span>
           </div>
 
           <div className="flex gap-8 text-sm text-gray-500">
-            <a href="#" className="hover:text-white transition-colors">
+            <a href="#" className="hover:text-[#FF69B4] transition-colors">
               About
             </a>
-            <a href="#" className="hover:text-white transition-colors">
+            <a href="#" className="hover:text-[#FF69B4] transition-colors">
               Terms
             </a>
-            <a href="#" className="hover:text-white transition-colors">
+            <a href="#" className="hover:text-[#FF69B4] transition-colors">
               Privacy
             </a>
-            <a href="#" className="hover:text-white transition-colors">
+            <a href="#" className="hover:text-[#FF69B4] transition-colors">
               Help
             </a>
           </div>
