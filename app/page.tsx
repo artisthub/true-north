@@ -1,10 +1,194 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
+
+type FormFieldName =
+  | 'artistName'
+  | 'contactEmail'
+  | 'teamRole'
+  | 'releaseType'
+  | 'releaseTimeline'
+  | 'monthlyListeners'
+  | 'currentDistributor'
+  | 'supportNeeds'
+  | 'releaseGoal';
+
+type FormField = {
+  name: FormFieldName;
+  label: string;
+  type: 'text' | 'email' | 'select' | 'textarea';
+  placeholder?: string;
+  options?: string[];
+  required?: boolean;
+};
+
+type OnboardingStep = {
+  id: string;
+  title: string;
+  description: string;
+  fields: FormField[];
+};
+
+type FormValues = Record<FormFieldName, string>;
+
+const initialFormState: FormValues = {
+  artistName: '',
+  contactEmail: '',
+  teamRole: '',
+  releaseType: '',
+  releaseTimeline: '',
+  monthlyListeners: '',
+  currentDistributor: '',
+  supportNeeds: '',
+  releaseGoal: ''
+};
+
+const onboardingSteps: OnboardingStep[] = [
+  {
+    id: 'profile',
+    title: 'Artist profile',
+    description: 'Tell us who you are and how we can reach you.',
+    fields: [
+      {
+        name: 'artistName',
+        label: 'Artist or label name',
+        type: 'text',
+        placeholder: 'True North Collective',
+        required: true
+      },
+      {
+        name: 'contactEmail',
+        label: 'Contact email',
+        type: 'email',
+        placeholder: 'you@label.com',
+        required: true
+      },
+      {
+        name: 'teamRole',
+        label: 'Your role',
+        type: 'select',
+        required: true,
+        options: ['Artist', 'Manager', 'Label', 'Distributor', 'Other']
+      }
+    ]
+  },
+  {
+    id: 'release-plan',
+    title: 'Release plan',
+    description: 'Share what you are dropping and when you need it live.',
+    fields: [
+      {
+        name: 'releaseType',
+        label: 'Next release type',
+        type: 'select',
+        required: true,
+        options: ['Single', 'EP', 'Album', 'Catalog migration']
+      },
+      {
+        name: 'releaseTimeline',
+        label: 'Target release window',
+        type: 'select',
+        required: true,
+        options: ['Next 30 days', '60-90 days', 'Just exploring', 'Catalog already live']
+      },
+      {
+        name: 'monthlyListeners',
+        label: 'Monthly Spotify listeners',
+        type: 'select',
+        required: true,
+        options: ['<10K', '10K-50K', '50K-250K', '250K+']
+      }
+    ]
+  },
+  {
+    id: 'support',
+    title: 'Support needs',
+    description: 'Let us know what success looks like so we can tailor onboarding.',
+    fields: [
+      {
+        name: 'currentDistributor',
+        label: 'Current distributor (if any)',
+        type: 'text',
+        placeholder: 'DistroKid, AWAL, none',
+        required: false
+      },
+      {
+        name: 'supportNeeds',
+        label: 'What support do you need from True North?',
+        type: 'textarea',
+        placeholder: 'Catalog migration, split automation, marketing ops…',
+        required: true
+      },
+      {
+        name: 'releaseGoal',
+        label: 'Main goal with this release',
+        type: 'select',
+        required: true,
+        options: ['Faster delivery', 'Better splits & payouts', 'Growth marketing', 'Switching providers', 'Label services']
+      }
+    ]
+  }
+];
 
 const TrueNorthLanding = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [formStep, setFormStep] = useState(0);
+  const [formValues, setFormValues] = useState<FormValues>({ ...initialFormState });
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const totalSteps = onboardingSteps.length;
+  const currentStep = onboardingSteps[formStep];
+  const isLastStep = formStep === totalSteps - 1;
+  const progress = formSubmitted ? 100 : (formStep / Math.max(totalSteps - 1, 1)) * 100;
+
+  const canAdvance = formSubmitted
+    ? false
+    : currentStep.fields.every((field) => !field.required || formValues[field.name].trim().length > 0);
+
+  const handleFieldChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormValues((prev) => ({ ...prev, [name as FormFieldName]: value }));
+  };
+
+  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!canAdvance) return;
+    if (isLastStep) {
+      setFormSubmitted(true);
+    } else {
+      setFormStep((prev) => prev + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (formStep === 0 || formSubmitted) return;
+    setFormStep((prev) => prev - 1);
+  };
+
+  const resetForm = () => {
+    setFormValues({ ...initialFormState });
+    setFormStep(0);
+    setFormSubmitted(false);
+  };
+
+  const mailtoHref = useMemo(() => {
+    const subject = encodeURIComponent(`True North onboarding: ${formValues.artistName || 'New artist'}`);
+    const body = encodeURIComponent(
+      [
+        `Artist/Label: ${formValues.artistName}`,
+        `Role: ${formValues.teamRole}`,
+        `Email: ${formValues.contactEmail}`,
+        `Release type: ${formValues.releaseType}`,
+        `Timeline: ${formValues.releaseTimeline}`,
+        `Monthly listeners: ${formValues.monthlyListeners}`,
+        `Current distributor: ${formValues.currentDistributor || 'N/A'}`,
+        `Goal: ${formValues.releaseGoal}`,
+        `Support needed: ${formValues.supportNeeds}`
+      ].join('\n')
+    );
+    return `mailto:hello@truenorth.com?subject=${subject}&body=${body}`;
+  }, [formValues]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -443,7 +627,7 @@ const TrueNorthLanding = () => {
                 <div className="text-xs font-bold tracking-widest text-pink-400 mb-4 uppercase">Enterprise Grade</div>
                 <h3 className="text-lg font-bold mb-2">Built to Scale</h3>
                 <p className="text-gray-400 text-xs mb-4">
-                  Powered by Revelator. DDEX‑compliant deliveries, UPC/ISRC auto-gen, 99.9% uptime.
+                  Powered by our white-label infrastructure. DDEX-compliant deliveries, UPC/ISRC auto-gen, 99.9% uptime.
                 </p>
                 <div className="flex gap-2">
                   <span className="px-2 py-1 rounded text-[10px] text-[#FFE0F4] bg-[#FF1493]/10 border border-[#FF1493]/30">DDEX</span>
@@ -577,22 +761,214 @@ const TrueNorthLanding = () => {
           </div>
         </section>
 
-        {/* --- CTA --- */}
-        <section id="start" className="py-32 flex items-center justify-center text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-[#FF1493]/25 to-transparent" />
-          <div className="container mx-auto px-6 relative z-10">
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-white fade-trigger opacity-0 translate-y-10">
-              Ready when you are.
-            </h2>
-            <p className="text-xl text-gray-400 mb-10 fade-trigger opacity-0 translate-y-10 delay-100">
-              Upload the single, set your splits, and point your compass north.
-            </p>
-            <a
-              href="#"
-              className="inline-block px-10 py-5 rounded-full text-xl font-bold bg-gradient-to-r from-[#FF1493] to-[#FF69B4] text-white shadow-[0_25px_80px_rgba(255,20,147,0.35)] hover:-translate-y-1 transition-transform fade-trigger opacity-0 translate-y-10 delay-200"
-            >
-              Get Started Now
-            </a>
+        {/* --- ONBOARDING --- */}
+        <section id="start" className="py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#FF1493]/20 via-transparent to-transparent" />
+          <div className="absolute -top-32 -right-32 w-[420px] h-[420px] bg-[#FF69B4]/20 blur-[150px]" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[780px] h-[780px] bg-[#FF1493]/10 blur-[220px]" />
+
+          <div className="container mx-auto px-6 relative z-10 grid gap-16 lg:grid-cols-[1.1fr_1fr] items-center">
+            <div className="space-y-8">
+              <p className="uppercase tracking-[0.4em] text-xs text-pink-300/70">Guided signup</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+                UnitedMasters-style intake.
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-[#FFE0F4] to-[#FF69B4]">
+                  Built for True North.
+                </span>
+              </h2>
+              <p className="text-lg text-gray-300 max-w-xl">
+                Tell us who you are, what you&apos;re releasing, and the type of support you need. It&apos;s the same
+                three-step flow we used at UnitedMasters: profile, release plan, and services. Submit once and our
+                team responds within one business day with your secure portal invite.
+              </p>
+
+              <div className="space-y-4">
+                {onboardingSteps.map((stepInfo, index) => {
+                  const status = formSubmitted
+                    ? 'complete'
+                    : index < formStep
+                      ? 'complete'
+                      : index === formStep
+                        ? 'active'
+                        : 'upcoming';
+
+                  const badgeClass =
+                    status === 'complete'
+                      ? 'bg-gradient-to-r from-[#FF1493] to-[#FF69B4] text-white'
+                      : status === 'active'
+                        ? 'border border-[#FF69B4] text-white'
+                        : 'border border-white/10 text-gray-500';
+
+                  return (
+                    <div
+                      key={stepInfo.id}
+                      className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
+                    >
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${badgeClass}`}>
+                        {status === 'complete' ? '✓' : index + 1}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-white">{stepInfo.title}</p>
+                        <p className="text-sm text-gray-400">{stepInfo.description}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex flex-wrap gap-6 text-sm text-gray-400">
+                <div>
+                  <p className="text-2xl font-bold text-white">24h</p>
+                  <p>Average turnaround</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">0%</p>
+                  <p>Upfront fees to apply</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-white">1:1</p>
+                  <p>Human onboarding</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="glass-card rounded-3xl p-8 border border-white/10 relative">
+              <div className="mb-6 space-y-2">
+                <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.3em] text-gray-500">
+                  <span>Step {formSubmitted ? totalSteps : formStep + 1} of {totalSteps}</span>
+                  <span>{formSubmitted ? 'Complete' : currentStep.title}</span>
+                </div>
+                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#FF1493] via-[#FF69B4] to-[#FFD1EC] transition-all duration-500"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+
+              {formSubmitted ? (
+                <div className="text-center space-y-6">
+                  <div>
+                    <p className="text-sm font-semibold tracking-[0.4em] text-pink-200/80 uppercase">Submission received</p>
+                    <p className="text-3xl font-bold text-white mt-3">You&apos;re in the queue.</p>
+                  </div>
+                  <p className="text-gray-300">
+                    We&apos;ll review {formValues.artistName || 'your'} details and send credentials to{' '}
+                    <span className="text-white font-semibold">{formValues.contactEmail || 'your inbox'}</span>. Need to nudge us?
+                    Drop a line and include any decks or links.
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    <a
+                      href={mailtoHref}
+                      className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[#FF1493] to-[#FF69B4] px-6 py-3 font-semibold text-white shadow-[0_20px_50px_rgba(255,20,147,0.3)]"
+                    >
+                      Email the team
+                    </a>
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      className="rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-gray-300 hover:text-white"
+                    >
+                      Start another submission
+                    </button>
+                    <a
+                      href="https://artisthub.revelator.pro/"
+                      className="text-xs text-gray-400 underline decoration-dotted"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Already have access? Log in to the artist portal →
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleFormSubmit} className="space-y-6">
+                  <div className="space-y-5">
+                    {currentStep.fields.map((field) => (
+                      <label key={field.name} className="block text-left text-sm font-semibold text-white/80 space-y-2">
+                        <span>
+                          {field.label}
+                          {field.required ? <span className="text-pink-300"> *</span> : null}
+                        </span>
+                        {field.type === 'select' ? (
+                          <div className="relative">
+                            <select
+                              name={field.name}
+                              value={formValues[field.name]}
+                              onChange={handleFieldChange}
+                              required={field.required}
+                              className="w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 pr-10 text-white shadow-inner focus:border-[#FF69B4] focus:outline-none"
+                            >
+                              <option value="" disabled>
+                                Select an option
+                              </option>
+                              {field.options?.map((option) => (
+                                <option key={option} value={option} className="bg-[#050005] text-white">
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-pink-200">⌄</span>
+                          </div>
+                        ) : field.type === 'textarea' ? (
+                          <textarea
+                            name={field.name}
+                            value={formValues[field.name]}
+                            onChange={handleFieldChange}
+                            placeholder={field.placeholder}
+                            required={field.required}
+                            rows={4}
+                            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white shadow-inner focus:border-[#FF69B4] focus:outline-none"
+                          />
+                        ) : (
+                          <input
+                            type={field.type}
+                            name={field.name}
+                            value={formValues[field.name]}
+                            onChange={handleFieldChange}
+                            placeholder={field.placeholder}
+                            required={field.required}
+                            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white shadow-inner focus:border-[#FF69B4] focus:outline-none"
+                          />
+                        )}
+                      </label>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-col gap-3 pt-2">
+                    <button
+                      type="submit"
+                      disabled={!canAdvance}
+                      className={`rounded-2xl px-6 py-4 text-center font-semibold text-white transition-all ${
+                        canAdvance
+                          ? 'bg-gradient-to-r from-[#FF1493] to-[#FF69B4] shadow-[0_20px_60px_rgba(255,20,147,0.35)] hover:-translate-y-0.5'
+                          : 'bg-white/10 text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      {isLastStep ? 'Submit application' : `Next: ${onboardingSteps[formStep + 1]?.title ?? 'Review'}`}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleBack}
+                      disabled={formStep === 0}
+                      className={`rounded-2xl border px-6 py-3 text-sm font-semibold ${
+                        formStep === 0
+                          ? 'border-white/5 text-gray-500 cursor-not-allowed'
+                          : 'border-white/15 text-gray-300 hover:text-white'
+                      }`}
+                    >
+                      Back to previous step
+                    </button>
+
+                    <p className="text-xs text-gray-500">
+                      We use this info to fast-track roster reviews. No auto-charges, ever. After approval you&apos;ll receive
+                      your artist portal signup link plus a human onboarding call.
+                    </p>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </section>
 
@@ -636,16 +1012,16 @@ const TrueNorthLanding = () => {
           </div>
 
           <div className="flex gap-8 text-sm text-gray-500">
-            <a href="#" className="hover:text-[#FF69B4] transition-colors">
+            <a href="/about" className="hover:text-[#FF69B4] transition-colors">
               About
             </a>
-            <a href="#" className="hover:text-[#FF69B4] transition-colors">
+            <a href="/legal/terms" className="hover:text-[#FF69B4] transition-colors">
               Terms
             </a>
-            <a href="#" className="hover:text-[#FF69B4] transition-colors">
+            <a href="mailto:privacy@truenorth.com" className="hover:text-[#FF69B4] transition-colors">
               Privacy
             </a>
-            <a href="#" className="hover:text-[#FF69B4] transition-colors">
+            <a href="mailto:hello@truenorth.com" className="hover:text-[#FF69B4] transition-colors">
               Help
             </a>
           </div>
