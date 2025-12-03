@@ -9,6 +9,7 @@ export default function GetStartedPage() {
     email: '',
     artistName: '',
     catalogSize: '1-5',
+    currentDistributor: '',
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -163,6 +164,31 @@ export default function GetStartedPage() {
                           <option value="100+">100+ Releases</option>
                         </select>
                       </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="currentDistributor" className="form-label">Current Distributor</label>
+                      <select
+                        id="currentDistributor"
+                        name="currentDistributor"
+                        className="form-select"
+                        value={formData.currentDistributor}
+                        onChange={handleChange}
+                      >
+                        <option value="" disabled>Select your current distributor</option>
+                        <option value="DistroKid">DistroKid</option>
+                        <option value="CD Baby">CD Baby</option>
+                        <option value="Tunecore">Tunecore</option>
+                        <option value="UnitedMasters">UnitedMasters</option>
+                        <option value="Amuse">Amuse</option>
+                        <option value="Ditto">Ditto</option>
+                        <option value="Symphonic">Symphonic</option>
+                        <option value="ONErpm">ONErpm</option>
+                        <option value="AWAL">AWAL</option>
+                        <option value="Stem">Stem</option>
+                        <option value="None">None / First Release</option>
+                        <option value="Other">Other</option>
+                      </select>
                     </div>
 
                     <div className="form-group">

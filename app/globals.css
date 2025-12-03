@@ -227,6 +227,7 @@ header {
     gap: 12px;
     letter-spacing: -0.5px;
     color: #ffffff;
+    text-decoration: none; /* Added to remove underline */
 }
 
 .logo-icon {
