@@ -48,7 +48,7 @@ export default function Home() {
                 <a href="/about">About</a>
                 <a href="#pricing">Pricing</a>
                 <a href="#features">Features</a>
-                <a className="btn-primary" href="#start">Get Started</a>
+                <a className="btn-primary" href="/get-started">Get Started</a>
               </nav>
             </div>
           </div>
@@ -62,7 +62,7 @@ export default function Home() {
                 <h2 className="hero-subtitle fade-in fade-in-delay-1">Release with Direction</h2>
                 <p className="hero-desc fade-in fade-in-delay-2">Global distribution, clean splits, real-time data—no busywork.</p>
                 <p className="hero-tagline fade-in fade-in-delay-3">Distribution for artists and labels who want less admin and more release days.</p>
-                <a href="#start" className="btn-primary fade-in fade-in-delay-4" style={{ fontSize: '16px', padding: '16px 40px' }}>Start Distributing</a>
+                <a href="/get-started" className="btn-primary fade-in fade-in-delay-4" style={{ fontSize: '16px', padding: '16px 40px' }}>Start Distributing</a>
               </div>
             </div>
           </section>
@@ -162,7 +162,7 @@ export default function Home() {
               {/* Full-width Feature 1 */}
               <div className="feature-full fade-in">
                 <div className="feature-content">
-                  <h3>Splits that don't need spreadsheets</h3>
+                  <h3>Splits that don&apos;t need spreadsheets</h3>
                   <p>Set splits in seconds, add recoupables, track costs, and pay collaborators automatically. Statements are clean. Payouts are fast. Rights stay yours.</p>
                 </div>
                 <div className="feature-visual">
@@ -185,8 +185,8 @@ export default function Home() {
             {/* Full-width Feature 2 (Reversed) */}
             <div className="feature-full reverse fade-in">
               <div className="feature-content">
-                <h3>Data you'll actually use</h3>
-                <p>Real‑time trends by platform, territory, and track. See what's working, skip what isn't. Export anything.</p>
+                <h3>Data you&apos;ll actually use</h3>
+                <p>Real‑time trends by platform, territory, and track. See what&apos;s working, skip what isn&apos;t. Export anything.</p>
               </div>
               <div className="feature-visual">
                 <div className="feature-icon-large">
@@ -251,7 +251,7 @@ export default function Home() {
             ENTERPRISE GRADE
           </div>
           <h3>Built to scale, quietly</h3>
-          <p>Powered by Revelator under the hood: DDEX‑compliant deliveries, UPC/ISRC generation, automated updates, and the reliability you'd expect from enterprise—minus the enterprise headache.</p>
+          <p>Powered by Revelator under the hood: DDEX‑compliant deliveries, UPC/ISRC generation, automated updates, and the reliability you&apos;d expect from enterprise—minus the enterprise headache.</p>
 
           <div className="enterprise-features">
             <div className="enterprise-feature-item">
@@ -328,7 +328,7 @@ export default function Home() {
 
       <section className="quote-section">
         <div className="container">
-          <p className="quote fade-in">"Move in the right direction."</p>
+          <p className="quote fade-in">&quot;Move in the right direction.&quot;</p>
         </div>
       </section>
 
@@ -480,7 +480,7 @@ export default function Home() {
         <div className="container">
           <h2 className="cta-title fade-in">Ready when you are.</h2>
           <p className="cta-desc fade-in fade-in-delay-1">Upload the single, set your splits, and point your compass north.</p>
-          <a href="#" className="btn-primary fade-in fade-in-delay-2" style={{ fontSize: '18px', padding: '18px 50px' }}>Get Started Now</a>
+          <a href="/get-started" className="btn-primary fade-in fade-in-delay-2" style={{ fontSize: '18px', padding: '18px 50px' }}>Get Started Now</a>
         </div>
       </section>
 

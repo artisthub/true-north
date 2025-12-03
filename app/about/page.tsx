@@ -26,9 +26,9 @@ export default function AboutPage() {
                 <a href="/#distribution">Distribution</a>
                 <a href="/#features">Features</a>
                 <a href="/#pricing">Pricing</a>
-                <a className="btn-primary" href="/#start">
+                <Link className="btn-primary" href="/get-started">
                   Get Started
-                </a>
+                </Link>
               </nav>
             </div>
           </div>
@@ -164,9 +164,9 @@ export default function AboutPage() {
                 <h2>Ready to move your catalog?</h2>
                 <p>Bring the momentum from ArtistHub straight into distribution. We&apos;ll help you migrate, launch, and grow.</p>
                 <div className="about-cta-actions">
-                  <a className="btn-primary" href="/#start">
+                  <Link className="btn-primary" href="/get-started">
                     Start a release
-                  </a>
+                  </Link>
                   <a className="btn-secondary" href="mailto:hello@truenorthmusic.com">
                     Talk to our team
                   </a>
