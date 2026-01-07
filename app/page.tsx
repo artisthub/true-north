@@ -40,8 +40,9 @@ export default function Home() {
           <div className="container">
             <div className="header-content">
               <div className="logo">
-                <div className="logo-icon">↑</div>
-                True North
+                <div className="logo-icon">
+                  <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                </div>
               </div>
               <nav>
                 <a href="#distribution">Distribution</a>
@@ -58,11 +59,23 @@ export default function Home() {
           <section className="hero">
             <div className="container">
               <div className="hero-content">
-                <h1 className="hero-title fade-in">True North</h1>
-                <h2 className="hero-subtitle fade-in fade-in-delay-1">Release with Direction</h2>
-                <p className="hero-desc fade-in fade-in-delay-2">Global distribution, clean splits, real-time data—no busywork.</p>
-                <p className="hero-tagline fade-in fade-in-delay-3">Distribution for artists and labels who want less admin and more release days.</p>
-                <a href="/get-started" className="btn-primary fade-in fade-in-delay-4" style={{ fontSize: '16px', padding: '16px 40px' }}>Start Distributing</a>
+                <h1 className="hero-title fade-in">
+                  Release with <br />
+                  <span className="text-gradient-direction">Direction</span>
+                </h1>
+                <p className="hero-desc fade-in fade-in-delay-1">
+                  Global distribution, clean splits, fast data—no busywork.
+                  <span className="hero-desc-sub">For artists and labels who want less admin and more release days.</span>
+                </p>
+                
+                <div className="hero-actions fade-in fade-in-delay-2">
+                  <a href="/get-started" className="btn-primary" style={{ fontSize: '18px', padding: '16px 40px' }}>
+                    Start Distributing
+                  </a>
+                  <a href="#features" className="btn-secondary" style={{ fontSize: '18px', padding: '16px 40px' }}>
+                    View Features
+                  </a>
+                </div>
               </div>
             </div>
           </section>
@@ -434,7 +447,7 @@ export default function Home() {
           <div className="pricing-grid">
             <div className="pricing-card featured fade-in">
               <div className="plan-name">Active</div>
-              <div className="plan-price">$39<span className="plan-price-small">/yr</span></div>
+              <div className="plan-price">$59<span className="plan-price-small">/yr</span></div>
               <div className="plan-price-small" style={{ marginTop: '-10px' }}>+ 40% of sync</div>
               <p className="plan-desc">Includes global distribution, automated splits & payouts, analytics, smart links, and lyrics delivery (musicmatch + LyricFind).</p>
               <a href="#start" className="btn-primary" style={{ width: '100%', padding: '15px' }}>Choose Active</a>
@@ -488,36 +501,50 @@ export default function Home() {
             <div className="container">
               <div className="section-header fade-in">
                 <h2 className="section-title">Legal Center</h2>
-                <p className="section-desc">Guidelines for submitting DMCA notices and understanding how we use cookies across True North.</p>
+                <p className="section-desc">
+                  Explore the policies that govern distribution on True North, from terms of service to privacy, cookies, and DMCA guidelines.
+                </p>
               </div>
 
               <div className="legal-grid">
-                <div className="legal-card fade-in" id="dmca-policy">
-                  <h3>DMCA Policy</h3>
-                  <p>True North respects the rights of creators. If you believe content distributed through our services violates your copyright, submit a detailed Digital Millennium Copyright Act (DMCA) notice so we can investigate quickly.</p>
-                  <p>Include the following information in your notice:</p>
-                  <ul>
-                    <li>Your full legal name, business affiliation (if applicable), mailing address, phone number, and email.</li>
-                    <li>Clear identification of the copyrighted work you believe has been infringed.</li>
-                    <li>Links or release identifiers that point us to the allegedly infringing material on True North.</li>
-                    <li>A statement, made under penalty of perjury, that you have a good-faith belief the disputed use is not authorized by the copyright owner, its agent, or the law.</li>
-                    <li>A statement that the information in the notice is accurate and that you are authorized to act on behalf of the owner.</li>
-                    <li>Your electronic or physical signature.</li>
-                  </ul>
-                  <p>Send completed notices to <a href="mailto:dmca@truenorthmusic.com">dmca@truenorthmusic.com</a>. We will acknowledge receipt, review the claim, and remove or disable access to the material if appropriate.</p>
-                  <p className="legal-note">If you believe content was removed in error, submit a counter-notice with the details above and a statement consenting to jurisdiction in your residence or our principal place of business.</p>
+                <div className="legal-card fade-in">
+                  <h3>Terms &amp; Conditions</h3>
+                  <p>
+                    Understand the agreement that governs distribution, royalty payouts, and your responsibilities when releasing with True North.
+                  </p>
+                  <a className="btn-secondary" href="/legal/terms">
+                    Review Terms
+                  </a>
                 </div>
 
-                <div className="legal-card fade-in fade-in-delay-1" id="cookie-policy">
+                <div className="legal-card fade-in fade-in-delay-1">
+                  <h3>Privacy Policy</h3>
+                  <p>
+                    Learn how we collect, use, and protect account data, catalog information, and analytics across dashboards and artist tools.
+                  </p>
+                  <a className="btn-secondary" href="/legal/privacy">
+                    Read Privacy Policy
+                  </a>
+                </div>
+
+                <div className="legal-card fade-in fade-in-delay-2">
                   <h3>Cookie Policy</h3>
-                  <p>We use cookies and similar technologies to keep your account secure, understand release performance, and tailor the experience across dashboards, analytics, and marketing pages.</p>
-                  <ul>
-                    <li><strong>Essential cookies</strong> keep you signed in, maintain session security, and enable core functionality.</li>
-                    <li><strong>Performance cookies</strong> help us measure how artists and teams interact with tools so we can ship better features.</li>
-                    <li><strong>Marketing cookies</strong> power optional campaigns such as smart links and retargeting; these are only activated with your consent.</li>
-                  </ul>
-                  <p>You can adjust preferences at any time through your browser settings or by contacting us. We honor browser-based opt-out signals where supported.</p>
-                  <p className="legal-note">Questions? Email <a href="mailto:privacy@truenorthmusic.com">privacy@truenorthmusic.com</a> and we&apos;ll help configure your workspace.</p>
+                  <p>
+                    See how cookies keep your sessions secure, power analytics, and how to control your preferences across True North experiences.
+                  </p>
+                  <a className="btn-secondary" href="/legal/cookie-policy">
+                    Read Cookie Policy
+                  </a>
+                </div>
+
+                <div className="legal-card fade-in fade-in-delay-3">
+                  <h3>DMCA Policy</h3>
+                  <p>
+                    Find the steps for reporting infringing material or filing counter-notices so we can keep releases online for legitimate creators.
+                  </p>
+                  <a className="btn-secondary" href="/legal/dmca">
+                    Read DMCA Policy
+                  </a>
                 </div>
               </div>
             </div>
@@ -550,9 +577,9 @@ export default function Home() {
             <div className="footer-section">
               <h4>Legal</h4>
               <a href="/legal/terms">Terms &amp; Conditions</a>
-              <a href="#">Privacy Policy</a>
-              <a href="#cookie-policy">Cookie Policy</a>
-              <a href="#dmca-policy">DMCA</a>
+              <a href="/legal/privacy">Privacy Policy</a>
+              <a href="/legal/cookie-policy">Cookie Policy</a>
+              <a href="/legal/dmca">DMCA</a>
             </div>
           </div>
           <div className="footer-bottom">

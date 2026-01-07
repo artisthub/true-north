@@ -3,27 +3,52 @@
 import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 
+const initialFormData = {
+  name: '',
+  email: '',
+  artistName: '',
+  catalogSize: '1-5',
+  currentDistributor: '',
+  message: ''
+};
+
 export default function GetStartedPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    artistName: '',
-    catalogSize: '1-5',
-    currentDistributor: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState(initialFormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    setErrorMessage(null);
     setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsLoading(false);
-    setIsSubmitted(true);
+
+    try {
+      const response = await fetch('/api/get-started', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        const { error } = await response.json().catch(() => ({ error: null }));
+        throw new Error(error ?? 'We couldn’t submit your application. Please try again.');
+      }
+
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Failed to submit application', error);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : 'We couldn’t submit your application. Please try again.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -51,8 +76,9 @@ export default function GetStartedPage() {
           <div className="container">
             <div className="header-content">
               <Link href="/" className="logo">
-                <div className="logo-icon">↑</div>
-                True North
+                <div className="logo-icon">
+                  <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                </div>
               </Link>
               <nav>
                 <Link href="/">Home</Link>
@@ -217,6 +243,11 @@ export default function GetStartedPage() {
                       >
                         {isLoading ? 'Submitting...' : 'Submit Application'}
                       </button>
+                      {errorMessage ? (
+                        <p style={{ marginTop: '16px', color: '#f472b6' }}>
+                          {errorMessage}
+                        </p>
+                      ) : null}
                     </div>
                   </form>
                 )}
@@ -232,8 +263,9 @@ export default function GetStartedPage() {
               <Link href="/">Home</Link>
               <Link href="/legal/terms">Terms &amp; Conditions</Link>
               <Link href="/#pricing">Pricing</Link>
-              <Link href="/#dmca-policy">DMCA</Link>
-              <Link href="/#cookie-policy">Cookie Policy</Link>
+              <Link href="/legal/dmca">DMCA</Link>
+              <Link href="/legal/cookie-policy">Cookie Policy</Link>
+              <Link href="/legal/privacy">Privacy Policy</Link>
             </nav>
           </div>
         </footer>

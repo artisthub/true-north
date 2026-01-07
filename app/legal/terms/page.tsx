@@ -28,7 +28,7 @@ export default function TermsPage() {
                 <a href="/#distribution">Distribution</a>
                 <a href="/about">About</a>
                 <a href="/#pricing">Pricing</a>
-                <a className="btn-primary" href="/#start">
+                <a className="btn-primary" href="/get-started">
                   Get Started
                 </a>
               </nav>
@@ -453,8 +453,9 @@ export default function TermsPage() {
               <a href="/">Home</a>
               <a href="/about">About</a>
               <a href="/#pricing">Pricing</a>
-              <a href="/#dmca-policy">DMCA</a>
-              <a href="/#cookie-policy">Cookie Policy</a>
+              <a href="/legal/dmca">DMCA</a>
+              <a href="/legal/cookie-policy">Cookie Policy</a>
+              <a href="/legal/privacy">Privacy Policy</a>
             </nav>
           </div>
         </footer>

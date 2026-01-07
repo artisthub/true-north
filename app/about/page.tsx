@@ -41,8 +41,9 @@ export default function AboutPage() {
           <div className="container">
             <div className="header-content">
               <Link href="/" className="logo">
-                <div className="logo-icon">↑</div>
-                True North
+                <div className="logo-icon">
+                  <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                </div>
               </Link>
               <nav>
                 <a href="/">Home</a>
@@ -206,8 +207,9 @@ export default function AboutPage() {
               <a href="/">Home</a>
               <a href="/legal/terms">Terms &amp; Conditions</a>
               <a href="/#pricing">Pricing</a>
-              <a href="/#dmca-policy">DMCA</a>
-              <a href="/#cookie-policy">Cookie Policy</a>
+              <a href="/legal/dmca">DMCA</a>
+              <a href="/legal/cookie-policy">Cookie Policy</a>
+              <a href="/legal/privacy">Privacy Policy</a>
             </nav>
           </div>
         </footer>
