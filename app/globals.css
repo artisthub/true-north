@@ -231,15 +231,15 @@ header {
 }
 
 .logo-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #FF1493, #FF69B4);
+    width: 80px; /* Increased size */
+    height: 80px; /* Increased size */
+    background: transparent;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    box-shadow: 0 4px 20px rgba(255, 20, 147, 0.3);
+    /* font-size: 24px; For the old arrow */
+    /* box-shadow: 0 4px 20px rgba(255, 20, 147, 0.3); Removed for transparent look */
 }
 
 nav {
@@ -300,6 +300,29 @@ nav a:not(.btn-primary):hover::after {
     text-align: center;
     padding: 140px 0 100px;
     position: relative;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.text-gradient-direction {
+    background: linear-gradient(to right, #ffffff 30%, #FFE0F4, #FF69B4); /* Extended white portion */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-desc-sub {
+    display: block;
+    margin-top: 12px;
+    color: #888;
+    font-size: 18px;
 }
 
 .hero::before {
