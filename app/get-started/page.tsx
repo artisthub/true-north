@@ -20,11 +20,13 @@ export default function GetStartedPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log('Form submitted with data:', formData); // Debug log
 
     setErrorMessage(null);
     setIsLoading(true);
 
     try {
+      console.log('Sending request to /api/get-started'); // Debug log
       const response = await fetch('/api/get-started', {
         method: 'POST',
         headers: {
@@ -33,18 +35,22 @@ export default function GetStartedPage() {
         body: JSON.stringify(formData)
       });
 
+      console.log('Response status:', response.status); // Debug log
+
       if (!response.ok) {
         const { error } = await response.json().catch(() => ({ error: null }));
-        throw new Error(error ?? 'We couldn’t submit your application. Please try again.');
+        throw new Error(error || 'We couldn\'t submit your application. Please try again.');
       }
 
+      const data = await response.json();
+      console.log('Response data:', data); // Debug log
       setIsSubmitted(true);
     } catch (error) {
       console.error('Failed to submit application', error);
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : 'We couldn’t submit your application. Please try again.'
+          : 'We couldn\'t submit your application. Please try again.'
       );
     } finally {
       setIsLoading(false);
@@ -53,6 +59,7 @@ export default function GetStartedPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    console.log('Input changed:', name, value); // Debug log
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -61,15 +68,7 @@ export default function GetStartedPage() {
 
   return (
     <>
-      <div className="bg-gradient">
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
-        <div className="shooting-star"></div>
-        <div className="decorative-star star-1">✦</div>
-        <div className="decorative-star star-2">✧</div>
-        <div className="decorative-star star-3">✦</div>
-        <div className="decorative-star star-4">✧</div>
-      </div>
+      <div className="bg-gradient"></div>
 
       <div className="content-wrapper about-wrapper">
         <header>
@@ -234,6 +233,13 @@ export default function GetStartedPage() {
                         type="submit" 
                         className="btn-primary" 
                         disabled={isLoading}
+                        onClick={(e) => {
+                          console.log('Button clicked!');
+                          if (isLoading) {
+                            e.preventDefault();
+                            return;
+                          }
+                        }}
                         style={{ 
                           padding: '16px 60px', 
                           fontSize: '18px',

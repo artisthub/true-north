@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
 type FormPayload = {
   name?: string;
@@ -14,10 +15,12 @@ const requiredFields: Array<keyof FormPayload> = ['name', 'email', 'artistName']
 const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
 
 export async function POST(request: Request) {
-  if (!slackWebhookUrl) {
+  // Check if Supabase is configured
+  if (!supabase) {
+    console.error('Supabase client not initialized. Please configure environment variables.');
     return NextResponse.json(
-      { error: 'Server misconfigured: missing Slack webhook URL.' },
-      { status: 500 }
+      { error: 'Database connection not configured. Please contact support.' },
+      { status: 503 }
     );
   }
 
@@ -36,27 +39,37 @@ export async function POST(request: Request) {
     );
   }
 
-  const body = buildSlackMessage(payload);
+  // Save to Supabase
+  const { error: dbError } = await supabase.from('contact_submissions').insert({
+    name: payload.name,
+    email: payload.email,
+    artist_name: payload.artistName,
+    catalog_size: payload.catalogSize,
+    current_distributor: payload.currentDistributor,
+    message: payload.message
+  });
 
-  try {
-    const slackResponse = await fetch(slackWebhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-
-    if (!slackResponse.ok) {
-      return NextResponse.json(
-        { error: 'Failed to notify Slack.' },
-        { status: 502 }
-      );
-    }
-  } catch (error) {
-    console.error('Slack webhook error:', error);
+  if (dbError) {
+    console.error('Supabase insert error:', dbError);
     return NextResponse.json(
-      { error: 'Failed to notify Slack.' },
-      { status: 502 }
+      { error: 'Failed to save submission.' },
+      { status: 500 }
     );
+  }
+
+  // Also notify Slack if webhook is configured
+  if (slackWebhookUrl) {
+    try {
+      const body = buildSlackMessage(payload);
+      await fetch(slackWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+    } catch (error) {
+      // Log but don't fail the request if Slack notification fails
+      console.error('Slack webhook error:', error);
+    }
   }
 
   return NextResponse.json({ success: true });
@@ -71,7 +84,7 @@ function buildSlackMessage({
   message = ''
 }: FormPayload) {
   const lines = [
-    '*New “Get Started” submission*',
+    '*New "Get Started" submission*',
     `*Name:* ${name}`,
     `*Email:* ${email}`,
     `*Artist / Label:* ${artistName}`,

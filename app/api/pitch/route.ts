@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
 type PitchPayload = {
   // Your Details
@@ -93,13 +94,6 @@ const requiredFields: Array<keyof PitchPayload> = [
 const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
 
 export async function POST(request: Request) {
-  if (!slackWebhookUrl) {
-    return NextResponse.json(
-      { error: 'Server misconfigured: missing Slack webhook URL.' },
-      { status: 500 }
-    );
-  }
-
   let payload: PitchPayload;
   try {
     payload = await request.json();
@@ -120,27 +114,77 @@ export async function POST(request: Request) {
     );
   }
 
-  const body = buildSlackMessage(payload);
+  // Save to Supabase
+  const { error: dbError } = await supabase.from('pitch_submissions').insert({
+    email: payload.email,
+    name: payload.name,
+    enterprise_name: payload.enterpriseName,
+    true_north_account_id: payload.revelatorAccountId,
+    release_title: payload.releaseTitle,
+    release_artists: payload.releaseArtists,
+    release_type: payload.releaseType,
+    release_stage: payload.releaseStage,
+    release_date: payload.releaseDate,
+    true_north_release_id: payload.revelatorReleaseId,
+    upc_code: payload.upcCode,
+    label_name: payload.labelName,
+    territory_restrictions: payload.territoryRestrictions,
+    track_name: payload.trackName,
+    isrc_code: payload.isrcCode,
+    instrumental: payload.instrumental,
+    primary_genre: payload.primaryGenre,
+    secondary_genres: payload.secondaryGenres || [],
+    lyrics_language: payload.lyricsLanguage,
+    track_instruments: payload.trackInstruments,
+    mood_keywords: payload.moodKeywords || [],
+    spotify_profile: payload.spotifyProfile,
+    spotify_listeners: payload.spotifyListeners,
+    instagram_profile: payload.instagramProfile,
+    instagram_followers: payload.instagramFollowers,
+    youtube_channel: payload.youtubeChannel,
+    youtube_subscribers: payload.youtubeSubscribers,
+    tiktok_profile: payload.tiktokProfile,
+    tiktok_followers: payload.tiktokFollowers,
+    deezer_profile: payload.deezerProfile,
+    deezer_fans: payload.deezerFans,
+    other_profiles: payload.otherProfiles,
+    social_activity: payload.socialActivity || [],
+    meta_reels_participation: payload.metaReelsParticipation || [],
+    top_social_content: payload.topSocialContent,
+    collaborating_artist: payload.collaboratingArtist,
+    main_pitch: payload.mainPitch,
+    playlist_fit: payload.playlistFit,
+    behind_the_music: payload.behindTheMusic,
+    marketing_plan: payload.marketingPlan,
+    primary_territories: payload.primaryTerritories || [],
+    age_demographics: payload.ageDemographics,
+    official_video: payload.officialVideo,
+    priority_dsps: payload.priorityDsps || [],
+    direct_pitching: payload.directPitching,
+    consent: payload.consent
+  });
 
-  try {
-    const slackResponse = await fetch(slackWebhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-
-    if (!slackResponse.ok) {
-      return NextResponse.json(
-        { error: 'Failed to notify Slack.' },
-        { status: 502 }
-      );
-    }
-  } catch (error) {
-    console.error('Slack webhook error:', error);
+  if (dbError) {
+    console.error('Supabase insert error:', dbError);
     return NextResponse.json(
-      { error: 'Failed to notify Slack.' },
-      { status: 502 }
+      { error: 'Failed to save submission.' },
+      { status: 500 }
     );
+  }
+
+  // Also notify Slack if webhook is configured
+  if (slackWebhookUrl) {
+    try {
+      const body = buildSlackMessage(payload);
+      await fetch(slackWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+    } catch (error) {
+      // Log but don't fail the request if Slack notification fails
+      console.error('Slack webhook error:', error);
+    }
   }
 
   return NextResponse.json({ success: true });
