@@ -18,8 +18,9 @@ export async function POST(request: Request) {
   // Check if Supabase is configured
   if (!supabase) {
     console.error('Supabase client not initialized. Please configure environment variables.');
+    console.error('Please add your SUPABASE_SERVICE_ROLE_KEY to .env.local');
     return NextResponse.json(
-      { error: 'Database connection not configured. Please contact support.' },
+      { error: 'Database configuration pending. Please add your Supabase service role key to .env.local file.' },
       { status: 503 }
     );
   }

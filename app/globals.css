@@ -290,6 +290,9 @@ nav a:not(.btn-primary):hover::after {
     transition: all 0.3s ease;
     display: inline-block;
     box-shadow: 0 4px 20px rgba(255, 20, 147, 0.3);
+    position: relative;
+    z-index: 1000;
+    pointer-events: auto !important;
 }
 
 .btn-primary:hover {
@@ -1601,6 +1604,7 @@ nav a:not(.btn-primary):hover::after {
     background: radial-gradient(circle, rgba(255, 20, 147, 0.08) 0%, transparent 70%);
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .about-cta-card:hover::before {

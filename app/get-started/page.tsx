@@ -128,7 +128,7 @@ export default function GetStartedPage() {
                     </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
+                  <form onSubmit={handleSubmit} style={{ textAlign: 'left', position: 'relative', zIndex: 100 }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                       <div className="form-group">
                         <label htmlFor="name" className="form-label">Full Name</label>
@@ -228,17 +228,14 @@ export default function GetStartedPage() {
                       ></textarea>
                     </div>
 
-                    <div style={{ textAlign: 'center', marginTop: '40px' }}>
+                    <div style={{ textAlign: 'center', marginTop: '40px', position: 'relative', zIndex: 200 }}>
                       <button 
-                        type="submit" 
+                        type="button" 
                         className="btn-primary" 
                         disabled={isLoading}
                         onClick={(e) => {
-                          console.log('Button clicked!');
-                          if (isLoading) {
-                            e.preventDefault();
-                            return;
-                          }
+                          console.log('Submit button clicked!');
+                          handleSubmit(e as any);
                         }}
                         style={{ 
                           padding: '16px 60px', 
