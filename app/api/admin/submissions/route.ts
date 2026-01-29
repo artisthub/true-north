@@ -72,9 +72,9 @@ export async function GET(request: Request) {
 
       // Combine and sort by created_at
       const allSubmissions = [
-        ...(pitchResult.data || []).map(item => ({ ...item, type: 'pitch' })),
-        ...(contactResult.data || []).map(item => ({ ...item, type: 'contact' }))
-      ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        ...(pitchResult.data || []).map((item: any) => ({ ...item, type: 'pitch' })),
+        ...(contactResult.data || []).map((item: any) => ({ ...item, type: 'contact' }))
+      ].sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       return NextResponse.json({
         data: allSubmissions,

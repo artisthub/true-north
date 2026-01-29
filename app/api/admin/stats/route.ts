@@ -71,7 +71,7 @@ export async function GET() {
     }
 
     // Count pitch submissions by date
-    pitchDaily.data?.forEach(submission => {
+    pitchDaily.data?.forEach((submission: { created_at: string }) => {
       const dateStr = submission.created_at.split('T')[0];
       if (dailyStats[dateStr]) {
         dailyStats[dateStr].pitch++;
@@ -79,7 +79,7 @@ export async function GET() {
     });
 
     // Count contact submissions by date
-    contactDaily.data?.forEach(submission => {
+    contactDaily.data?.forEach((submission: { created_at: string }) => {
       const dateStr = submission.created_at.split('T')[0];
       if (dailyStats[dateStr]) {
         dailyStats[dateStr].contact++;
