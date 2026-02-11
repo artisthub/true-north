@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createServerClient, createAdminClient } from '@/lib/supabase-auth';
 
 type PitchPayload = {
   // Your Details
@@ -101,6 +101,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid JSON payload.' }, { status: 400 });
   }
 
+  // Check if user is authenticated using Supabase Auth
+  const supabaseClient = createServerClient();
+  const { data: { user: currentUser } } = await supabaseClient.auth.getUser();
+  
+  // Use admin client for database operations
+  const supabase = createAdminClient();
+
   const missingField = requiredFields.find((field) => {
     const value = payload[field];
     if (field === 'consent') return value !== true;
@@ -114,7 +121,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // Save to Supabase
+  // Save to Supabase with user_id if authenticated
   const { error: dbError } = await supabase.from('pitch_submissions').insert({
     email: payload.email,
     name: payload.name,
@@ -161,7 +168,8 @@ export async function POST(request: Request) {
     official_video: payload.officialVideo,
     priority_dsps: payload.priorityDsps || [],
     direct_pitching: payload.directPitching,
-    consent: payload.consent
+    consent: payload.consent,
+    profile_id: currentUser?.id || null // Link to authenticated user if exists
   });
 
   if (dbError) {

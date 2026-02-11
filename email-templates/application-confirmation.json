@@ -1,0 +1,31 @@
+{
+  "Subject": "Application Received - Welcome to True North! 🎵",
+  "HtmlBody": "{{html_template}}",
+  "TextBody": "Application Received - True North\n\nHi {{first_name}},\n\nThank you for applying to join True North's exclusive roster. We've received your {{account_type}} application and our team is reviewing it carefully.\n\nApplication Details:\n- Application ID: #{{application_id}}\n- Account Type: {{account_type}}\n- {{entity_name_label}}: {{entity_name}}\n- Submitted: {{submission_date}}\n\nWhat Happens Next?\n\n1. Application Review\n   Our team reviews your application within 24-48 hours\n\n2. Decision Email\n   You'll receive an email with our decision and next steps\n\n3. Onboarding\n   If approved, you'll receive setup instructions and access credentials\n\nCheck your application status: {{application_status_url}}\n\nHave questions about your application?\nContact us at support@truenorth.com\n\n© 2024 True North Music Distribution. All rights reserved.\nYour music deserves the best distribution.",
+  "TemplateAlias": "application-confirmation",
+  "TemplateId": null,
+  "MessageStream": "outbound",
+  "Variables": {
+    "first_name": "User's first name",
+    "last_name": "User's last name",
+    "email": "User's email address",
+    "account_type": "artist or label",
+    "entity_name": "Artist name or Label name",
+    "entity_name_label": "Artist Name or Label Name",
+    "application_id": "Unique application ID",
+    "submission_date": "Date and time of submission",
+    "application_status_url": "URL to check application status",
+    "html_template": "The HTML content from application-confirmation.html"
+  },
+  "ExampleData": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    "account_type": "artist",
+    "entity_name": "The Midnight Sessions",
+    "entity_name_label": "Artist Name",
+    "application_id": "APP-2024-001234",
+    "submission_date": "January 15, 2024 at 3:45 PM EST",
+    "application_status_url": "https://truenorth.com/application/status/APP-2024-001234"
+  }
+}

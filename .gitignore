@@ -13,3 +13,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .DS_Store
+
+# Test files and sensitive data
+test-create-user.js
+cookies.txt
+user-cookies.txt
+*.cookie
+*.cookies

@@ -448,7 +448,6 @@ export default function Home() {
             <div className="pricing-card featured fade-in">
               <div className="plan-name">Active</div>
               <div className="plan-price">$59<span className="plan-price-small">/yr</span></div>
-              <div className="plan-price-small" style={{ marginTop: '-10px' }}>+ 40% of sync</div>
               <p className="plan-desc">Includes global distribution, automated splits & payouts, analytics, smart links, and lyrics delivery (musicmatch + LyricFind).</p>
               <a href="#start" className="btn-primary" style={{ width: '100%', padding: '15px' }}>Choose Active</a>
             </div>
@@ -464,6 +463,10 @@ export default function Home() {
           <div className="addons fade-in">
             <h3>Add‑Ons</h3>
             <ul>
+              <li>
+                <span>Sync Licensing</span>
+                <span>40% commission</span>
+              </li>
               <li>
                 <span>YouTube Content ID + UGC</span>
                 <span>30%</span>
