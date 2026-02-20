@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -10,7 +9,8 @@ export function createBrowserClient() {
 }
 
 // Server-side Supabase client with cookie handling
-export function createServerClient() {
+export async function createServerClient() {
+  const { cookies } = await import('next/headers');
   const cookieStore = cookies();
   
   return createClient(supabaseUrl, supabaseAnonKey, {
@@ -59,7 +59,7 @@ export function createAdminClient() {
 
 // Get current user from server
 export async function getCurrentUser() {
-  const supabase = createServerClient();
+  const supabase = await createServerClient();
   
   try {
     const { data: { user }, error } = await supabase.auth.getUser();

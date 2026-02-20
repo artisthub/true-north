@@ -45,7 +45,7 @@ const initialFormData = {
   email: '',
   name: '',
   artistName: '',
-  labelName: ''
+  labelName: '',
 
   // Release Details
   releaseTitle: '',

@@ -102,7 +102,7 @@ export async function POST(request: Request) {
   }
 
   // Check if user is authenticated using Supabase Auth
-  const supabaseClient = createServerClient();
+  const supabaseClient = await createServerClient();
   const { data: { user: currentUser } } = await supabaseClient.auth.getUser();
   
   // Use admin client for database operations
