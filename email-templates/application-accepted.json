@@ -1,0 +1,29 @@
+{
+  "Subject": "🎉 Congratulations! Your True North Application is Approved!",
+  "HtmlBody": "{{html_template}}",
+  "TextBody": "Congratulations - Your True North Application is Approved!\n\nDear {{first_name}},\n\nWe're thrilled to inform you that your {{account_type}} application has been APPROVED!\n\nWelcome to True North's exclusive roster of artists and labels. We're excited to partner with {{entity_name}} and help you reach new heights in music distribution.\n\nYour Account Details:\n- Account Type: {{account_type}}\n- {{entity_name_label}}: {{entity_name}}\n- Account Email: {{email}}\n- Annual Fee: ${{annual_fee}}\n\nComplete Your Setup:\n\n1. Complete Payment\n   Click the link below to pay your annual fee and activate your account\n\n2. Account Activation\n   Once payment is confirmed, you'll receive your login credentials\n\n3. Start Distributing\n   Upload your music and start distributing to 150+ platforms worldwide\n\nComplete Payment: {{payment_link}}\n\n⏰ Please complete payment within 48 hours to secure your spot\n\nWhat's Included:\n✅ Distribution to 150+ platforms worldwide\n✅ 100% of your royalties - we never take a cut\n✅ Real-time analytics and reporting\n✅ YouTube Content ID and monetization\n✅ Dedicated support team\n✅ Unlimited releases and re-uploads\n\nQuestions about getting started?\nEmail: onboarding@truenorth.com\nPhone: +1 (234) 567-890\n\n© 2024 True North Music Distribution. All rights reserved.\nWelcome to the family! 🎵",
+  "TemplateAlias": "application-accepted",
+  "TemplateId": null,
+  "MessageStream": "outbound",
+  "Variables": {
+    "first_name": "User's first name",
+    "last_name": "User's last name",
+    "email": "User's email address",
+    "account_type": "artist or label",
+    "entity_name": "Artist name or Label name",
+    "entity_name_label": "Artist Name or Label Name",
+    "annual_fee": "Annual subscription fee amount",
+    "payment_link": "Secure payment link URL",
+    "html_template": "The HTML content from application-accepted.html"
+  },
+  "ExampleData": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    "account_type": "artist",
+    "entity_name": "The Midnight Sessions",
+    "entity_name_label": "Artist Name",
+    "annual_fee": "999",
+    "payment_link": "https://truenorth.com/payment/secure/APP-2024-001234"
+  }
+}

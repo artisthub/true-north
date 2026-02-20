@@ -41,21 +41,50 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Protect user dashboard and user API routes with Supabase Auth
+  // Protect user dashboard, pitch, and user API routes with Supabase Auth
   if (request.nextUrl.pathname.startsWith('/dashboard') || 
+      request.nextUrl.pathname.startsWith('/pitch') ||
       request.nextUrl.pathname.startsWith('/api/user')) {
     
-    // Check Supabase session
-    const { data: { session }, error } = await supabase.auth.getSession();
+    // Try to get the auth token from cookies
+    const cookieName = `sb-${new URL(supabaseUrl).hostname.split('.')[0]}-auth-token`;
+    const authCookie = request.cookies.get(cookieName);
     
-    if (error || !session) {
-      // Redirect to login for dashboard pages
-      if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    if (!authCookie) {
+      // Redirect to login for dashboard and pitch pages
+      if (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/pitch')) {
         return NextResponse.redirect(new URL('/login', request.url));
       }
       // Return 401 for API routes
       return NextResponse.json(
         { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+    
+    // Verify the session is valid
+    try {
+      const sessionData = JSON.parse(decodeURIComponent(authCookie.value));
+      const now = Math.floor(Date.now() / 1000);
+      
+      // Check if token is expired
+      if (sessionData.expires_at && sessionData.expires_at < now) {
+        // Token is expired
+        if (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/pitch')) {
+          return NextResponse.redirect(new URL('/login', request.url));
+        }
+        return NextResponse.json(
+          { error: 'Token expired' },
+          { status: 401 }
+        );
+      }
+    } catch {
+      // Invalid cookie format
+      if (request.nextUrl.pathname.startsWith('/dashboard') || request.nextUrl.pathname.startsWith('/pitch')) {
+        return NextResponse.redirect(new URL('/login', request.url));
+      }
+      return NextResponse.json(
+        { error: 'Invalid session' },
         { status: 401 }
       );
     }
@@ -69,6 +98,8 @@ export const config = {
     '/admin/:path*',
     '/api/admin/:path*',
     '/dashboard/:path*',
-    '/api/user/:path*'
+    '/pitch/:path*',
+    '/api/user/:path*',
+    '/api/pitch/:path*'
   ]
 };

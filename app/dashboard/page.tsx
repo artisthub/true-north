@@ -236,9 +236,8 @@ export default function DashboardPage() {
             </section>
           </div>
         </main>
-      </div>
 
-      <style jsx>{`
+        <style jsx>{`
           .loading {
             display: flex;
             justify-content: center;

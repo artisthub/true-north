@@ -18,14 +18,23 @@ export function createServerClient() {
       storage: {
         getItem: (key: string) => {
           const cookie = cookieStore.get(key);
-          return cookie?.value || null;
+          if (cookie?.value) {
+            // Decode URL-encoded cookie value
+            try {
+              return decodeURIComponent(cookie.value);
+            } catch {
+              return cookie.value;
+            }
+          }
+          return null;
         },
         setItem: (key: string, value: string) => {
           cookieStore.set(key, value, {
-            httpOnly: true,
+            httpOnly: false, // Allow client-side access for Supabase
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
             path: '/',
+            maxAge: 60 * 60 * 24 * 7, // 7 days
           });
         },
         removeItem: (key: string) => {

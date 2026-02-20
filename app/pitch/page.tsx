@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const genreOptions = [
@@ -40,11 +41,11 @@ const socialPlatforms = [
 ];
 
 const initialFormData = {
-  // Your Details
+  // Your Details (auto-filled from user profile)
   email: '',
   name: '',
-  enterpriseName: '',
-  revelatorAccountId: '',
+  artistName: '',
+  labelName: ''
 
   // Release Details
   releaseTitle: '',
@@ -54,7 +55,6 @@ const initialFormData = {
   releaseDate: '',
   revelatorReleaseId: '',
   upcCode: '',
-  labelName: '',
   territoryRestrictions: '',
 
   // Track Details
@@ -100,10 +100,42 @@ const initialFormData = {
 };
 
 export default function PitchPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState(initialFormData);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [userLoading, setUserLoading] = useState(true);
+
+  // Fetch user data on mount
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const response = await fetch('/api/user/me');
+        if (!response.ok) {
+          router.push('/login');
+          return;
+        }
+        const { user } = await response.json();
+        
+        // Pre-fill form with user data
+        setFormData(prev => ({
+          ...prev,
+          email: user.email || '',
+          name: user.artistName || user.labelName || '',
+          artistName: user.artistName || '',
+          labelName: user.labelName || ''
+        }));
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        router.push('/login');
+      } finally {
+        setUserLoading(false);
+      }
+    }
+    
+    fetchUserData();
+  }, [router]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -173,12 +205,15 @@ export default function PitchPage() {
       <div className="content-wrapper about-wrapper">
         <header>
           <div className="container">
-            <div className="header-content" style={{ justifyContent: 'center' }}>
-              <Link href="/" className="logo">
+            <div className="header-content">
+              <Link href="/dashboard" className="logo">
                 <div className="logo-icon">
                   <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
                 </div>
               </Link>
+              <nav>
+                <Link href="/dashboard">← Back to Dashboard</Link>
+              </nav>
             </div>
           </div>
         </header>
@@ -245,7 +280,11 @@ export default function PitchPage() {
                 padding: '60px 50px'
               }}>
 
-                {isSubmitted ? (
+                {userLoading ? (
+                  <div style={{ textAlign: 'center', padding: '60px' }}>
+                    <div style={{ color: '#FF69B4', fontSize: '18px' }}>Loading your information...</div>
+                  </div>
+                ) : isSubmitted ? (
                   <div className="success-message fade-in visible">
                     <div className="success-icon">
                       <svg viewBox="0 0 24 24" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -256,8 +295,25 @@ export default function PitchPage() {
                     <p className="success-desc">
                       Thank you for your submission! Our curation team will review your release and reach out if there are any opportunities.
                     </p>
-                    <div style={{ marginTop: '40px' }}>
-                      <Link href="/" className="btn-primary">Back to Home</Link>
+                    <div style={{ marginTop: '40px', display: 'flex', gap: '16px', justifyContent: 'center' }}>
+                      <Link href="/dashboard" className="btn-primary">Back to Dashboard</Link>
+                      <button 
+                        type="button" 
+                        onClick={() => { setIsSubmitted(false); handleClearForm(); }}
+                        className="btn-secondary"
+                        style={{
+                          border: '1px solid rgba(255, 20, 147, 0.4)',
+                          borderRadius: '30px',
+                          padding: '12px 30px',
+                          background: 'transparent',
+                          color: '#FF69B4',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Submit Another Pitch
+                      </button>
                     </div>
                   </div>
                 ) : (
@@ -267,28 +323,26 @@ export default function PitchPage() {
                     <div className="pitch-section">
                       <h2 className="pitch-section-title">YOUR DETAILS</h2>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-                        <div className="form-group">
-                          <label htmlFor="email" className="form-label">Your Email <span style={{ color: '#FF1493' }}>*</span></label>
-                          <input type="email" id="email" name="email" required className="form-input" placeholder="you@company.com" value={formData.email} onChange={handleChange} />
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="name" className="form-label">Your Name <span style={{ color: '#FF1493' }}>*</span></label>
-                          <input type="text" id="name" name="name" required className="form-input" placeholder="Jane Doe" value={formData.name} onChange={handleChange} />
-                        </div>
+                      <div style={{ 
+                        background: 'rgba(255, 20, 147, 0.05)', 
+                        border: '1px solid rgba(255, 20, 147, 0.2)',
+                        borderRadius: '16px',
+                        padding: '20px',
+                        marginBottom: '24px'
+                      }}>
+                        <p style={{ margin: 0, color: '#ccc' }}>
+                          <strong style={{ color: '#FF69B4' }}>Submitting as:</strong> {formData.artistName || formData.labelName || formData.name}
+                        </p>
+                        <p style={{ margin: '8px 0 0', color: '#999', fontSize: '14px' }}>
+                          {formData.email}
+                        </p>
                       </div>
-
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-                        <div className="form-group">
-                          <label htmlFor="enterpriseName" className="form-label">Enterprise Name <span style={{ color: '#FF1493' }}>*</span></label>
-                          <input type="text" id="enterpriseName" name="enterpriseName" required className="form-input" placeholder="Your Label / Company" value={formData.enterpriseName} onChange={handleChange} />
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="revelatorAccountId" className="form-label">True North Account ID <span style={{ color: '#FF1493' }}>*</span></label>
-                          <input type="number" id="revelatorAccountId" name="revelatorAccountId" required className="form-input" placeholder="123456" value={formData.revelatorAccountId} onChange={handleChange} />
-                          <span className="form-hint">Format: Integer</span>
-                        </div>
-                      </div>
+                      
+                      {/* Hidden fields for pre-filled data */}
+                      <input type="hidden" name="email" value={formData.email} />
+                      <input type="hidden" name="name" value={formData.name} />
+                      <input type="hidden" name="artistName" value={formData.artistName} />
+                      <input type="hidden" name="labelName" value={formData.labelName} />
                     </div>
 
                     {/* RELEASE DETAILS */}

@@ -51,19 +51,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Set auth cookies (Supabase handles this automatically)
-    const cookieStore = cookies();
-    
-    // Store access token for easy access
-    cookieStore.set('sb-auth-token', data.session?.access_token || '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: '/',
-    });
-
-    return NextResponse.json({
+    // Create response
+    const response = NextResponse.json({
       success: true,
       user: {
         id: data.user.id,
@@ -71,8 +60,33 @@ export async function POST(request: Request) {
         accountType: profile.account_type,
         artistName: profile.artist_name,
         labelName: profile.label_name,
-      }
+      },
+      session: data.session // Include session for client-side handling
     });
+
+    // Set Supabase auth cookies - using the format Supabase expects
+    if (data.session) {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+      const cookieName = `sb-${new URL(supabaseUrl).hostname.split('.')[0]}-auth-token`;
+      
+      // Set the combined auth token that Supabase uses
+      response.cookies.set(cookieName, JSON.stringify({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+        expires_at: data.session.expires_at,
+        expires_in: data.session.expires_in,
+        token_type: 'bearer',
+        user: data.user
+      }), {
+        httpOnly: false, // Supabase needs to read this client-side
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: '/',
+      });
+    }
+
+    return response;
 
   } catch (error) {
     console.error('Login error:', error);

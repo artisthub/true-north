@@ -29,8 +29,22 @@ export default function LoginPage() {
         throw new Error(data.error || 'Login failed');
       }
 
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Store session in localStorage for Supabase client
+      if (data.session) {
+        // The storage key format Supabase uses
+        const storageKey = 'sb-xahwxprmponwfyelcfsj-auth-token';
+        localStorage.setItem(storageKey, JSON.stringify({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+          expires_at: data.session.expires_at,
+          expires_in: data.session.expires_in,
+          token_type: 'bearer',
+          user: data.session.user
+        }));
+      }
+
+      // Force a reload to ensure cookies and storage are synced
+      window.location.href = '/dashboard';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -54,12 +68,11 @@ export default function LoginPage() {
         <div className="login-container">
           <div className="login-card">
             <div className="login-header">
-              <Link href="/" className="logo">
-                <div className="logo-icon">
-                  <img src="/logo.svg" alt="True North Logo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
-                </div>
-                <span>True North</span>
-              </Link>
+              <div className="logo-wrapper">
+                <Link href="/">
+                  <img src="/logo.svg" alt="True North Logo" style={{ width: '96px', height: '96px', objectFit: 'contain', display: 'block' }} />
+                </Link>
+              </div>
               <h1>Welcome Back</h1>
               <p>Sign in to manage your music distribution</p>
             </div>
@@ -152,38 +165,26 @@ export default function LoginPage() {
 
             .login-header {
               text-align: center;
-              margin-bottom: 2.5rem;
+              margin-bottom: 3rem;
               position: relative;
               z-index: 1;
             }
 
-            .logo {
-              display: inline-flex;
-              align-items: center;
-              gap: 0.75rem;
-              text-decoration: none;
-              color: #ffffff;
-              font-size: 1.75rem;
-              font-weight: 700;
-              margin-bottom: 2rem;
-              letter-spacing: -0.5px;
-            }
-
-            .logo-icon {
-              width: 48px;
-              height: 48px;
-              background: rgba(255, 20, 147, 0.1);
-              border: 2px solid rgba(255, 20, 147, 0.3);
-              border-radius: 12px;
+            .logo-wrapper {
               display: flex;
               align-items: center;
               justify-content: center;
-              box-shadow: 0 4px 20px rgba(255, 20, 147, 0.3);
+              margin-bottom: 1.5rem;
+            }
+            
+            .logo-wrapper a {
+              display: block;
+              line-height: 0;
             }
 
             .login-header h1 {
               font-size: 2.5rem;
-              margin-bottom: 0.75rem;
+              margin-bottom: 0.5rem;
               background: linear-gradient(135deg, #ffffff 0%, #FF69B4 100%);
               -webkit-background-clip: text;
               -webkit-text-fill-color: transparent;
@@ -195,6 +196,7 @@ export default function LoginPage() {
             .login-header p {
               color: #999;
               font-size: 1.1rem;
+              margin: 0;
             }
 
             .login-form {
@@ -227,15 +229,25 @@ export default function LoginPage() {
             }
 
             .apply-link {
-              color: #FF69B4;
+              color: #FF1493;
               text-decoration: none;
               font-weight: 600;
               transition: all 0.3s ease;
             }
 
             .apply-link:hover {
-              color: #FF1493;
+              color: #FF69B4;
               text-decoration: underline;
+            }
+            
+            a {
+              color: #FF1493;
+              text-decoration: none;
+              transition: all 0.3s ease;
+            }
+            
+            a:hover {
+              color: #FF69B4;
             }
 
             @media (max-width: 768px) {

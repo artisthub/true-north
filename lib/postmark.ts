@@ -14,6 +14,11 @@ interface ApplicationEmailData {
   applicationId: string;
 }
 
+interface AcceptedEmailData extends ApplicationEmailData {
+  paymentLink: string;
+  annualFee: string;
+}
+
 export async function sendApplicationConfirmationEmail(data: ApplicationEmailData) {
   if (!client) {
     console.warn('Postmark server token not configured, skipping email send');
@@ -189,6 +194,185 @@ Your music deserves the best distribution.`,
     return result;
   } catch (error) {
     console.error('Failed to send application confirmation email:', error);
+    throw error;
+  }
+}
+
+// Send application accepted email
+export async function sendApplicationAcceptedEmail(data: AcceptedEmailData) {
+  if (!client) {
+    console.warn('Postmark server token not configured, skipping email send');
+    return;
+  }
+
+  try {
+    const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+
+    const result = await client.sendEmailWithTemplate({
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorth.com",
+      "To": data.email,
+      "TemplateAlias": "application-accepted",
+      "TemplateModel": {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        account_type: data.accountType,
+        entity_name: data.entityName,
+        entity_name_label: entityNameLabel,
+        annual_fee: data.annualFee,
+        payment_link: data.paymentLink
+      },
+      "MessageStream": "outbound"
+    });
+
+    console.log('Application accepted email sent successfully:', result.MessageID);
+    return result;
+  } catch (error) {
+    console.error('Failed to send application accepted email:', error);
+    throw error;
+  }
+}
+
+// Send application accepted email with inline HTML
+export async function sendApplicationAcceptedEmailInline(data: AcceptedEmailData) {
+  if (!client) {
+    console.warn('Postmark server token not configured, skipping email send');
+    return;
+  }
+
+  try {
+    let htmlTemplate = '';
+    
+    // Try to read HTML template if it exists
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const templatePath = path.join(process.cwd(), 'email-templates', 'application-accepted.html');
+      htmlTemplate = await fs.readFile(templatePath, 'utf-8');
+    } catch (fileError) {
+      console.warn('Could not read accepted email template file, using fallback HTML');
+      // Use a simple fallback HTML template
+      htmlTemplate = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Application Approved - True North</title>
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="color: white; margin: 0;">🎉 Congratulations!</h1>
+            <p style="color: white; margin: 10px 0 0 0; font-size: 20px;">Welcome to True North</p>
+          </div>
+          
+          <div style="background: #f9f9f9; padding: 40px 20px; border-radius: 0 0 10px 10px;">
+            <h2>Your Application is Approved!</h2>
+            <p>Dear {{first_name}},</p>
+            <p>We're thrilled to inform you that your <strong>{{account_type}}</strong> application has been <strong>APPROVED</strong>!</p>
+            <p>Welcome to True North's exclusive roster. We're excited to partner with <strong>{{entity_name}}</strong>.</p>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin-top: 0;">Your Account Details</h3>
+              <p><strong>Account Type:</strong> {{account_type}}</p>
+              <p><strong>{{entity_name_label}}:</strong> {{entity_name}}</p>
+              <p><strong>Email:</strong> {{email}}</p>
+              <p><strong>Annual Fee:</strong> ${{annual_fee}}</p>
+            </div>
+            
+            <h3>Complete Your Setup</h3>
+            <ol>
+              <li><strong>Complete Payment:</strong> Pay your annual fee to activate your account</li>
+              <li><strong>Account Activation:</strong> Receive your login credentials</li>
+              <li><strong>Start Distributing:</strong> Upload your music to 150+ platforms</li>
+            </ol>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="{{payment_link}}" style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); color: #fff; padding: 15px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 18px;">
+                Complete Payment →
+              </a>
+            </div>
+            
+            <p style="text-align: center; color: #666;">⏰ Please complete payment within 48 hours to secure your spot</p>
+            
+            <p>Questions? Contact us at <a href="mailto:onboarding@truenorth.com">onboarding@truenorth.com</a></p>
+          </div>
+          
+          <div style="text-align: center; margin-top: 30px; color: #999; font-size: 14px;">
+            <p>© 2024 True North Music Distribution. All rights reserved.<br>Welcome to the family! 🎵</p>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+    
+    // Replace variables
+    const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+    
+    // Replace placeholders in HTML
+    htmlTemplate = htmlTemplate
+      .replace(/{{first_name}}/g, data.firstName)
+      .replace(/{{last_name}}/g, data.lastName)
+      .replace(/{{email}}/g, data.email)
+      .replace(/{{account_type}}/g, data.accountType)
+      .replace(/{{entity_name}}/g, data.entityName)
+      .replace(/{{entity_name_label}}/g, entityNameLabel)
+      .replace(/{{annual_fee}}/g, data.annualFee)
+      .replace(/{{payment_link}}/g, data.paymentLink);
+
+    const result = await client.sendEmail({
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorth.com",
+      "To": data.email,
+      "Subject": "🎉 Congratulations! Your True North Application is Approved!",
+      "HtmlBody": htmlTemplate,
+      "TextBody": `Congratulations - Your True North Application is Approved!
+
+Dear ${data.firstName},
+
+We're thrilled to inform you that your ${data.accountType} application has been APPROVED!
+
+Welcome to True North's exclusive roster of artists and labels. We're excited to partner with ${data.entityName} and help you reach new heights in music distribution.
+
+Your Account Details:
+- Account Type: ${data.accountType}
+- ${entityNameLabel}: ${data.entityName}
+- Account Email: ${data.email}
+- Annual Fee: $${data.annualFee}
+
+Complete Your Setup:
+
+1. Complete Payment
+   Click the link below to pay your annual fee and activate your account
+
+2. Account Activation
+   Once payment is confirmed, you'll receive your login credentials
+
+3. Start Distributing
+   Upload your music and start distributing to 150+ platforms worldwide
+
+Complete Payment: ${data.paymentLink}
+
+⏰ Please complete payment within 48 hours to secure your spot
+
+What's Included:
+✅ Distribution to 150+ platforms worldwide
+✅ 100% of your royalties - we never take a cut
+✅ Real-time analytics and reporting
+✅ YouTube Content ID and monetization
+✅ Dedicated support team
+✅ Unlimited releases and re-uploads
+
+Questions about getting started?
+Email: onboarding@truenorth.com
+
+© 2024 True North Music Distribution. All rights reserved.
+Welcome to the family! 🎵`,
+      "MessageStream": "outbound"
+    });
+
+    console.log('Application accepted email sent successfully:', result.MessageID);
+    return result;
+  } catch (error) {
+    console.error('Failed to send application accepted email:', error);
     throw error;
   }
 }
