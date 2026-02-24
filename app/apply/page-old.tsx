@@ -129,7 +129,7 @@ export default function ApplyPage() {
                   </div>
                   <h1 className="success-title">Application Submitted!</h1>
                   <p className="success-description">
-                    Thank you for applying to True North. We've received your application and will review it carefully.
+                    Thank you for applying to True North. We&apos;ve received your application and will review it carefully.
                   </p>
                   <div className="success-timeline">
                     <div className="timeline-item">
@@ -150,7 +150,7 @@ export default function ApplyPage() {
                       <div className="timeline-icon">🎵</div>
                       <div className="timeline-content">
                         <strong>Next Steps</strong>
-                        <span>We'll contact you with our decision</span>
+                        <span>We&apos;ll contact you with our decision</span>
                       </div>
                     </div>
                   </div>
@@ -230,7 +230,7 @@ export default function ApplyPage() {
                     </button>
                   </div>
                   <h2>{accountType === 'artist' ? 'Join as an Artist' : 'Join as a Label'}</h2>
-                  <p className="form-subtitle">Complete your application to join True North's exclusive roster</p>
+                  <p className="form-subtitle">Complete your application to join True North&apos;s exclusive roster</p>
                 </div>
 
                 {/* Basic Information */}

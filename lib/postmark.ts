@@ -276,7 +276,7 @@ export async function sendApplicationAcceptedEmailInline(data: AcceptedEmailData
               <p><strong>Account Type:</strong> {{account_type}}</p>
               <p><strong>{{entity_name_label}}:</strong> {{entity_name}}</p>
               <p><strong>Email:</strong> {{email}}</p>
-              <p><strong>Annual Fee:</strong> ${{annual_fee}}</p>
+              <p><strong>Annual Fee:</strong> \${{annual_fee}}</p>
             </div>
             
             <h3>Complete Your Setup</h3>

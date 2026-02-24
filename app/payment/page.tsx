@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { useSearchParams } from 'next/navigation';
 
@@ -18,7 +18,7 @@ interface ApplicationData {
   label_name?: string;
 }
 
-export default function PaymentPage() {
+function PaymentContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
   
@@ -104,7 +104,7 @@ export default function PaymentPage() {
         throw new Error('Stripe not loaded');
       }
 
-      const { error: stripeError } = await stripe.redirectToCheckout({
+      const { error: stripeError } = await (stripe as any).redirectToCheckout({
         sessionId
       });
 
@@ -437,5 +437,13 @@ export default function PaymentPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PaymentContent />
+    </Suspense>
   );
 }

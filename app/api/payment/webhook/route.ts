@@ -141,7 +141,7 @@ export async function POST(request: Request) {
             .from('profiles')
             .update({
               account_status: 'cancelled',
-              subscription_end_date: new Date(subscription.current_period_end * 1000).toISOString()
+              subscription_end_date: new Date((subscription as any).current_period_end * 1000).toISOString()
             })
             .eq('stripe_subscription_id', subscription.id);
         } else if (subscription.status === 'active') {
@@ -149,7 +149,7 @@ export async function POST(request: Request) {
             .from('profiles')
             .update({
               account_status: 'active',
-              subscription_end_date: new Date(subscription.current_period_end * 1000).toISOString()
+              subscription_end_date: new Date((subscription as any).current_period_end * 1000).toISOString()
             })
             .eq('stripe_subscription_id', subscription.id);
         }

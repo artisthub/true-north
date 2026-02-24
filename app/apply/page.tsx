@@ -132,7 +132,7 @@ export default function ApplyPage() {
                 </div>
                 <h1 style={{ fontSize: '32px', marginBottom: '16px', color: '#fff' }}>Application Submitted!</h1>
                 <p style={{ fontSize: '18px', color: '#ccc', marginBottom: '40px', lineHeight: '1.6' }}>
-                  Thank you for applying to True North. We'll review your application and contact you within 24-48 hours.
+                  Thank you for applying to True North. We&apos;ll review your application and contact you within 24-48 hours.
                 </p>
                 <Link href="/" className="btn-primary">Back to Home</Link>
               </div>
@@ -191,7 +191,7 @@ export default function ApplyPage() {
                         <circle cx="12" cy="7" r="4"/>
                       </svg>
                     </div>
-                    <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>I'm an Artist</h3>
+                    <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>I&apos;m an Artist</h3>
                     <p style={{ fontSize: '14px', color: '#999' }}>Solo artist or band</p>
                   </button>
 
@@ -232,7 +232,7 @@ export default function ApplyPage() {
                         <path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2"/>
                       </svg>
                     </div>
-                    <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>I'm a Label</h3>
+                    <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>I&apos;m a Label</h3>
                     <p style={{ fontSize: '14px', color: '#999' }}>Manage multiple artists</p>
                   </button>
                 </div>
