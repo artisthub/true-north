@@ -19,10 +19,13 @@ export default function CookiePolicyPage() {
         <header>
           <div className="container">
             <div className="header-content">
-              <Link href="/" className="logo">
-                <div className="logo-icon">↑</div>
-                True North
-              </Link>
+              <div className="logo">
+                <Link href="/">
+                  <div className="logo-icon">
+                    <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                  </div>
+                </Link>
+              </div>
               <nav>
                 <a href="/">Home</a>
                 <a href="/#distribution">Distribution</a>
