@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createServerClient, createAdminClient } from '@/lib/supabase-auth';
 
+export const dynamic = 'force-dynamic';
+
 type PitchPayload = {
   // Your Details
   email?: string;
