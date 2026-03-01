@@ -13,7 +13,7 @@ export default function DmcaPolicyPage() {
         <div className="decorative-star star-4">✧</div>
       </div>
 
-      <div className="terms-wrapper">
+      <div className="content-wrapper">
         <header>
           <div className="container">
             <div className="header-content">
