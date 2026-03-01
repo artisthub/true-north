@@ -5,7 +5,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    console.log('GET /api/user/me - Creating Supabase client...');
     const supabase = await createServerClient();
+    console.log('Supabase client created successfully');
     
     // Get current user from Supabase Auth
     const { data: { user }, error } = await supabase.auth.getUser();
