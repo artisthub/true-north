@@ -6,11 +6,11 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    // Log environment variables status (without exposing values)
+    // Log environment variables to debug
     console.log('Environment check:', {
-      hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      hasSupabaseAnon: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      hasServiceRole: !!process.env.SUPABASE_SERVICE_ROLE_KEY
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      supabaseAnon: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      serviceRole: process.env.SUPABASE_SERVICE_ROLE_KEY
     });
     
     const { email, password } = await request.json();
