@@ -170,8 +170,7 @@ export default function TermsPage() {
                 </ul>
                 <p>
                   If you enable the UGC/YouTube monetization add-on for a release, royalties reported by YouTube or UGC
-                  platforms are allocated 70% to you, 10% to True North (administration fee), and 20% to Revelator (platform
-                  provider). The split applies only to UGC receipts for the enabled release and is deducted before payout. You
+                  platforms are allocated 70% to you and 30% to True North (administration and platform fees). The split applies only to UGC receipts for the enabled release and is deducted before payout. You
                   can enable or disable the add-on per release; DSP processing timelines apply.
                 </p>
                 <h3>Tier 2 – Revenue share</h3>
@@ -181,7 +180,7 @@ export default function TermsPage() {
                   <li>Minimum: $60 per account per 12-month contract year, applied against earnings (shortfalls may be invoiced).</li>
                   <li>Payout frequency: Monthly statements on or about the 25th; payouts triggered within 24–48 hours after statements (subject to receipt of funds).</li>
                   <li>Minimum withdrawal: $25.</li>
-                  <li>UGC/YouTube add-on: Same 70/10/20 split described above, applied to the enabled release(s).</li>
+                  <li>UGC/YouTube add-on: Same 70/30 split described above, applied to the enabled release(s).</li>
                 </ul>
                 <h3>6B. Fees &amp; refunds</h3>
                 <p>
@@ -255,7 +254,7 @@ export default function TermsPage() {
                 <h2>11. Third-party services</h2>
                 <p>
                   We rely on trusted third-party providers to operate portions of the Services. Without limitation, we
-                  currently use: (a) Revelator for catalog management, deliveries to DSPs, client and artist portal access, and
+                  currently use: (a) our proprietary platform for catalog management, deliveries to DSPs, client and artist portal access, and
                   royalty and statement administration; and (b) Stripe Connect (Express) for onboarding, identity verification,
                   and payouts.
                 </p>
@@ -407,7 +406,7 @@ export default function TermsPage() {
                       <li>Price: $39 per year (per artist profile or account).</li>
                       <li>Distribution fee: 0% of Streaming Receipts and downloads.</li>
                       <li>
-                        UGC/YouTube add-on: Receipts split 70% Artist / 10% True North / 20% Revelator for enabled releases.
+                        UGC/YouTube add-on: Receipts split 70% Artist / 30% True North for enabled releases.
                       </li>
                       <li>
                         Included benefits: delivery to supported DSPs, quality control, catalog and metadata tools, artist/client
@@ -424,7 +423,7 @@ export default function TermsPage() {
                       <li>Payout frequency: Monthly statements on or about the 25th with payouts triggered within 24–48 hours (subject to funds received).</li>
                       <li>Minimum withdrawal: $25.</li>
                       <li>
-                        UGC/YouTube add-on: Receipts split 70% Artist / 10% True North / 20% Revelator for enabled releases.
+                        UGC/YouTube add-on: Receipts split 70% Artist / 30% True North for enabled releases.
                       </li>
                     </ul>
                   </div>
