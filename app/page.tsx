@@ -264,7 +264,7 @@ export default function Home() {
             ENTERPRISE GRADE
           </div>
           <h3>Built to scale, quietly</h3>
-          <p>Powered by Revelator under the hood: DDEX‑compliant deliveries, UPC/ISRC generation, automated updates, and the reliability you&apos;d expect from enterprise—minus the enterprise headache.</p>
+          <p>Enterprise-grade infrastructure: DDEX‑compliant deliveries, UPC/ISRC generation, automated updates, and the reliability you&apos;d expect from enterprise—minus the enterprise headache.</p>
 
           <div className="enterprise-features">
             <div className="enterprise-feature-item">
