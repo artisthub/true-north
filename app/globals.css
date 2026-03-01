@@ -26,8 +26,8 @@ body {
 
 /* Fade-in animations */
 .fade-in {
-    opacity: 0;
-    transform: translateY(30px);
+    opacity: 1; /* Changed from 0 to ensure content is visible even without JS */
+    transform: translateY(0); /* Changed from 30px */
     transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
@@ -1768,6 +1768,7 @@ a {
     font-size: 32px;
     margin-bottom: 18px;
     letter-spacing: -0.5px;
+    color: #ffffff;
 }
 
 .terms-section h3 {
