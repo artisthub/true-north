@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Login</title>
+</head>
+<body>
+    <h1>Test Login</h1>
+    <button onclick="testLogin()">Test Login</button>
+    <pre id="result"></pre>
+    
+    <script>
+        async function testLogin() {
+            const resultEl = document.getElementById('result');
+            resultEl.textContent = 'Testing login...';
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'derek@ruffner.io',
+                        password: 'helloworld'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    resultEl.textContent = '✅ Login successful!\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    resultEl.textContent = '❌ Login failed:\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                resultEl.textContent = '❌ Error: ' + error.message;
+            }
+        }
+        
+        // Auto-test on load
+        window.onload = () => testLogin();
+    </script>
+</body>
+</html>
