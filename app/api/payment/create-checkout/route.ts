@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase-auth';
-import { stripe, SUBSCRIPTION_PRICE, PRODUCT_NAME } from '@/lib/stripe';
+import { stripe, SUBSCRIPTION_PRICE, PRODUCT_NAME, STRIPE_PRICE_ID } from '@/lib/stripe';
 
 export async function POST(request: Request) {
   if (!stripe) {
@@ -43,17 +43,7 @@ export async function POST(request: Request) {
       payment_method_types: ['card'],
       line_items: [
         {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: PRODUCT_NAME,
-              description: `Annual membership for ${application.account_type === 'artist' ? application.artist_name : application.label_name}`,
-            },
-            unit_amount: SUBSCRIPTION_PRICE * 100, // Convert to cents
-            recurring: {
-              interval: 'year',
-            },
-          },
+          price: STRIPE_PRICE_ID,
           quantity: 1,
         },
       ],
