@@ -500,59 +500,6 @@ export default function Home() {
         </div>
       </section>
 
-          <section className="section legal-section" id="legal">
-            <div className="container">
-              <div className="section-header fade-in">
-                <h2 className="section-title">Legal Center</h2>
-                <p className="section-desc">
-                  Explore the policies that govern distribution on True North, from terms of service to privacy, cookies, and DMCA guidelines.
-                </p>
-              </div>
-
-              <div className="legal-grid">
-                <div className="legal-card fade-in">
-                  <h3>Terms &amp; Conditions</h3>
-                  <p>
-                    Understand the agreement that governs distribution, royalty payouts, and your responsibilities when releasing with True North.
-                  </p>
-                  <a className="btn-secondary" href="/legal/terms">
-                    Review Terms
-                  </a>
-                </div>
-
-                <div className="legal-card fade-in fade-in-delay-1">
-                  <h3>Privacy Policy</h3>
-                  <p>
-                    Learn how we collect, use, and protect account data, catalog information, and analytics across dashboards and artist tools.
-                  </p>
-                  <a className="btn-secondary" href="/legal/privacy">
-                    Read Privacy Policy
-                  </a>
-                </div>
-
-                <div className="legal-card fade-in fade-in-delay-2">
-                  <h3>Cookie Policy</h3>
-                  <p>
-                    See how cookies keep your sessions secure, power analytics, and how to control your preferences across True North experiences.
-                  </p>
-                  <a className="btn-secondary" href="/legal/cookie-policy">
-                    Read Cookie Policy
-                  </a>
-                </div>
-
-                <div className="legal-card fade-in fade-in-delay-3">
-                  <h3>DMCA Policy</h3>
-                  <p>
-                    Find the steps for reporting infringing material or filing counter-notices so we can keep releases online for legitimate creators.
-                  </p>
-                  <a className="btn-secondary" href="/legal/dmca">
-                    Read DMCA Policy
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-
       </main>
 
       <footer>
