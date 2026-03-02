@@ -172,9 +172,11 @@ export default function TermsPage() {
                   </li>
                 </ul>
                 <p>
-                  If you enable the UGC/YouTube monetization add-on for a release, royalties reported by YouTube or UGC
-                  platforms are allocated 70% to you and 30% to True North (administration and platform fees). The split applies only to UGC receipts for the enabled release and is deducted before payout. You
-                  can enable or disable the add-on per release; DSP processing timelines apply.
+                  If you enable the UGC/YouTube monetization add-on for a release, we collect 12.5% of receipts received
+                  from YouTube or UGC platforms (after platform fees are deducted). This ensures you receive 70% of the
+                  original royalties, accounting for the approximately 20% that platforms typically withhold. The fee applies
+                  only to UGC receipts for the enabled release. You can enable or disable the add-on per release; DSP
+                  processing timelines apply.
                 </p>
                 <h3>Tier 2 – Revenue share</h3>
                 <ul className="terms-list">
@@ -183,7 +185,7 @@ export default function TermsPage() {
                   <li>Minimum: $60 per account per 12-month contract year, applied against earnings (shortfalls may be invoiced).</li>
                   <li>Payout frequency: Monthly statements on or about the 25th; payouts triggered within 24–48 hours after statements (subject to receipt of funds).</li>
                   <li>Minimum withdrawal: $25.</li>
-                  <li>UGC/YouTube add-on: Same 70/30 split described above, applied to the enabled release(s).</li>
+                  <li>UGC/YouTube add-on: Same 12.5% fee (after platform deductions) described above, applied to the enabled release(s).</li>
                 </ul>
                 <h3>6B. Fees &amp; refunds</h3>
                 <p>
@@ -409,7 +411,8 @@ export default function TermsPage() {
                       <li>Price: $39 per year (per artist profile or account).</li>
                       <li>Distribution fee: 0% of Streaming Receipts and downloads.</li>
                       <li>
-                        UGC/YouTube add-on: Receipts split 70% Artist / 30% True North for enabled releases.
+                        UGC/YouTube add-on: True North collects 12.5% of receipts (after platform fees) for enabled releases,
+                        ensuring artists receive 70% of original royalties.
                       </li>
                       <li>
                         Included benefits: delivery to supported DSPs, quality control, catalog and metadata tools, artist/client
@@ -426,7 +429,8 @@ export default function TermsPage() {
                       <li>Payout frequency: Monthly statements on or about the 25th with payouts triggered within 24–48 hours (subject to funds received).</li>
                       <li>Minimum withdrawal: $25.</li>
                       <li>
-                        UGC/YouTube add-on: Receipts split 70% Artist / 30% True North for enabled releases.
+                        UGC/YouTube add-on: True North collects 12.5% of receipts (after platform fees) for enabled releases,
+                        ensuring artists receive 70% of original royalties.
                       </li>
                     </ul>
                   </div>
