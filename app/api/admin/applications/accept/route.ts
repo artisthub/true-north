@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { sendApplicationAcceptedEmailInline } from '@/lib/postmark';
+import { sendApplicationAcceptedEmailInline } from '@/lib/email';
+import crypto from 'crypto';
 
 export async function POST(request: Request) {
   if (!supabase) {
@@ -55,8 +56,17 @@ export async function POST(request: Request) {
       throw updateError;
     }
 
-    // Generate payment link
-    const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment?id=${applicationId}`;
+    // Generate payment link token
+    const paymentLinkToken = crypto.randomBytes(32).toString('hex');
+    await supabase
+      .from('applications')
+      .update({
+        payment_link_token: paymentLinkToken,
+        payment_link_sent_at: new Date().toISOString()
+      })
+      .eq('id', applicationId);
+
+    const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment?token=${paymentLinkToken}`;
     const annualFee = process.env.NEXT_PUBLIC_ANNUAL_FEE || '999';
 
     // Send acceptance email

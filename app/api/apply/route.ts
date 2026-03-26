@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { sendApplicationConfirmationEmailInline } from '@/lib/postmark';
+import { sendApplicationConfirmationEmailInline } from '@/lib/email';
 
 export async function POST(request: Request) {
   if (!supabase) {

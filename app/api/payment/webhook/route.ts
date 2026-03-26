@@ -2,7 +2,11 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { createAdminClient } from '@/lib/supabase-auth';
 import { stripe } from '@/lib/stripe';
+import { createAccount } from '@/lib/revelator';
+import { sendWelcomeRevelatorEmailInline } from '@/lib/email';
 import Stripe from 'stripe';
+
+import crypto from 'crypto';
 
 export async function POST(request: Request) {
   if (!stripe) {
@@ -90,7 +94,8 @@ export async function POST(request: Request) {
               stripe_customer_id: session.customer as string,
               stripe_subscription_id: session.subscription as string,
               subscription_end_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-              application_id: applicationId
+              application_id: applicationId,
+              revelator_setup_status: 'pending'
             })
             .eq('id', authUser.user.id);
 
@@ -107,23 +112,103 @@ export async function POST(request: Request) {
             })
             .eq('id', applicationId);
 
+          // Create Revelator account
+          let revelatorResult: { enterpriseId: number } | null = null;
+          let revelatorError: string | null = null;
+
+          try {
+            const revelatorAccountType = accountType === 'artist' ? 'Launch' : 'Growth';
+            const enterpriseName = accountType === 'artist'
+              ? (artistName || `${application.first_name} ${application.last_name}`)
+              : (labelName || application.company_name || `${application.first_name} ${application.last_name}`);
+
+            revelatorResult = await createAccount({
+              email: application.email,
+              password: crypto.randomBytes(24).toString('hex'),
+              enterpriseName,
+              firstname: application.first_name || '',
+              lastname: application.last_name || '',
+              type: revelatorAccountType as 'Launch' | 'Growth',
+              partnerUserId: authUser.user.id,
+            });
+
+            await supabase
+              .from('profiles')
+              .update({
+                revelator_enterprise_id: revelatorResult.enterpriseId,
+                revelator_setup_status: 'complete',
+                revelator_error: null,
+              })
+              .eq('id', authUser.user.id);
+
+          } catch (err) {
+            const errorMsg = err instanceof Error ? err.message : String(err);
+            revelatorError = errorMsg;
+            console.error('Revelator account creation failed:', errorMsg);
+
+            await supabase
+              .from('profiles')
+              .update({
+                revelator_setup_status: 'failed',
+                revelator_error: errorMsg,
+              })
+              .eq('id', authUser.user.id);
+          }
+
+          // Send welcome email (fire and forget)
+          sendWelcomeRevelatorEmailInline({
+            firstName: application.first_name || '',
+            lastName: application.last_name || '',
+            email: application.email,
+            accountType: accountType as 'artist' | 'label',
+            entityName: accountType === 'artist'
+              ? (artistName || `${application.first_name} ${application.last_name}`)
+              : (labelName || ''),
+          }).catch((emailErr) => {
+            console.error('Failed to send welcome email:', emailErr);
+          });
+
           // Send notification if Slack webhook is configured
           const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
           if (slackWebhookUrl) {
+            const slackBlocks: any[] = [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `*New Paid User*\n*Email:* ${application.email}\n*Type:* ${accountType}\n*Name:* ${accountType === 'artist' ? artistName : labelName}`
+                }
+              }
+            ];
+
+            if (revelatorResult) {
+              slackBlocks.push({
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `*Revelator:* Account created (Enterprise ID: ${revelatorResult.enterpriseId})`
+                }
+              });
+            }
+
+            if (revelatorError) {
+              slackBlocks.push({
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `:warning: *Revelator account creation failed:*\n${revelatorError}`
+                }
+              });
+            }
+
             await fetch(slackWebhookUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                text: `New paid user! 🎉`,
-                blocks: [
-                  {
-                    type: 'section',
-                    text: {
-                      type: 'mrkdwn',
-                      text: `*New Paid User* 💳\n*Email:* ${application.email}\n*Type:* ${accountType}\n*Name:* ${accountType === 'artist' ? artistName : labelName}`
-                    }
-                  }
-                ]
+                text: revelatorError
+                  ? `New paid user (Revelator setup failed): ${application.email}`
+                  : `New paid user! ${application.email}`,
+                blocks: slackBlocks
               })
             });
           }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { sendApplicationAcceptedEmailInline } from '@/lib/email';
 import crypto from 'crypto';
 
 export async function GET(
@@ -94,12 +95,27 @@ export async function PATCH(
 
     if (updateError) throw updateError;
 
-    // Send notification email (in production, use a proper email service)
+    // Send notification email
     if (status === 'approved') {
       const paymentUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment?token=${updateData.payment_link_token}`;
-      
-      // Log the payment URL for now
-      console.log('Payment URL for approved application:', paymentUrl);
+      const annualFee = process.env.NEXT_PUBLIC_ANNUAL_FEE || '999';
+
+      try {
+        await sendApplicationAcceptedEmailInline({
+          firstName: application.first_name,
+          lastName: application.last_name,
+          email: application.email,
+          accountType: application.account_type,
+          entityName: application.account_type === 'artist'
+            ? (application.artist_name || '')
+            : (application.label_name || ''),
+          applicationId: application.id,
+          paymentLink: paymentUrl,
+          annualFee
+        });
+      } catch (emailError) {
+        console.error('Failed to send acceptance email:', emailError);
+      }
 
       // Send Slack notification if configured
       const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
@@ -115,7 +131,7 @@ export async function PATCH(
                   type: 'section',
                   text: {
                     type: 'mrkdwn',
-                    text: `*Application Approved* ✅\n*Name:* ${application.first_name} ${application.last_name}\n*Email:* ${application.email}\n*Type:* ${application.account_type}\n*Payment Link:* ${paymentUrl}`
+                    text: `*Application Approved*\n*Name:* ${application.first_name} ${application.last_name}\n*Email:* ${application.email}\n*Type:* ${application.account_type}\n*Payment Link:* ${paymentUrl}`
                   }
                 }
               ]

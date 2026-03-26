@@ -1,0 +1,27 @@
+{
+  "Subject": "Your True North Account is Ready - Start Distributing!",
+  "HtmlBody": "{{html_template}}",
+  "TextBody": "Your True North Account is Ready!\n\nHey {{first_name}},\n\nYour payment has been confirmed and your {{entity_name}} account on True North is now active.\n\nYour Account Details:\n- Account Type: {{account_type}}\n- {{entity_name_label}}: {{entity_name}}\n- Email: {{email}}\n- Status: Active\n\nGetting Started:\n\n1. Access Your Dashboard\n   Click the link below to open your distribution dashboard\n\n2. Create Your First Release\n   Add your tracks, artwork, and release details\n\n3. Submit for Distribution\n   Choose your stores and send your music to 150+ platforms worldwide\n\nOpen Dashboard: {{dashboard_link}}\n\nThis link will log you in automatically. No password needed.\n\nQuick Tips:\n- Have your artwork ready (3000x3000px, JPG/PNG)\n- Audio files should be WAV (16-bit, 44.1kHz)\n- Submit releases at least 4 weeks before release date\n- Double-check metadata before submitting\n\nNeed help?\nEmail: onboarding@truenorthdistro.com\n\n© 2024 True North Music Distribution. All rights reserved.",
+  "TemplateAlias": "welcome-revelator",
+  "TemplateId": null,
+  "MessageStream": "outbound",
+  "Variables": {
+    "first_name": "User's first name",
+    "last_name": "User's last name",
+    "email": "User's email address",
+    "account_type": "artist or label",
+    "entity_name": "Artist name or Label name",
+    "entity_name_label": "Artist Name or Label Name",
+    "dashboard_link": "Revelator dashboard auto-login URL",
+    "html_template": "The HTML content from welcome-revelator.html"
+  },
+  "ExampleData": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    "account_type": "artist",
+    "entity_name": "The Midnight Sessions",
+    "entity_name_label": "Artist Name",
+    "dashboard_link": "https://auth.truenorthdistro.com?token=abc123"
+  }
+}

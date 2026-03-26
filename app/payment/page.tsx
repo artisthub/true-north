@@ -1,12 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
 import { useSearchParams } from 'next/navigation';
-
-const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-  : null;
 
 interface ApplicationData {
   id: string;
@@ -72,7 +67,7 @@ function PaymentContent() {
       return;
     }
 
-    if (!stripePromise || !application) {
+    if (!application) {
       setError('Payment system not configured');
       return;
     }
@@ -81,7 +76,6 @@ function PaymentContent() {
     setError(null);
 
     try {
-      // Create checkout session
       const response = await fetch('/api/payment/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -93,24 +87,12 @@ function PaymentContent() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create payment session');
+        const errData = await response.json().catch(() => null);
+        throw new Error(errData?.error || 'Failed to create payment session');
       }
 
-      const { sessionId } = await response.json();
-      
-      // Redirect to Stripe Checkout
-      const stripe = await stripePromise;
-      if (!stripe) {
-        throw new Error('Stripe not loaded');
-      }
-
-      const { error: stripeError } = await (stripe as any).redirectToCheckout({
-        sessionId
-      });
-
-      if (stripeError) {
-        throw stripeError;
-      }
+      const { sessionId, url } = await response.json();
+      window.location.href = url || `https://checkout.stripe.com/c/pay/${sessionId}`;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Payment failed');
       setProcessing(false);
@@ -218,7 +200,7 @@ function PaymentContent() {
           <button 
             type="submit" 
             className="payment-button"
-            disabled={processing || !stripePromise}
+            disabled={processing}
           >
             {processing ? 'Processing...' : 'Proceed to Payment'}
           </button>

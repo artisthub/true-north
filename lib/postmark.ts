@@ -19,6 +19,14 @@ interface AcceptedEmailData extends ApplicationEmailData {
   annualFee: string;
 }
 
+interface WelcomeRevelatorEmailData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  accountType: 'artist' | 'label';
+  entityName: string;
+}
+
 export async function sendApplicationConfirmationEmail(data: ApplicationEmailData) {
   if (!client) {
     console.warn('Postmark server token not configured, skipping email send');
@@ -36,10 +44,10 @@ export async function sendApplicationConfirmationEmail(data: ApplicationEmailDat
     });
 
     const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
-    const applicationStatusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorth.com'}/application/status/${data.applicationId}`;
+    const applicationStatusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorthdistro.com'}/application/status/${data.applicationId}`;
 
     const result = await client.sendEmailWithTemplate({
-      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorth.com",
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
       "To": data.email,
       "TemplateAlias": "application-confirmation", // or use TemplateId if you have the numeric ID
       "TemplateModel": {
@@ -116,7 +124,7 @@ export async function sendApplicationConfirmationEmailInline(data: ApplicationEm
               <li><strong>Onboarding:</strong> If approved, you'll receive setup instructions and access credentials</li>
             </ol>
             
-            <p>Have questions? Contact us at <a href="mailto:support@truenorth.com">support@truenorth.com</a></p>
+            <p>Have questions? Contact us at <a href="mailto:support@truenorthdistro.com">support@truenorthdistro.com</a></p>
           </div>
           
           <div style="text-align: center; margin-top: 30px; color: #999; font-size: 14px;">
@@ -138,7 +146,7 @@ export async function sendApplicationConfirmationEmailInline(data: ApplicationEm
     });
 
     const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
-    const applicationStatusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorth.com'}/application/status/${data.applicationId}`;
+    const applicationStatusUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorthdistro.com'}/application/status/${data.applicationId}`;
     
     // Replace placeholders in HTML
     htmlTemplate = htmlTemplate
@@ -153,7 +161,7 @@ export async function sendApplicationConfirmationEmailInline(data: ApplicationEm
       .replace(/{{application_status_url}}/g, applicationStatusUrl);
 
     const result = await client.sendEmail({
-      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorth.com",
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
       "To": data.email,
       "Subject": "Application Received - Welcome to True North! 🎵",
       "HtmlBody": htmlTemplate,
@@ -183,7 +191,7 @@ What Happens Next?
 Check your application status: ${applicationStatusUrl}
 
 Have questions about your application?
-Contact us at support@truenorth.com
+Contact us at support@truenorthdistro.com
 
 © 2024 True North Music Distribution. All rights reserved.
 Your music deserves the best distribution.`,
@@ -209,7 +217,7 @@ export async function sendApplicationAcceptedEmail(data: AcceptedEmailData) {
     const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
 
     const result = await client.sendEmailWithTemplate({
-      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorth.com",
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
       "To": data.email,
       "TemplateAlias": "application-accepted",
       "TemplateModel": {
@@ -261,40 +269,28 @@ export async function sendApplicationAcceptedEmailInline(data: AcceptedEmailData
         </head>
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="color: white; margin: 0;">🎉 Congratulations!</h1>
-            <p style="color: white; margin: 10px 0 0 0; font-size: 20px;">Welcome to True North</p>
+            <h1 style="color: white; margin: 0;">TRUE NORTH</h1>
+            <p style="color: white; margin: 8px 0 0 0; font-size: 14px; letter-spacing: 2px;">MUSIC DISTRIBUTION</p>
           </div>
           
           <div style="background: #f9f9f9; padding: 40px 20px; border-radius: 0 0 10px 10px;">
-            <h2>Your Application is Approved!</h2>
-            <p>Dear {{first_name}},</p>
-            <p>We're thrilled to inform you that your <strong>{{account_type}}</strong> application has been <strong>APPROVED</strong>!</p>
-            <p>Welcome to True North's exclusive roster. We're excited to partner with <strong>{{entity_name}}</strong>.</p>
+            <h2 style="text-align: center;">Your Application is Approved</h2>
+            <p style="text-align: center;">Your {{account_type}} application for <strong>{{entity_name}}</strong> has been approved. Complete your payment below to activate your account.</p>
             
             <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="margin-top: 0;">Your Account Details</h3>
-              <p><strong>Account Type:</strong> {{account_type}}</p>
-              <p><strong>{{entity_name_label}}:</strong> {{entity_name}}</p>
-              <p><strong>Email:</strong> {{email}}</p>
-              <p><strong>Annual Fee:</strong> \${{annual_fee}}</p>
+              <p style="margin: 5px 0;"><strong>Account Type:</strong> {{account_type}}</p>
+              <p style="margin: 5px 0;"><strong>{{entity_name_label}}:</strong> {{entity_name}}</p>
+              <p style="margin: 5px 0;"><strong>Annual Fee:</strong> \${{annual_fee}}</p>
             </div>
             
-            <h3>Complete Your Setup</h3>
-            <ol>
-              <li><strong>Complete Payment:</strong> Pay your annual fee to activate your account</li>
-              <li><strong>Account Activation:</strong> Receive your login credentials</li>
-              <li><strong>Start Distributing:</strong> Upload your music to 150+ platforms</li>
-            </ol>
-            
             <div style="text-align: center; margin: 30px 0;">
-              <a href="{{payment_link}}" style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); color: #fff; padding: 15px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 18px;">
-                Complete Payment →
+              <a href="{{payment_link}}" style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); color: #fff; padding: 14px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px;">
+                Complete Payment
               </a>
             </div>
             
-            <p style="text-align: center; color: #666;">⏰ Please complete payment within 48 hours to secure your spot</p>
-            
-            <p>Questions? Contact us at <a href="mailto:onboarding@truenorth.com">onboarding@truenorth.com</a></p>
+            <p style="text-align: center; color: #666;">Please complete payment within <strong>48 hours</strong> to secure your spot.</p>
+            <p style="text-align: center; color: #666;">Questions? <a href="mailto:onboarding@truenorthdistro.com">onboarding@truenorthdistro.com</a></p>
           </div>
           
           <div style="text-align: center; margin-top: 30px; color: #999; font-size: 14px;">
@@ -320,52 +316,26 @@ export async function sendApplicationAcceptedEmailInline(data: AcceptedEmailData
       .replace(/{{payment_link}}/g, data.paymentLink);
 
     const result = await client.sendEmail({
-      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorth.com",
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
       "To": data.email,
-      "Subject": "🎉 Congratulations! Your True North Application is Approved!",
+      "Subject": "Your True North Application is Approved",
       "HtmlBody": htmlTemplate,
-      "TextBody": `Congratulations - Your True North Application is Approved!
+      "TextBody": `Your True North Application is Approved
 
-Dear ${data.firstName},
+Your ${data.accountType} application for ${data.entityName} has been approved.
 
-We're thrilled to inform you that your ${data.accountType} application has been APPROVED!
-
-Welcome to True North's exclusive roster of artists and labels. We're excited to partner with ${data.entityName} and help you reach new heights in music distribution.
-
-Your Account Details:
+Account Details:
 - Account Type: ${data.accountType}
 - ${entityNameLabel}: ${data.entityName}
-- Account Email: ${data.email}
 - Annual Fee: $${data.annualFee}
-
-Complete Your Setup:
-
-1. Complete Payment
-   Click the link below to pay your annual fee and activate your account
-
-2. Account Activation
-   Once payment is confirmed, you'll receive your login credentials
-
-3. Start Distributing
-   Upload your music and start distributing to 150+ platforms worldwide
 
 Complete Payment: ${data.paymentLink}
 
-⏰ Please complete payment within 48 hours to secure your spot
+Please complete payment within 48 hours to secure your spot.
 
-What's Included:
-✅ Distribution to 150+ platforms worldwide
-✅ 100% of your royalties - we never take a cut
-✅ Real-time analytics and reporting
-✅ YouTube Content ID and monetization
-✅ Dedicated support team
-✅ Unlimited releases and re-uploads
+Questions? onboarding@truenorthdistro.com
 
-Questions about getting started?
-Email: onboarding@truenorth.com
-
-© 2024 True North Music Distribution. All rights reserved.
-Welcome to the family! 🎵`,
+True North Music Distribution. All rights reserved.`,
       "MessageStream": "outbound"
     });
 
@@ -373,6 +343,141 @@ Welcome to the family! 🎵`,
     return result;
   } catch (error) {
     console.error('Failed to send application accepted email:', error);
+    throw error;
+  }
+}
+
+export async function sendWelcomeRevelatorEmail(data: WelcomeRevelatorEmailData) {
+  if (!client) {
+    console.warn('Postmark server token not configured, skipping email send');
+    return;
+  }
+
+  try {
+    const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+
+    const result = await client.sendEmailWithTemplate({
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
+      "To": data.email,
+      "TemplateAlias": "welcome-revelator",
+      "TemplateModel": {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        account_type: data.accountType,
+        entity_name: data.entityName,
+        entity_name_label: entityNameLabel,
+        dashboard_link: process.env.REVELATOR_WEB_URL || 'https://auth.truenorthdistro.com',
+      },
+      "MessageStream": "outbound"
+    });
+
+    console.log('Welcome Revelator email sent successfully:', result.MessageID);
+    return result;
+  } catch (error) {
+    console.error('Failed to send welcome Revelator email:', error);
+    throw error;
+  }
+}
+
+export async function sendWelcomeRevelatorEmailInline(data: WelcomeRevelatorEmailData) {
+  if (!client) {
+    console.warn('Postmark server token not configured, skipping email send');
+    return;
+  }
+
+  try {
+    let htmlTemplate = '';
+
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const templatePath = path.join(process.cwd(), 'email-templates', 'welcome-revelator.html');
+      htmlTemplate = await fs.readFile(templatePath, 'utf-8');
+    } catch {
+      console.warn('Could not read welcome Revelator email template, using fallback HTML');
+      htmlTemplate = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Your True North Account is Ready!</title>
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="color: white; margin: 0;">True North</h1>
+            <p style="color: white; margin: 10px 0 0 0;">Music Distribution</p>
+          </div>
+          <div style="background: #f9f9f9; padding: 40px 20px; border-radius: 0 0 10px 10px;">
+            <h2>Your Account is Ready!</h2>
+            <p>Hey {{first_name}},</p>
+            <p>Your payment has been confirmed and your <strong>{{entity_name}}</strong> account is now <strong>active</strong>.</p>
+            <p>You're being redirected to the distribution dashboard where you can start uploading your music. If you weren't redirected, click the button below.</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="{{dashboard_link}}" style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); color: #fff; padding: 15px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 18px;">
+                Open Distribution Dashboard
+              </a>
+            </div>
+            <p>Questions? Contact us at <a href="mailto:onboarding@truenorthdistro.com">onboarding@truenorthdistro.com</a></p>
+          </div>
+          <div style="text-align: center; margin-top: 30px; color: #999; font-size: 14px;">
+            <p>&copy; 2024 True North Music Distribution. All rights reserved.</p>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+
+    htmlTemplate = htmlTemplate
+      .replace(/{{first_name}}/g, data.firstName)
+      .replace(/{{last_name}}/g, data.lastName)
+      .replace(/{{email}}/g, data.email)
+      .replace(/{{account_type}}/g, data.accountType)
+      .replace(/{{entity_name}}/g, data.entityName)
+      .replace(/{{entity_name_label}}/g, entityNameLabel)
+      .replace(/{{dashboard_link}}/g, process.env.REVELATOR_WEB_URL || 'https://auth.truenorthdistro.com');
+
+    const result = await client.sendEmail({
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
+      "To": data.email,
+      "Subject": "Your True North Account is Ready - Start Distributing!",
+      "HtmlBody": htmlTemplate,
+      "TextBody": `Your True North Account is Ready!
+
+Hey ${data.firstName},
+
+Your payment has been confirmed and your ${data.entityName} account on True North is now active.
+
+Getting Started:
+
+1. Access Your Dashboard
+   You'll be redirected automatically after payment. If not, go to:
+   ${process.env.REVELATOR_WEB_URL || 'https://auth.truenorthdistro.com'}
+
+2. Create Your First Release
+   Add your tracks, artwork, and release details
+
+3. Submit for Distribution
+   Choose your stores and send your music to 150+ platforms worldwide
+
+Quick Tips:
+- Have artwork ready (3000x3000px, JPG/PNG)
+- Audio files should be WAV (16-bit, 44.1kHz)
+- Submit releases at least 4 weeks before release date
+
+Need help?
+Email: onboarding@truenorthdistro.com
+
+© 2024 True North Music Distribution. All rights reserved.`,
+      "MessageStream": "outbound"
+    });
+
+    console.log('Welcome Revelator email sent successfully:', result.MessageID);
+    return result;
+  } catch (error) {
+    console.error('Failed to send welcome Revelator email:', error);
     throw error;
   }
 }

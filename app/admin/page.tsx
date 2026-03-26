@@ -62,6 +62,7 @@ export default function AdminDashboard() {
   const [appFilter, setAppFilter] = useState<'all' | 'pending' | 'approved' | 'denied'>('pending');
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+  const [resendingEmail, setResendingEmail] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -145,6 +146,27 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Failed to fetch application:', error);
+    }
+  };
+
+  const handleResendEmail = async (id: string) => {
+    try {
+      setResendingEmail(true);
+      const response = await fetch(`/api/admin/applications/${id}/resend-email`, {
+        method: 'POST'
+      });
+
+      if (response.ok) {
+        alert('Email sent successfully!');
+      } else {
+        const errData = await response.json().catch(() => null);
+        alert(errData?.error || 'Failed to send email');
+      }
+    } catch (error) {
+      console.error('Failed to resend email:', error);
+      alert('Failed to send email');
+    } finally {
+      setResendingEmail(false);
     }
   };
 
@@ -520,6 +542,20 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   )}
+
+                  {selectedApplication.status === 'approved' && (
+                    <div className="decision-section">
+                      <div className="decision-buttons">
+                        <button
+                          className="btn-resend"
+                          onClick={() => handleResendEmail(selectedApplication.id)}
+                          disabled={resendingEmail}
+                        >
+                          {resendingEmail ? 'Sending...' : 'Resend Approval Email'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -804,6 +840,27 @@ export default function AdminDashboard() {
 
         .btn-deny:hover {
           transform: translateY(-2px);
+        }
+
+        .btn-resend {
+          flex: 1;
+          padding: 12px 24px;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+        }
+
+        .btn-resend:hover:not(:disabled) {
+          transform: translateY(-2px);
+        }
+
+        .btn-resend:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
         }
 
         .submissions-container {

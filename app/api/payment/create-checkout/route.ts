@@ -10,6 +10,15 @@ export async function POST(request: Request) {
     );
   }
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+  if (!appUrl || !appUrl.startsWith('http')) {
+    return NextResponse.json(
+      { error: 'App URL not configured. Set NEXT_PUBLIC_APP_URL in environment variables (must include https://).' },
+      { status: 500 }
+    );
+  }
+
   const supabase = createAdminClient();
 
   try {
@@ -48,8 +57,8 @@ export async function POST(request: Request) {
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment?token=${token}`,
+      success_url: `${appUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appUrl}/payment?token=${token}`,
       customer_email: application.email,
       metadata: {
         applicationId: application.id,
@@ -61,7 +70,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({
-      sessionId: session.id
+      sessionId: session.id,
+      url: session.url
     });
 
   } catch (error) {
