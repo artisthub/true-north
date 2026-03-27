@@ -100,35 +100,16 @@ export async function sendApplicationConfirmationEmailInline(data: ApplicationEm
         </head>
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="color: white; margin: 0;">True North</h1>
-            <p style="color: white; margin: 10px 0 0 0;">Music Distribution</p>
+            <h1 style="color: white; margin: 0;">TRUE NORTH</h1>
+            <p style="color: white; margin: 8px 0 0 0; font-size: 14px; letter-spacing: 2px;">MUSIC DISTRIBUTION</p>
           </div>
-          
           <div style="background: #f9f9f9; padding: 40px 20px; border-radius: 0 0 10px 10px;">
-            <h2>Application Received!</h2>
-            <p>Hi {{first_name}},</p>
-            <p>Thank you for applying to join True North's exclusive roster. We've received your <strong>{{account_type}}</strong> application and our team is reviewing it carefully.</p>
-            
-            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="margin-top: 0;">Application Details</h3>
-              <p><strong>Application ID:</strong> #{{application_id}}</p>
-              <p><strong>Account Type:</strong> {{account_type}}</p>
-              <p><strong>{{entity_name_label}}:</strong> {{entity_name}}</p>
-              <p><strong>Submitted:</strong> {{submission_date}}</p>
-            </div>
-            
-            <h3>What Happens Next?</h3>
-            <ol>
-              <li><strong>Application Review:</strong> Our team reviews your application within 24-48 hours</li>
-              <li><strong>Decision Email:</strong> You'll receive an email with our decision and next steps</li>
-              <li><strong>Onboarding:</strong> If approved, you'll receive setup instructions and access credentials</li>
-            </ol>
-            
-            <p>Have questions? Contact us at <a href="mailto:support@truenorthdistro.com">support@truenorthdistro.com</a></p>
+            <h2 style="text-align: center;">Application Received</h2>
+            <p style="text-align: center;">Hi {{first_name}}, we've received your {{account_type}} application for <strong>{{entity_name}}</strong>. Our team will review it within 24-48 hours.</p>
+            <p style="text-align: center; color: #666;">Questions? <a href="mailto:support@truenorthdistro.com">support@truenorthdistro.com</a></p>
           </div>
-          
-          <div style="text-align: center; margin-top: 30px; color: #999; font-size: 14px;">
-            <p>© 2024 True North Music Distribution. All rights reserved.</p>
+          <div style="text-align: center; margin-top: 20px; color: #999; font-size: 14px;">
+            <p>True North Music Distribution. All rights reserved.</p>
           </div>
         </body>
         </html>
@@ -163,38 +144,17 @@ export async function sendApplicationConfirmationEmailInline(data: ApplicationEm
     const result = await client.sendEmail({
       "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
       "To": data.email,
-      "Subject": "Application Received - Welcome to True North! 🎵",
+      "Subject": "Application Received - True North",
       "HtmlBody": htmlTemplate,
       "TextBody": `Application Received - True North
 
 Hi ${data.firstName},
 
-Thank you for applying to join True North's exclusive roster. We've received your ${data.accountType} application and our team is reviewing it carefully.
+We've received your ${data.accountType} application for ${data.entityName}. Our team will review it within 24-48 hours.
 
-Application Details:
-- Application ID: #${data.applicationId}
-- Account Type: ${data.accountType}
-- ${entityNameLabel}: ${data.entityName}
-- Submitted: ${submissionDate}
+Questions? support@truenorthdistro.com
 
-What Happens Next?
-
-1. Application Review
-   Our team reviews your application within 24-48 hours
-
-2. Decision Email
-   You'll receive an email with our decision and next steps
-
-3. Onboarding
-   If approved, you'll receive setup instructions and access credentials
-
-Check your application status: ${applicationStatusUrl}
-
-Have questions about your application?
-Contact us at support@truenorthdistro.com
-
-© 2024 True North Music Distribution. All rights reserved.
-Your music deserves the best distribution.`,
+True North Music Distribution. All rights reserved.`,
       "MessageStream": "outbound"
     });
 

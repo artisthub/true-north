@@ -107,27 +107,13 @@ export async function sendApplicationConfirmationEmail(data: ApplicationEmailDat
 
 Hi ${data.firstName},
 
-Thank you for applying to join True North's exclusive roster. We've received your ${data.accountType} application and our team is reviewing it carefully.
+We've received your ${data.accountType} application for ${data.entityName}. Our team will review it within 24-48 hours.
 
-Application Details:
-- Application ID: #${data.applicationId}
-- Account Type: ${data.accountType}
-- ${entityNameLabel}: ${data.entityName}
-- Submitted: ${submissionDate}
+Questions? support@truenorthdistro.com
 
-What Happens Next?
-1. Application Review - Our team reviews your application within 24-48 hours
-2. Decision Email - You'll receive an email with our decision and next steps
-3. Onboarding - If approved, you'll receive setup instructions and access credentials
+True North Music Distribution. All rights reserved.`;
 
-Check your application status: ${applicationStatusUrl}
-
-Have questions about your application?
-Contact us at support@truenorthdistro.com
-
-© 2024 True North Music Distribution. All rights reserved.`;
-
-  await sendMail(data.email, 'Application Received - Welcome to True North!', html, text);
+  await sendMail(data.email, 'Application Received - True North', html, text);
   console.log('Application confirmation email sent via Mailgun:', data.email);
 }
 
