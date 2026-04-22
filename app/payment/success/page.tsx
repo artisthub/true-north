@@ -7,6 +7,7 @@ import Link from 'next/link';
 type SetupStatus = 'loading' | 'pending' | 'ready' | 'redirecting' | 'error';
 
 const REVELATOR_FALLBACK_URL = process.env.NEXT_PUBLIC_REVELATOR_WEB_URL || 'https://auth.truenorthdistro.com';
+const VEVO_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdfOcXaajwCXEtxH4LLEHh-Kg_V0pGwTODuWoGIHuZU-dO_mA/viewform?usp=publish-editor';
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
@@ -63,39 +64,58 @@ function PaymentSuccessContent() {
   return (
     <div className="success-container">
       <div className="success-card">
-        {(status === 'loading' || status === 'pending') && (
+        {(status === 'loading' || status === 'pending' || status === 'redirecting') && (
           <>
-            <div className="spinner-container">
-              <div className="spinner" />
+            <div className="check-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
             </div>
-            <h1>Setting Up Your Account</h1>
-            <p className="subtitle">
-              Payment confirmed! We&apos;re creating your distribution dashboard now...
-            </p>
-            <div className="progress-bar-container">
-              <div className="progress-bar" />
-            </div>
-            <p className="hint">
-              You&apos;ll be redirected automatically. Please don&apos;t close this page.
-            </p>
-          </>
-        )}
 
-        {status === 'redirecting' && redirectUrl && (
-          <>
-            <div className="spinner-container">
-              <div className="spinner" />
-            </div>
-            <h1>Redirecting...</h1>
+            <h1>Payment Confirmed!</h1>
             <p className="subtitle">
-              Taking you to your distribution dashboard.
+              Welcome to True North. Your account is being set up and you&apos;ll receive an email once it&apos;s ready.
             </p>
-            <p className="hint">
-              If you&apos;re not redirected,{' '}
-              <a href={redirectUrl} className="manual-link">
-                click here
-              </a>.
-            </p>
+
+            <div className="vevo-box">
+              <div className="vevo-header">
+                <span className="vevo-badge">Action Required</span>
+                <h2>Submit Your VEVO Form</h2>
+                <p>
+                  To complete your onboarding, please fill out the VEVO submission form. This allows us to set up your official VEVO channel and video distribution.
+                </p>
+              </div>
+              <a
+                href={VEVO_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="vevo-btn"
+              >
+                Open VEVO Submission Form
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+              </a>
+              <p className="vevo-note">
+                You can also find this and other support forms at{' '}
+                <a href="/support" target="_blank" rel="noopener noreferrer">truenorthdistro.com/support</a>.
+              </p>
+            </div>
+
+            <div className="setup-status">
+              <div className="spinner" />
+              <p className="hint">
+                {status === 'redirecting'
+                  ? 'Redirecting you to your dashboard…'
+                  : 'Setting up your distribution dashboard…'}
+                {status === 'redirecting' && redirectUrl && (
+                  <>{' '}<a href={redirectUrl} className="manual-link">Click here if not redirected</a>.</>
+                )}
+              </p>
+            </div>
           </>
         )}
 
@@ -115,7 +135,7 @@ function PaymentSuccessContent() {
       <style jsx>{`
         .success-container {
           min-height: 100vh;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #000000;
           padding: 2rem;
           display: flex;
           align-items: center;
@@ -123,26 +143,134 @@ function PaymentSuccessContent() {
         }
 
         .success-card {
-          max-width: 500px;
+          max-width: 560px;
           width: 100%;
-          background: white;
-          border-radius: 20px;
-          padding: 3rem;
           text-align: center;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
-        .spinner-container {
-          width: 64px;
-          height: 64px;
+        .check-icon {
+          width: 72px;
+          height: 72px;
+          background: linear-gradient(135deg, #FF1493, #FF69B4);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           margin: 0 auto 1.5rem;
+          color: #fff;
+          box-shadow: 0 4px 24px rgba(255, 20, 147, 0.4);
+        }
+
+        h1 {
+          font-size: 2rem;
+          font-weight: 700;
+          margin-bottom: 0.75rem;
+          color: #ffffff;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .subtitle {
+          color: #888;
+          font-size: 1rem;
+          margin-bottom: 2rem;
+          line-height: 1.6;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .vevo-box {
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 20, 147, 0.25);
+          border-radius: 16px;
+          padding: 28px;
+          margin-bottom: 2rem;
+          text-align: left;
+        }
+
+        .vevo-header {
+          margin-bottom: 20px;
+        }
+
+        .vevo-badge {
+          display: inline-block;
+          padding: 3px 10px;
+          background: rgba(255, 20, 147, 0.15);
+          border: 1px solid rgba(255, 20, 147, 0.4);
+          border-radius: 20px;
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: #FF69B4;
+          margin-bottom: 12px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .vevo-header h2 {
+          font-size: 1.25rem;
+          font-weight: 600;
+          color: #ffffff;
+          margin: 0 0 10px 0;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .vevo-header p {
+          font-size: 14px;
+          color: #999;
+          line-height: 1.6;
+          margin: 0;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .vevo-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 24px;
+          background: linear-gradient(135deg, #FF1493, #FF69B4);
+          color: #ffffff;
+          border-radius: 30px;
+          font-size: 15px;
+          font-weight: 600;
+          text-decoration: none;
+          box-shadow: 0 4px 20px rgba(255, 20, 147, 0.3);
+          transition: all 0.2s ease;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .vevo-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 28px rgba(255, 20, 147, 0.5);
+        }
+
+        .vevo-note {
+          margin: 14px 0 0 0;
+          font-size: 12px;
+          color: #555;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .vevo-note a {
+          color: #FF69B4;
+          text-decoration: none;
+        }
+
+        .setup-status {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          padding: 16px 20px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 12px;
         }
 
         .spinner {
-          width: 64px;
-          height: 64px;
-          border: 4px solid rgba(102, 126, 234, 0.2);
-          border-top-color: #667eea;
+          width: 18px;
+          height: 18px;
+          flex-shrink: 0;
+          border: 2px solid rgba(255, 20, 147, 0.2);
+          border-top-color: #FF1493;
           border-radius: 50%;
           animation: spin 0.8s linear infinite;
         }
@@ -151,56 +279,15 @@ function PaymentSuccessContent() {
           to { transform: rotate(360deg); }
         }
 
-        .progress-bar-container {
-          width: 100%;
-          height: 4px;
-          background: #e0e0e0;
-          border-radius: 2px;
-          margin: 1.5rem 0;
-          overflow: hidden;
-        }
-
-        .progress-bar {
-          height: 100%;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border-radius: 2px;
-          animation: indeterminate 1.5s ease-in-out infinite;
-        }
-
-        @keyframes indeterminate {
-          0% { width: 0%; margin-left: 0; }
-          50% { width: 60%; margin-left: 20%; }
-          100% { width: 0%; margin-left: 100%; }
-        }
-
-        h1 {
-          font-size: 1.8rem;
-          margin-bottom: 0.75rem;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-          color: #666;
-          font-size: 1rem;
-          margin-bottom: 0.5rem;
-          line-height: 1.5;
-        }
-
-        p {
-          color: #666;
-          font-size: 1rem;
-          margin-bottom: 1rem;
-        }
-
         .hint {
-          color: #999;
-          font-size: 0.875rem;
+          color: #666;
+          font-size: 13px;
+          margin: 0;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         .manual-link {
-          color: #667eea;
+          color: #FF69B4;
           text-decoration: underline;
         }
 
@@ -211,6 +298,10 @@ function PaymentSuccessContent() {
           margin-top: 1.5rem;
         }
 
+        p {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
         :global(.btn-primary) {
           padding: 0.75rem 2rem;
           border-radius: 50px;
@@ -218,7 +309,7 @@ function PaymentSuccessContent() {
           font-weight: 600;
           transition: transform 0.3s ease;
           display: inline-block;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, #FF1493, #FF69B4);
           color: white;
         }
 
@@ -226,9 +317,9 @@ function PaymentSuccessContent() {
           transform: translateY(-2px);
         }
 
-        @media (max-width: 768px) {
-          .success-card {
-            padding: 2rem;
+        @media (max-width: 600px) {
+          .vevo-box {
+            padding: 20px;
           }
         }
       `}</style>

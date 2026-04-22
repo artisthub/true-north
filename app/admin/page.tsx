@@ -62,7 +62,8 @@ export default function AdminDashboard() {
   const [appFilter, setAppFilter] = useState<'all' | 'pending' | 'approved' | 'denied'>('pending');
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
-  const [resendingEmail, setResendingEmail] = useState(false);
+  const [resendingEmail, setResendingEmail] = useState<string | null>(null);
+  const [resendDropdownOpen, setResendDropdownOpen] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -149,15 +150,18 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleResendEmail = async (id: string) => {
+  const handleResendEmail = async (id: string, emailType: 'confirmation' | 'accepted' | 'welcome') => {
     try {
-      setResendingEmail(true);
+      setResendingEmail(emailType);
       const response = await fetch(`/api/admin/applications/${id}/resend-email`, {
-        method: 'POST'
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emailType }),
       });
 
       if (response.ok) {
-        alert('Email sent successfully!');
+        const data = await response.json();
+        alert(data.message || 'Email sent successfully!');
       } else {
         const errData = await response.json().catch(() => null);
         alert(errData?.error || 'Failed to send email');
@@ -166,7 +170,7 @@ export default function AdminDashboard() {
       console.error('Failed to resend email:', error);
       alert('Failed to send email');
     } finally {
-      setResendingEmail(false);
+      setResendingEmail(null);
     }
   };
 
@@ -543,19 +547,45 @@ export default function AdminDashboard() {
                     </div>
                   )}
 
-                  {selectedApplication.status === 'approved' && (
-                    <div className="decision-section">
-                      <div className="decision-buttons">
-                        <button
-                          className="btn-resend"
-                          onClick={() => handleResendEmail(selectedApplication.id)}
-                          disabled={resendingEmail}
-                        >
-                          {resendingEmail ? 'Sending...' : 'Resend Approval Email'}
-                        </button>
-                      </div>
+                  <div className="decision-section">
+                    <h4>Resend Emails</h4>
+                    <div className="resend-dropdown-wrapper">
+                      <button
+                        className="btn-resend-trigger"
+                        onClick={() => setResendDropdownOpen(o => !o)}
+                        disabled={resendingEmail !== null}
+                      >
+                        {resendingEmail ? 'Sending…' : '✉ Resend Email'}
+                        <span className="dropdown-arrow">{resendDropdownOpen ? '▴' : '▾'}</span>
+                      </button>
+                      {resendDropdownOpen && (
+                        <div className="resend-dropdown-menu">
+                          <button
+                            className="resend-dropdown-item resend-item-confirmation"
+                            onClick={() => { setResendDropdownOpen(false); handleResendEmail(selectedApplication.id, 'confirmation'); }}
+                          >
+                            ✉ Confirmation Email
+                          </button>
+                          {(selectedApplication.status === 'approved' || selectedApplication.status === 'payment_complete') && (
+                            <button
+                              className="resend-dropdown-item resend-item-accepted"
+                              onClick={() => { setResendDropdownOpen(false); handleResendEmail(selectedApplication.id, 'accepted'); }}
+                            >
+                              ✉ Approval + Payment Email
+                            </button>
+                          )}
+                          {selectedApplication.status === 'payment_complete' && (
+                            <button
+                              className="resend-dropdown-item resend-item-welcome"
+                              onClick={() => { setResendDropdownOpen(false); handleResendEmail(selectedApplication.id, 'welcome'); }}
+                            >
+                              ✉ Welcome / Dashboard Email
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -842,25 +872,82 @@ export default function AdminDashboard() {
           transform: translateY(-2px);
         }
 
-        .btn-resend {
-          flex: 1;
-          padding: 12px 24px;
+        .resend-dropdown-wrapper {
+          position: relative;
+          display: inline-block;
+        }
+
+        .btn-resend-trigger {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 20px;
           border: none;
           border-radius: 8px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          background: linear-gradient(135deg, #667eea, #764ba2);
+          background: linear-gradient(135deg, #374151, #4B5563);
           color: white;
+          font-weight: 600;
+          font-size: 13px;
+          cursor: pointer;
+          transition: all 0.2s ease;
         }
 
-        .btn-resend:hover:not(:disabled) {
+        .btn-resend-trigger:hover:not(:disabled) {
           transform: translateY(-2px);
+          filter: brightness(1.15);
         }
 
-        .btn-resend:disabled {
-          opacity: 0.6;
+        .btn-resend-trigger:disabled {
+          opacity: 0.5;
           cursor: not-allowed;
+        }
+
+        .dropdown-arrow {
+          font-size: 10px;
+        }
+
+        .resend-dropdown-menu {
+          position: absolute;
+          top: calc(100% + 6px);
+          left: 0;
+          min-width: 220px;
+          background: #1a1a1a;
+          border: 1px solid rgba(255, 20, 147, 0.3);
+          border-radius: 10px;
+          overflow: hidden;
+          z-index: 100;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+        }
+
+        .resend-dropdown-item {
+          display: block;
+          width: 100%;
+          padding: 12px 16px;
+          border: none;
+          background: transparent;
+          color: white;
+          font-size: 13px;
+          font-weight: 500;
+          text-align: left;
+          cursor: pointer;
+          transition: background 0.15s ease;
+          border-left: 3px solid transparent;
+        }
+
+        .resend-item-confirmation {
+          border-left-color: #4B5563;
+        }
+
+        .resend-item-accepted {
+          border-left-color: #764ba2;
+        }
+
+        .resend-item-welcome {
+          border-left-color: #FF1493;
+        }
+
+        .resend-dropdown-item:hover {
+          background: rgba(255, 255, 255, 0.07);
         }
 
         .submissions-container {

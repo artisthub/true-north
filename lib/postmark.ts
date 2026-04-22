@@ -410,6 +410,12 @@ Hey ${data.firstName},
 
 Your payment has been confirmed and your ${data.entityName} account on True North is now active.
 
+---
+ACTION REQUIRED: Submit Your VEVO Form
+---
+To complete your onboarding, please fill out the VEVO submission form:
+https://docs.google.com/forms/d/e/1FAIpQLSdfOcXaajwCXEtxH4LLEHh-Kg_V0pGwTODuWoGIHuZU-dO_mA/viewform?usp=publish-editor
+
 Getting Started:
 
 1. Access Your Dashboard

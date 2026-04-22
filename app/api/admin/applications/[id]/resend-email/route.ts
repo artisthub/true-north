@@ -1,17 +1,28 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { sendApplicationAcceptedEmailInline } from '@/lib/email';
+import {
+  sendApplicationConfirmationEmailInline,
+  sendApplicationAcceptedEmailInline,
+  sendWelcomeRevelatorEmailInline,
+} from '@/lib/email';
 import crypto from 'crypto';
+
+type EmailType = 'confirmation' | 'accepted' | 'welcome';
 
 export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   if (!supabase) {
-    return NextResponse.json(
-      { error: 'Database not configured' },
-      { status: 503 }
-    );
+    return NextResponse.json({ error: 'Database not configured' }, { status: 503 });
+  }
+
+  let emailType: EmailType = 'accepted';
+  try {
+    const body = await request.json();
+    if (body?.emailType) emailType = body.emailType as EmailType;
+  } catch (_) {
+    emailType = 'accepted';
   }
 
   try {
@@ -22,53 +33,56 @@ export async function POST(
       .single();
 
     if (fetchError || !application) {
-      return NextResponse.json(
-        { error: 'Application not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Application not found' }, { status: 404 });
     }
 
-    if (application.status !== 'approved') {
-      return NextResponse.json(
-        { error: 'Can only resend email for approved applications' },
-        { status: 400 }
-      );
-    }
+    const entityName =
+      application.account_type === 'artist'
+        ? (application.artist_name || '')
+        : (application.label_name || '');
 
-    let paymentLinkToken = application.payment_link_token;
-    if (!paymentLinkToken) {
-      paymentLinkToken = crypto.randomBytes(32).toString('hex');
-      await supabase
-        .from('applications')
-        .update({
-          payment_link_token: paymentLinkToken,
-          payment_link_sent_at: new Date().toISOString()
-        })
-        .eq('id', params.id);
-    }
-
-    const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment?token=${paymentLinkToken}`;
-    const annualFee = process.env.NEXT_PUBLIC_ANNUAL_FEE || '999';
-
-    await sendApplicationAcceptedEmailInline({
+    const baseData = {
       firstName: application.first_name,
       lastName: application.last_name,
       email: application.email,
       accountType: application.account_type,
-      entityName: application.account_type === 'artist'
-        ? (application.artist_name || '')
-        : (application.label_name || ''),
+      entityName,
       applicationId: application.id,
-      paymentLink,
-      annualFee
-    });
+    };
 
-    return NextResponse.json({ success: true, message: 'Email sent' });
+    if (emailType === 'confirmation') {
+      await sendApplicationConfirmationEmailInline(baseData);
+      return NextResponse.json({ success: true, message: 'Confirmation email sent' });
+    }
+
+    if (emailType === 'accepted') {
+      let paymentLinkToken = application.payment_link_token;
+      if (!paymentLinkToken) {
+        paymentLinkToken = crypto.randomBytes(32).toString('hex');
+        await supabase
+          .from('applications')
+          .update({
+            payment_link_token: paymentLinkToken,
+            payment_link_sent_at: new Date().toISOString(),
+          })
+          .eq('id', params.id);
+      }
+
+      const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/payment?token=${paymentLinkToken}`;
+      const annualFee = process.env.NEXT_PUBLIC_ANNUAL_FEE || '999';
+
+      await sendApplicationAcceptedEmailInline({ ...baseData, paymentLink, annualFee });
+      return NextResponse.json({ success: true, message: 'Approval email sent' });
+    }
+
+    if (emailType === 'welcome') {
+      await sendWelcomeRevelatorEmailInline(baseData);
+      return NextResponse.json({ success: true, message: 'Welcome email sent' });
+    }
+
+    return NextResponse.json({ error: 'Invalid email type' }, { status: 400 });
   } catch (error) {
     console.error('Resend email error:', error);
-    return NextResponse.json(
-      { error: 'Failed to send email' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
   }
 }
