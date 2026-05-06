@@ -20,16 +20,17 @@ export default function DmcaPolicyPage() {
               <div className="logo">
                 <Link href="/">
                   <div className="logo-icon">
-                    <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                    <img src="/True_North_Pink_Black.png" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
                   </div>
                 </Link>
               </div>
               <nav>
                 <a href="/">Home</a>
                 <a href="/#distribution">Distribution</a>
+                <a href="/resources">Resources</a>
                 <a href="/about">About</a>
                 <a href="/#pricing">Pricing</a>
-                <a className="btn-primary" href="/get-started">
+                <a className="btn-primary" href="/apply">
                   Get Started
                 </a>
               </nav>
@@ -133,6 +134,7 @@ export default function DmcaPolicyPage() {
             <nav>
               <a href="/">Home</a>
               <a href="/legal/terms">Terms &amp; Conditions</a>
+              <a href="/legal/distribution">Distribution Agreement</a>
               <a href="/legal/privacy">Privacy Policy</a>
               <a href="/legal/cookie-policy">Cookie Policy</a>
             </nav>

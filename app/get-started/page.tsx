@@ -26,8 +26,8 @@ export default function GetStartedPage() {
     setIsLoading(true);
 
     try {
-      console.log('Sending request to /api/get-started'); // Debug log
-      const response = await fetch('/api/get-started', {
+      console.log('Sending request to /api/apply'); // Debug log
+      const response = await fetch('/api/apply', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -76,15 +76,16 @@ export default function GetStartedPage() {
             <div className="header-content">
               <Link href="/" className="logo">
                 <div className="logo-icon">
-                  <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                  <img src="/True_North_Pink_Black.png" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
                 </div>
               </Link>
               <nav>
                 <Link href="/">Home</Link>
                 <Link href="/#distribution">Distribution</Link>
+                <Link href="/resources">Resources</Link>
                 <Link href="/#features">Features</Link>
                 <Link href="/#pricing">Pricing</Link>
-                <Link className="btn-primary" href="/get-started">
+                <Link className="btn-primary" href="/apply">
                   Get Started
                 </Link>
               </nav>
@@ -99,7 +100,7 @@ export default function GetStartedPage() {
                 <span className="about-badge">Start Your Journey</span>
                 <h1>Join True North</h1>
                 <p>
-                  Ready to take control of your catalog? Fill out the form below to request access. 
+                  Ready to take control of your catalog? Fill out the form below to request access.
                   We review every application to ensure we&apos;re the right partner for your growth.
                 </p>
               </div>
@@ -109,7 +110,7 @@ export default function GetStartedPage() {
           <section className="section" style={{ paddingTop: '0' }}>
             <div className="container">
               <div className="about-cta-card fade-in visible" style={{ maxWidth: '800px', padding: '60px 50px', margin: '0 auto' }}>
-                
+
                 {isSubmitted ? (
                   <div className="success-message fade-in visible">
                     <div className="success-icon">
@@ -143,7 +144,7 @@ export default function GetStartedPage() {
                           onChange={handleChange}
                         />
                       </div>
-                      
+
                       <div className="form-group">
                         <label htmlFor="email" className="form-label">Email Address</label>
                         <input
@@ -229,16 +230,16 @@ export default function GetStartedPage() {
                     </div>
 
                     <div style={{ textAlign: 'center', marginTop: '40px', position: 'relative', zIndex: 200 }}>
-                      <button 
-                        type="button" 
-                        className="btn-primary" 
+                      <button
+                        type="button"
+                        className="btn-primary"
                         disabled={isLoading}
                         onClick={(e) => {
                           console.log('Submit button clicked!');
                           handleSubmit(e as any);
                         }}
-                        style={{ 
-                          padding: '16px 60px', 
+                        style={{
+                          padding: '16px 60px',
                           fontSize: '18px',
                           opacity: isLoading ? 0.7 : 1,
                           cursor: isLoading ? 'wait' : 'pointer'
@@ -265,6 +266,7 @@ export default function GetStartedPage() {
             <nav>
               <Link href="/">Home</Link>
               <Link href="/legal/terms">Terms &amp; Conditions</Link>
+              <Link href="/legal/distribution">Distribution Agreement</Link>
               <Link href="/#pricing">Pricing</Link>
               <Link href="/legal/dmca">DMCA</Link>
               <Link href="/legal/cookie-policy">Cookie Policy</Link>

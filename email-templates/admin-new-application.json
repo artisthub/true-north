@@ -1,0 +1,35 @@
+{
+  "Subject": "New {{account_type_label}} Application - {{entity_name}}",
+  "HtmlBody": "{{html_template}}",
+  "TextBody": "New {{account_type_label}} Application\n\nA new application has been submitted:\n\nApplicant: {{first_name}} {{last_name}}\nEmail: {{email}}\nAccount Type: {{account_type}}\n{{entity_name_label}}: {{entity_name}}\nCountry: {{country}}\nSubmitted: {{submission_date}}\nApplication ID: {{application_id}}\n\nReview: {{admin_url}}\n\nTrue North Music Distribution",
+  "TemplateAlias": "admin-new-application",
+  "TemplateId": null,
+  "MessageStream": "outbound",
+  "Variables": {
+    "first_name": "Applicant's first name",
+    "last_name": "Applicant's last name",
+    "email": "Applicant's email",
+    "account_type": "artist or label",
+    "account_type_label": "Artist or Label (capitalized)",
+    "entity_name": "Artist name or Label name",
+    "entity_name_label": "Artist Name or Label Name",
+    "country": "Applicant's country",
+    "submission_date": "Date and time of submission",
+    "application_id": "Unique application ID",
+    "admin_url": "URL to review application in admin panel",
+    "html_template": "The HTML content from admin-new-application.html"
+  },
+  "ExampleData": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john@example.com",
+    "account_type": "artist",
+    "account_type_label": "Artist",
+    "entity_name": "The Midnight Sessions",
+    "entity_name_label": "Artist Name",
+    "country": "United States",
+    "submission_date": "January 15, 2024 at 3:45 PM EST",
+    "application_id": "APP-2024-001234",
+    "admin_url": "https://truenorthdistro.com/admin"
+  }
+}

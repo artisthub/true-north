@@ -70,7 +70,7 @@ export default function LoginPage() {
             <div className="login-header">
               <div className="logo-wrapper">
                 <Link href="/">
-                  <img src="/logo.svg" alt="True North Logo" style={{ width: '96px', height: '96px', objectFit: 'contain', display: 'block' }} />
+                  <img src="/True_North_Pink_Black.png" alt="True North Logo" style={{ width: '96px', height: '96px', objectFit: 'contain', display: 'block' }} />
                 </Link>
               </div>
               <h1>Welcome Back</h1>
@@ -108,8 +108,8 @@ export default function LoginPage() {
                 <div className="error-message">{error}</div>
               )}
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn-primary"
                 style={{ width: '100%', padding: '14px 30px', fontSize: '16px' }}
                 disabled={isSubmitting}

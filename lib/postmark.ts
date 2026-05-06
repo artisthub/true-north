@@ -19,6 +19,16 @@ interface AcceptedEmailData extends ApplicationEmailData {
   annualFee: string;
 }
 
+interface AdminNewApplicationEmailData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  accountType: 'artist' | 'label';
+  entityName: string;
+  country: string;
+  applicationId: string;
+}
+
 interface WelcomeRevelatorEmailData {
   firstName: string;
   lastName: string;
@@ -303,6 +313,177 @@ True North Music Distribution. All rights reserved.`,
     return result;
   } catch (error) {
     console.error('Failed to send application accepted email:', error);
+    throw error;
+  }
+}
+
+export async function sendAdminNewApplicationEmail(data: AdminNewApplicationEmailData) {
+  if (!client) {
+    console.warn('Postmark server token not configured, skipping email send');
+    return;
+  }
+
+  try {
+    const submissionDate = new Date().toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    });
+
+    const accountTypeLabel = data.accountType === 'artist' ? 'Artist' : 'Label';
+    const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+    const adminUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorthdistro.com'}/admin`;
+    const adminEmails = (process.env.ADMIN_NOTIFICATION_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+
+    if (adminEmails.length === 0) {
+      console.log('No admin notification emails configured, skipping admin notification');
+      return;
+    }
+
+    const result = await client.sendEmailWithTemplate({
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
+      "To": adminEmails.join(','),
+      "TemplateAlias": "admin-new-application",
+      "TemplateModel": {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        account_type: data.accountType,
+        account_type_label: accountTypeLabel,
+        entity_name: data.entityName,
+        entity_name_label: entityNameLabel,
+        country: data.country,
+        submission_date: submissionDate,
+        application_id: data.applicationId,
+        admin_url: adminUrl
+      },
+      "MessageStream": "outbound"
+    });
+
+    console.log('Admin new application notification sent successfully:', result.MessageID);
+    return result;
+  } catch (error) {
+    console.error('Failed to send admin new application notification:', error);
+    throw error;
+  }
+}
+
+export async function sendAdminNewApplicationEmailInline(data: AdminNewApplicationEmailData) {
+  if (!client) {
+    console.warn('Postmark server token not configured, skipping email send');
+    return;
+  }
+
+  try {
+    let htmlTemplate = '';
+
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const templatePath = path.join(process.cwd(), 'email-templates', 'admin-new-application.html');
+      htmlTemplate = await fs.readFile(templatePath, 'utf-8');
+    } catch (fileError) {
+      console.warn('Could not read admin notification email template file, using fallback HTML');
+      htmlTemplate = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>New Application Received - True North</title>
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="color: white; margin: 0;">TRUE NORTH</h1>
+            <p style="color: white; margin: 8px 0 0 0; font-size: 14px; letter-spacing: 2px;">NEW APPLICATION</p>
+          </div>
+          <div style="background: #f9f9f9; padding: 40px 20px; border-radius: 0 0 10px 10px;">
+            <h2>New {{account_type_label}} Application</h2>
+            <p>A new application has been submitted and is awaiting review.</p>
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p style="margin: 5px 0;"><strong>Applicant:</strong> {{first_name}} {{last_name}}</p>
+              <p style="margin: 5px 0;"><strong>Email:</strong> {{email}}</p>
+              <p style="margin: 5px 0;"><strong>Account Type:</strong> {{account_type}}</p>
+              <p style="margin: 5px 0;"><strong>{{entity_name_label}}:</strong> {{entity_name}}</p>
+              <p style="margin: 5px 0;"><strong>Country:</strong> {{country}}</p>
+              <p style="margin: 5px 0;"><strong>Submitted:</strong> {{submission_date}}</p>
+              <p style="margin: 5px 0;"><strong>Application ID:</strong> {{application_id}}</p>
+            </div>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="{{admin_url}}" style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); color: #fff; padding: 14px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px;">
+                Review Application
+              </a>
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: 20px; color: #999; font-size: 14px;">
+            <p>This is an automated notification from True North Music Distribution.</p>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    const submissionDate = new Date().toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
+    });
+
+    const accountTypeLabel = data.accountType === 'artist' ? 'Artist' : 'Label';
+    const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+    const adminUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorthdistro.com'}/admin`;
+    const adminEmails = (process.env.ADMIN_NOTIFICATION_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+
+    if (adminEmails.length === 0) {
+      console.log('No admin notification emails configured, skipping admin notification');
+      return;
+    }
+
+    htmlTemplate = htmlTemplate
+      .replace(/{{first_name}}/g, data.firstName)
+      .replace(/{{last_name}}/g, data.lastName)
+      .replace(/{{email}}/g, data.email)
+      .replace(/{{account_type}}/g, data.accountType)
+      .replace(/{{account_type_label}}/g, accountTypeLabel)
+      .replace(/{{entity_name}}/g, data.entityName)
+      .replace(/{{entity_name_label}}/g, entityNameLabel)
+      .replace(/{{country}}/g, data.country)
+      .replace(/{{submission_date}}/g, submissionDate)
+      .replace(/{{application_id}}/g, data.applicationId)
+      .replace(/{{admin_url}}/g, adminUrl);
+
+    const result = await client.sendEmail({
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
+      "To": adminEmails.join(','),
+      "Subject": `New ${accountTypeLabel} Application - ${data.entityName}`,
+      "HtmlBody": htmlTemplate,
+      "TextBody": `New ${accountTypeLabel} Application
+
+A new application has been submitted:
+
+Applicant: ${data.firstName} ${data.lastName}
+Email: ${data.email}
+Account Type: ${data.accountType}
+${entityNameLabel}: ${data.entityName}
+Country: ${data.country}
+Submitted: ${submissionDate}
+Application ID: ${data.applicationId}
+
+Review: ${adminUrl}
+
+True North Music Distribution`,
+      "MessageStream": "outbound"
+    });
+
+    console.log('Admin new application notification sent successfully:', result.MessageID);
+    return result;
+  } catch (error) {
+    console.error('Failed to send admin new application notification:', error);
     throw error;
   }
 }

@@ -104,7 +104,7 @@ export default function DashboardPage() {
             <div className="header-content">
               <div className="logo">
                 <div className="logo-icon">
-                  <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                  <img src="/True_North_Pink_Black.png" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
                 </div>
               </div>
               <nav>
@@ -127,7 +127,7 @@ export default function DashboardPage() {
               <div className="hero-content">
                 <div className="dashboard-badge">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: '16px', height: '16px' }}>
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                   {user?.accountType === 'artist' ? 'ARTIST' : 'LABEL'} ACCOUNT
                 </div>
@@ -154,7 +154,7 @@ export default function DashboardPage() {
                   <h3>Submit New Pitch</h3>
                   <p>Create a pitch for DSP playlist consideration</p>
                 </Link>
-                
+
                 <Link href="#analytics" className="feature-card">
                   <div className="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="url(#gradient-analytics)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -164,7 +164,7 @@ export default function DashboardPage() {
                           <stop offset="100%" style={{ stopColor: '#FF69B4', stopOpacity: '1' }} />
                         </linearGradient>
                       </defs>
-                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                     </svg>
                   </div>
                   <h3>View Analytics</h3>
@@ -180,8 +180,8 @@ export default function DashboardPage() {
                           <stop offset="100%" style={{ stopColor: '#FF69B4', stopOpacity: '1' }} />
                         </linearGradient>
                       </defs>
-                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                      <line x1="1" y1="10" x2="23" y2="10"/>
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                      <line x1="1" y1="10" x2="23" y2="10" />
                     </svg>
                   </div>
                   <h3>Payments & Splits</h3>
@@ -205,7 +205,7 @@ export default function DashboardPage() {
                           <stop offset="100%" style={{ stopColor: '#FF69B4', stopOpacity: '0.3' }} />
                         </linearGradient>
                       </defs>
-                      <path d="M9 11H3v10h18V11h-6M9 11V3h6v8M9 11h6"/>
+                      <path d="M9 11H3v10h18V11h-6M9 11V3h6v8M9 11h6" />
                     </svg>
                   </div>
                   <h3>No pitches yet</h3>

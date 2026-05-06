@@ -80,17 +80,6 @@ const FORMS: SupportForm[] = [
     category: 'video',
   },
   {
-    id: 6,
-    name: 'Database Submissions',
-    services: [{ name: 'Database', logo: '/database.svg' }],
-    purpose:
-      'Submit or manage your music catalog entries in our database for accurate metadata and rights tracking.',
-    whenNeeded:
-      'When you need to add, update, or correct catalog data, artist information, or rights ownership in the distribution database.',
-    link: 'https://docs.google.com/spreadsheets/d/1h5mizZaK7f7Hu37xcEa32rCZYNKT4x6SfnlDD2myoH8/edit?usp=sharing',
-    category: 'audio',
-  },
-  {
     id: 7,
     name: 'VEVO Form',
     services: [{ name: 'VEVO', logo: '/vevo.svg' }],
@@ -159,7 +148,7 @@ export default function SupportFormsPage() {
                 <Link href="/">
                   <div className="logo-icon">
                     <img
-                      src="/logo.svg"
+                      src="/True_North_Pink_Black.png"
                       alt="True North Logo"
                       style={{ width: '80px', height: '80px', objectFit: 'contain' }}
                     />
@@ -169,9 +158,10 @@ export default function SupportFormsPage() {
               <nav>
                 <a href="/">Home</a>
                 <a href="/#distribution">Distribution</a>
+                <a href="/resources">Resources</a>
                 <a href="/about">About</a>
                 <a href="/#pricing">Pricing</a>
-                <a className="btn-primary" href="/get-started">
+                <a className="btn-primary" href="/apply">
                   Get Started
                 </a>
               </nav>
@@ -476,7 +466,7 @@ export default function SupportFormsPage() {
               <div className="footer-section">
                 <h4>Company</h4>
                 <a href="/about">About</a>
-                <a href="/get-started">Get Started</a>
+                <a href="/apply">Get Started</a>
               </div>
               <div className="footer-section">
                 <h4>Support</h4>
@@ -485,6 +475,7 @@ export default function SupportFormsPage() {
               <div className="footer-section">
                 <h4>Legal</h4>
                 <a href="/legal/terms">Terms &amp; Conditions</a>
+                <a href="/legal/distribution">Distribution Agreement</a>
                 <a href="/legal/privacy">Privacy Policy</a>
                 <a href="/legal/cookie-policy">Cookie Policy</a>
                 <a href="/legal/dmca">DMCA</a>

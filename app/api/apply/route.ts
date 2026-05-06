@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { sendApplicationConfirmationEmailInline } from '@/lib/email';
+import { sendApplicationConfirmationEmailInline, sendAdminNewApplicationEmailInline } from '@/lib/email';
 
 export async function POST(request: Request) {
   if (!supabase) {
@@ -119,6 +119,21 @@ export async function POST(request: Request) {
     } catch (emailError) {
       console.error('Failed to send confirmation email:', emailError);
       // Don't fail the application submission if email fails
+    }
+
+    // Send admin notification email
+    try {
+      await sendAdminNewApplicationEmailInline({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        accountType: data.accountType,
+        entityName: data.accountType === 'artist' ? data.artistName : data.labelName,
+        country: data.accountType === 'artist' ? (data.artistCountry || '') : (data.labelCountry || ''),
+        applicationId: newApplication.id
+      });
+    } catch (adminEmailError) {
+      console.error('Failed to send admin notification email:', adminEmailError);
     }
 
     // Send Slack notification if webhook is configured

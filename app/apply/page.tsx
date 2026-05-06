@@ -11,17 +11,17 @@ export default function ApplyPage() {
     email: '',
     firstName: '',
     lastName: '',
-    
+
     // Artist fields
     artistName: '',
     artistCountry: '',
     artistGenre: '',
-    
+
     // Label fields
     labelName: '',
     labelCountry: '',
     labelWebsite: '',
-    
+
     // Common fields
     currentDistributor: '',
     whyTrueNorth: ''
@@ -57,7 +57,7 @@ export default function ApplyPage() {
         type: 'success',
         message: 'Application submitted successfully! We will review your application and get back to you within 48 hours.'
       });
-      
+
       setShowSuccess(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
@@ -93,7 +93,7 @@ export default function ApplyPage() {
             <div className="header-content">
               <Link href="/" className="logo">
                 <div className="logo-icon">
-                  <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                  <img src="/True_North_Pink_Black.png" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
                 </div>
               </Link>
               <nav>
@@ -107,8 +107,8 @@ export default function ApplyPage() {
         <div className="apply-container">
           <div className="container">
             {showSuccess ? (
-              <div className="success-screen" style={{ 
-                maxWidth: '600px', 
+              <div className="success-screen" style={{
+                maxWidth: '600px',
                 margin: '100px auto',
                 textAlign: 'center',
                 padding: '60px 40px',
@@ -137,8 +137,8 @@ export default function ApplyPage() {
                 <Link href="/" className="btn-primary">Back to Home</Link>
               </div>
             ) : !accountType ? (
-              <div className="account-type-selector" style={{ 
-                maxWidth: '800px', 
+              <div className="account-type-selector" style={{
+                maxWidth: '800px',
                 margin: '100px auto',
                 textAlign: 'center'
               }}>
@@ -148,9 +148,9 @@ export default function ApplyPage() {
                 <p style={{ fontSize: '20px', color: '#ccc', marginBottom: '60px' }}>
                   Choose your account type to get started
                 </p>
-                <div style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: '1fr 1fr', 
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
                   gap: '30px',
                   maxWidth: '600px',
                   margin: '0 auto'
@@ -176,8 +176,8 @@ export default function ApplyPage() {
                       e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
-                    <div style={{ 
-                      width: '60px', 
+                    <div style={{
+                      width: '60px',
                       height: '60px',
                       margin: '0 auto 20px',
                       background: 'rgba(255, 20, 147, 0.1)',
@@ -187,8 +187,8 @@ export default function ApplyPage() {
                       justifyContent: 'center'
                     }}>
                       <svg viewBox="0 0 24 24" fill="none" stroke="#FF69B4" strokeWidth="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
                       </svg>
                     </div>
                     <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>I&apos;m an Artist</h3>
@@ -216,8 +216,8 @@ export default function ApplyPage() {
                       e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
-                    <div style={{ 
-                      width: '60px', 
+                    <div style={{
+                      width: '60px',
                       height: '60px',
                       margin: '0 auto 20px',
                       background: 'rgba(255, 20, 147, 0.1)',
@@ -227,9 +227,9 @@ export default function ApplyPage() {
                       justifyContent: 'center'
                     }}>
                       <svg viewBox="0 0 24 24" fill="none" stroke="#FF69B4" strokeWidth="2">
-                        <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/>
-                        <path d="M9 7h1m-1 4h1m4-4h1m-1 4h1"/>
-                        <path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2"/>
+                        <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" />
+                        <path d="M9 7h1m-1 4h1m4-4h1m-1 4h1" />
+                        <path d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2" />
                       </svg>
                     </div>
                     <h3 style={{ fontSize: '20px', marginBottom: '8px' }}>I&apos;m a Label</h3>
@@ -238,16 +238,16 @@ export default function ApplyPage() {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ 
-                maxWidth: '600px', 
+              <form onSubmit={handleSubmit} style={{
+                maxWidth: '600px',
                 margin: '80px auto',
                 background: 'rgba(0, 0, 0, 0.4)',
                 border: '1px solid rgba(255, 20, 147, 0.2)',
                 borderRadius: '30px',
                 padding: '50px 40px'
               }}>
-                <div style={{ 
-                  textAlign: 'center', 
+                <div style={{
+                  textAlign: 'center',
                   marginBottom: '40px',
                   paddingBottom: '30px',
                   borderBottom: '1px solid rgba(255, 20, 147, 0.1)'
@@ -256,8 +256,8 @@ export default function ApplyPage() {
                     {accountType === 'artist' ? 'Artist Application' : 'Label Application'}
                   </h2>
                   <p style={{ color: '#999' }}>
-                    {accountType === 'artist' 
-                      ? 'Join our exclusive artist roster' 
+                    {accountType === 'artist'
+                      ? 'Join our exclusive artist roster'
                       : 'Partner with us to distribute your artists'}
                   </p>
                   <button
@@ -281,7 +281,7 @@ export default function ApplyPage() {
                 {/* Basic Information */}
                 <div style={{ marginBottom: '32px' }}>
                   <h3 style={{ fontSize: '18px', marginBottom: '20px', color: '#FF69B4' }}>Contact Information</h3>
-                  
+
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
                     <div className="form-group">
                       <label className="form-label" htmlFor="firstName">First Name *</label>
@@ -308,7 +308,7 @@ export default function ApplyPage() {
                       />
                     </div>
                   </div>
-                  
+
                   <div className="form-group">
                     <label className="form-label" htmlFor="email">Email Address *</label>
                     <input
@@ -328,7 +328,7 @@ export default function ApplyPage() {
                   <h3 style={{ fontSize: '18px', marginBottom: '20px', color: '#FF69B4' }}>
                     {accountType === 'artist' ? 'Artist Details' : 'Label Details'}
                   </h3>
-                  
+
                   {accountType === 'artist' ? (
                     <>
                       <div className="form-group">
@@ -419,7 +419,7 @@ export default function ApplyPage() {
                 {/* Distribution Experience */}
                 <div style={{ marginBottom: '32px' }}>
                   <h3 style={{ fontSize: '18px', marginBottom: '20px', color: '#FF69B4' }}>Distribution Experience</h3>
-                  
+
                   <div className="form-group">
                     <label className="form-label" htmlFor="currentDistributor">Current Distributor (if any)</label>
                     <input
@@ -432,7 +432,7 @@ export default function ApplyPage() {
                       placeholder="e.g., Independent, CD Baby, DistroKid..."
                     />
                   </div>
-                  
+
                   <div className="form-group">
                     <label className="form-label" htmlFor="whyTrueNorth">Why do you want to join True North? *</label>
                     <textarea
@@ -470,11 +470,11 @@ export default function ApplyPage() {
                   {isSubmitting ? 'Submitting...' : 'Submit Application'}
                 </button>
 
-                <p style={{ 
-                  marginTop: '20px', 
-                  textAlign: 'center', 
-                  color: '#999', 
-                  fontSize: '14px' 
+                <p style={{
+                  marginTop: '20px',
+                  textAlign: 'center',
+                  color: '#999',
+                  fontSize: '14px'
                 }}>
                   By submitting, you agree to our{' '}
                   <Link href="/terms" style={{ color: '#FF69B4', textDecoration: 'underline' }}>

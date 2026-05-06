@@ -20,3 +20,4 @@ cookies.txt
 user-cookies.txt
 *.cookie
 *.cookies
+.env*.local

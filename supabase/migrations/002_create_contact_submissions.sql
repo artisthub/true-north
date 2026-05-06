@@ -1,4 +1,4 @@
--- Create contact_submissions table for /get-started (contact) form
+-- Create contact_submissions table for /apply (contact) form
 CREATE TABLE IF NOT EXISTS contact_submissions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMPTZ DEFAULT NOW(),

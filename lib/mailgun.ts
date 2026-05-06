@@ -32,6 +32,16 @@ interface AcceptedEmailData extends ApplicationEmailData {
   annualFee: string;
 }
 
+interface AdminNewApplicationEmailData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  accountType: 'artist' | 'label';
+  entityName: string;
+  country: string;
+  applicationId: string;
+}
+
 interface WelcomeRevelatorEmailData {
   firstName: string;
   lastName: string;
@@ -163,6 +173,69 @@ True North Music Distribution. All rights reserved.`;
 
 export async function sendApplicationAcceptedEmailInline(data: AcceptedEmailData) {
   return sendApplicationAcceptedEmail(data);
+}
+
+export async function sendAdminNewApplicationEmail(data: AdminNewApplicationEmailData) {
+  const adminEmails = (process.env.ADMIN_NOTIFICATION_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+  if (adminEmails.length === 0) {
+    console.log('No admin notification emails configured, skipping admin notification');
+    return;
+  }
+
+  const client = getClient();
+  if (!client) {
+    console.warn('Mailgun not configured, skipping email send');
+    return;
+  }
+
+  const submissionDate = new Date().toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short'
+  });
+
+  const accountTypeLabel = data.accountType === 'artist' ? 'Artist' : 'Label';
+  const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+  const adminUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorthdistro.com'}/admin`;
+
+  const html = (await readTemplate('admin-new-application.html'))
+    .replace(/{{first_name}}/g, data.firstName)
+    .replace(/{{last_name}}/g, data.lastName)
+    .replace(/{{email}}/g, data.email)
+    .replace(/{{account_type}}/g, data.accountType)
+    .replace(/{{account_type_label}}/g, accountTypeLabel)
+    .replace(/{{entity_name}}/g, data.entityName)
+    .replace(/{{entity_name_label}}/g, entityNameLabel)
+    .replace(/{{country}}/g, data.country)
+    .replace(/{{submission_date}}/g, submissionDate)
+    .replace(/{{application_id}}/g, data.applicationId)
+    .replace(/{{admin_url}}/g, adminUrl);
+
+  const text = `New ${accountTypeLabel} Application
+
+A new application has been submitted:
+
+Applicant: ${data.firstName} ${data.lastName}
+Email: ${data.email}
+Account Type: ${data.accountType}
+${entityNameLabel}: ${data.entityName}
+Country: ${data.country}
+Submitted: ${submissionDate}
+Application ID: ${data.applicationId}
+
+Review: ${adminUrl}
+
+True North Music Distribution`;
+
+  await sendMail(adminEmails.join(','), `New ${accountTypeLabel} Application - ${data.entityName}`, html, text);
+  console.log('Admin new application notification sent via Mailgun:', adminEmails.join(', '));
+}
+
+export async function sendAdminNewApplicationEmailInline(data: AdminNewApplicationEmailData) {
+  return sendAdminNewApplicationEmail(data);
 }
 
 export async function sendWelcomeRevelatorEmail(data: WelcomeRevelatorEmailData) {

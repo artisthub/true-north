@@ -117,7 +117,7 @@ export default function PitchPage() {
           return;
         }
         const { user } = await response.json();
-        
+
         // Pre-fill form with user data
         setFormData(prev => ({
           ...prev,
@@ -133,7 +133,7 @@ export default function PitchPage() {
         setUserLoading(false);
       }
     }
-    
+
     fetchUserData();
   }, [router]);
 
@@ -208,7 +208,7 @@ export default function PitchPage() {
             <div className="header-content">
               <Link href="/dashboard" className="logo">
                 <div className="logo-icon">
-                  <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                  <img src="/True_North_Pink_Black.png" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
                 </div>
               </Link>
               <nav>
@@ -297,8 +297,8 @@ export default function PitchPage() {
                     </p>
                     <div style={{ marginTop: '40px', display: 'flex', gap: '16px', justifyContent: 'center' }}>
                       <Link href="/dashboard" className="btn-primary">Back to Dashboard</Link>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => { setIsSubmitted(false); handleClearForm(); }}
                         className="btn-secondary"
                         style={{
@@ -323,8 +323,8 @@ export default function PitchPage() {
                     <div className="pitch-section">
                       <h2 className="pitch-section-title">YOUR DETAILS</h2>
 
-                      <div style={{ 
-                        background: 'rgba(255, 20, 147, 0.05)', 
+                      <div style={{
+                        background: 'rgba(255, 20, 147, 0.05)',
                         border: '1px solid rgba(255, 20, 147, 0.2)',
                         borderRadius: '16px',
                         padding: '20px',
@@ -337,7 +337,7 @@ export default function PitchPage() {
                           {formData.email}
                         </p>
                       </div>
-                      
+
                       {/* Hidden fields for pre-filled data */}
                       <input type="hidden" name="email" value={formData.email} />
                       <input type="hidden" name="name" value={formData.name} />
@@ -818,6 +818,7 @@ export default function PitchPage() {
             <nav>
               <Link href="/">Home</Link>
               <Link href="/legal/terms">Terms &amp; Conditions</Link>
+              <Link href="/legal/distribution">Distribution Agreement</Link>
               <Link href="/legal/privacy">Privacy Policy</Link>
             </nav>
           </div>

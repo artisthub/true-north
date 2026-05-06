@@ -42,15 +42,16 @@ export default function AboutPage() {
             <div className="header-content">
               <Link href="/" className="logo">
                 <div className="logo-icon">
-                  <img src="/logo.svg" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
+                  <img src="/True_North_Pink_Black.png" alt="True North Logo" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
                 </div>
               </Link>
               <nav>
                 <a href="/">Home</a>
                 <a href="/#distribution">Distribution</a>
+                <a href="/resources">Resources</a>
                 <a href="/#features">Features</a>
                 <a href="/#pricing">Pricing</a>
-                <Link className="btn-primary" href="/get-started">
+                <Link className="btn-primary" href="/apply">
                   Get Started
                 </Link>
               </nav>
@@ -188,7 +189,7 @@ export default function AboutPage() {
                 <h2>Ready to move your catalog?</h2>
                 <p>Bring the momentum from ArtistHub straight into distribution. We&apos;ll help you migrate, launch, and grow.</p>
                 <div className="about-cta-actions">
-                  <Link className="btn-primary" href="/get-started">
+                  <Link className="btn-primary" href="/apply">
                     Start a release
                   </Link>
                   <a className="btn-secondary" href="mailto:hello@truenorthmusic.com">
@@ -206,6 +207,7 @@ export default function AboutPage() {
             <nav>
               <a href="/">Home</a>
               <a href="/legal/terms">Terms &amp; Conditions</a>
+              <a href="/legal/distribution">Distribution Agreement</a>
               <a href="/#pricing">Pricing</a>
               <a href="/legal/dmca">DMCA</a>
               <a href="/legal/cookie-policy">Cookie Policy</a>
