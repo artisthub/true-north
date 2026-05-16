@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    window.location.href = 'https://auth.truenorthdistro.com/oauth2/authorize';
+    window.location.href = 'https://dashboard.truenorthdistro.com/en/login';
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
