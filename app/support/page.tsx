@@ -469,10 +469,6 @@ export default function SupportFormsPage() {
                 <a href="/apply">Get Started</a>
               </div>
               <div className="footer-section">
-                <h4>Support</h4>
-                <a href="/support">Support Forms</a>
-              </div>
-              <div className="footer-section">
                 <h4>Legal</h4>
                 <a href="/legal/terms">Terms &amp; Conditions</a>
                 <a href="/legal/distribution">Distribution Agreement</a>

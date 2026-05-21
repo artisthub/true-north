@@ -523,7 +523,6 @@ export default function Home() {
               <div className="footer-section">
                 <h4>Resources</h4>
                 <a href="/resources">Ecosystem</a>
-                <a href="/support">Support Forms</a>
               </div>
               <div className="footer-section">
                 <h4>Legal</h4>

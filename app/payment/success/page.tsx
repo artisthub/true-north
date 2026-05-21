@@ -99,10 +99,6 @@ function PaymentSuccessContent() {
                   <line x1="10" y1="14" x2="21" y2="3"/>
                 </svg>
               </a>
-              <p className="vevo-note">
-                You can also find this and other support forms at{' '}
-                <a href="/support" target="_blank" rel="noopener noreferrer">truenorthdistro.com/support</a>.
-              </p>
             </div>
 
             <div className="setup-status">

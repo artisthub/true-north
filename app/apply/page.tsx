@@ -477,7 +477,7 @@ export default function ApplyPage() {
                   fontSize: '14px'
                 }}>
                   By submitting, you agree to our{' '}
-                  <Link href="/terms" style={{ color: '#FF69B4', textDecoration: 'underline' }}>
+                  <Link href="/legal/terms" style={{ color: '#FF69B4', textDecoration: 'underline' }}>
                     Terms of Service
                   </Link>
                 </p>
