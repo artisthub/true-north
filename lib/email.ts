@@ -12,6 +12,8 @@ interface EmailProvider {
   sendWelcomeRevelatorEmailInline: AsyncVoidFn;
   sendAdminNewApplicationEmail: AsyncVoidFn;
   sendAdminNewApplicationEmailInline: AsyncVoidFn;
+  sendAdminPaymentCompleteEmail: AsyncVoidFn;
+  sendAdminPaymentCompleteEmailInline: AsyncVoidFn;
 }
 
 const provider = process.env.EMAIL_PROVIDER || 'postmark';
@@ -26,3 +28,5 @@ export const sendWelcomeRevelatorEmail = email.sendWelcomeRevelatorEmail;
 export const sendWelcomeRevelatorEmailInline = email.sendWelcomeRevelatorEmailInline;
 export const sendAdminNewApplicationEmail = email.sendAdminNewApplicationEmail;
 export const sendAdminNewApplicationEmailInline = email.sendAdminNewApplicationEmailInline;
+export const sendAdminPaymentCompleteEmail = email.sendAdminPaymentCompleteEmail;
+export const sendAdminPaymentCompleteEmailInline = email.sendAdminPaymentCompleteEmailInline;

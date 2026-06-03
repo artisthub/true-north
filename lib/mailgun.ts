@@ -50,6 +50,33 @@ interface WelcomeRevelatorEmailData {
   entityName: string;
 }
 
+interface AdminPaymentCompleteEmailData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  accountType: 'artist' | 'label';
+  entityName: string;
+  applicationId: string;
+  profileId: string;
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+  paymentCompletedAt: string;
+  revelatorStatus: 'complete' | 'failed';
+  revelatorEnterpriseId?: string;
+  revelatorError?: string;
+  applicationSubmissionHtml: string;
+  applicationSubmissionText: string;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 async function readTemplate(templateName: string): Promise<string> {
   try {
     const fs = await import('fs/promises');
@@ -236,6 +263,74 @@ True North Music Distribution`;
 
 export async function sendAdminNewApplicationEmailInline(data: AdminNewApplicationEmailData) {
   return sendAdminNewApplicationEmail(data);
+}
+
+export async function sendAdminPaymentCompleteEmail(data: AdminPaymentCompleteEmailData) {
+  const adminEmails = (process.env.ADMIN_NOTIFICATION_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+  if (adminEmails.length === 0) {
+    console.log('No admin notification emails configured, skipping admin notification');
+    return;
+  }
+
+  const client = getClient();
+  if (!client) {
+    console.warn('Mailgun not configured, skipping email send');
+    return;
+  }
+
+  const accountTypeLabel = data.accountType === 'artist' ? 'Artist' : 'Label';
+  const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+  const adminUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorthdistro.com'}/admin`;
+
+  const html = (await readTemplate('admin-payment-complete.html'))
+    .replace(/{{first_name}}/g, escapeHtml(data.firstName))
+    .replace(/{{last_name}}/g, escapeHtml(data.lastName))
+    .replace(/{{email}}/g, escapeHtml(data.email))
+    .replace(/{{account_type}}/g, escapeHtml(data.accountType))
+    .replace(/{{account_type_label}}/g, escapeHtml(accountTypeLabel))
+    .replace(/{{entity_name}}/g, escapeHtml(data.entityName))
+    .replace(/{{entity_name_label}}/g, escapeHtml(entityNameLabel))
+    .replace(/{{application_id}}/g, escapeHtml(data.applicationId))
+    .replace(/{{profile_id}}/g, escapeHtml(data.profileId))
+    .replace(/{{stripe_customer_id}}/g, escapeHtml(data.stripeCustomerId))
+    .replace(/{{stripe_subscription_id}}/g, escapeHtml(data.stripeSubscriptionId))
+    .replace(/{{payment_completed_at}}/g, escapeHtml(data.paymentCompletedAt))
+    .replace(/{{revelator_status}}/g, escapeHtml(data.revelatorStatus))
+    .replace(/{{revelator_enterprise_id}}/g, escapeHtml(data.revelatorEnterpriseId || 'Pending'))
+    .replace(/{{revelator_error}}/g, escapeHtml(data.revelatorError || 'None'))
+    .replace(/{{admin_url}}/g, escapeHtml(adminUrl))
+    .replace(/{{application_submission_html}}/g, data.applicationSubmissionHtml);
+
+  const text = `Payment Completed - True North
+
+A payment has been completed and the user account is now active.
+
+Applicant: ${data.firstName} ${data.lastName}
+Email: ${data.email}
+Account Type: ${data.accountType}
+${entityNameLabel}: ${data.entityName}
+Application ID: ${data.applicationId}
+Profile ID: ${data.profileId}
+Stripe Customer ID: ${data.stripeCustomerId}
+Stripe Subscription ID: ${data.stripeSubscriptionId}
+Payment Completed: ${data.paymentCompletedAt}
+Revelator Status: ${data.revelatorStatus}
+Revelator Enterprise ID: ${data.revelatorEnterpriseId || 'Pending'}
+Revelator Error: ${data.revelatorError || 'None'}
+
+Original Application Submission:
+${data.applicationSubmissionText}
+
+Open Admin Panel: ${adminUrl}
+
+True North Music Distribution`;
+
+  await sendMail(adminEmails.join(','), `Payment Completed - ${data.entityName}`, html, text);
+  console.log('Admin payment complete notification sent via Mailgun:', adminEmails.join(', '));
+}
+
+export async function sendAdminPaymentCompleteEmailInline(data: AdminPaymentCompleteEmailData) {
+  return sendAdminPaymentCompleteEmail(data);
 }
 
 export async function sendWelcomeRevelatorEmail(data: WelcomeRevelatorEmailData) {

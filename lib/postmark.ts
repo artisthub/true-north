@@ -37,6 +37,33 @@ interface WelcomeRevelatorEmailData {
   entityName: string;
 }
 
+interface AdminPaymentCompleteEmailData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  accountType: 'artist' | 'label';
+  entityName: string;
+  applicationId: string;
+  profileId: string;
+  stripeCustomerId: string;
+  stripeSubscriptionId: string;
+  paymentCompletedAt: string;
+  revelatorStatus: 'complete' | 'failed';
+  revelatorEnterpriseId?: string;
+  revelatorError?: string;
+  applicationSubmissionHtml: string;
+  applicationSubmissionText: string;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export async function sendApplicationConfirmationEmail(data: ApplicationEmailData) {
   if (!client) {
     console.warn('Postmark server token not configured, skipping email send');
@@ -484,6 +511,181 @@ True North Music Distribution`,
     return result;
   } catch (error) {
     console.error('Failed to send admin new application notification:', error);
+    throw error;
+  }
+}
+
+export async function sendAdminPaymentCompleteEmail(data: AdminPaymentCompleteEmailData) {
+  if (!client) {
+    console.warn('Postmark server token not configured, skipping email send');
+    return;
+  }
+
+  try {
+    const accountTypeLabel = data.accountType === 'artist' ? 'Artist' : 'Label';
+    const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+    const adminUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorthdistro.com'}/admin`;
+    const adminEmails = (process.env.ADMIN_NOTIFICATION_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+
+    if (adminEmails.length === 0) {
+      console.log('No admin notification emails configured, skipping admin notification');
+      return;
+    }
+
+    const result = await client.sendEmailWithTemplate({
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
+      "To": adminEmails.join(','),
+      "TemplateAlias": "admin-payment-complete",
+      "TemplateModel": {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        account_type: data.accountType,
+        account_type_label: accountTypeLabel,
+        entity_name: data.entityName,
+        entity_name_label: entityNameLabel,
+        application_id: data.applicationId,
+        profile_id: data.profileId,
+        stripe_customer_id: data.stripeCustomerId,
+        stripe_subscription_id: data.stripeSubscriptionId,
+        payment_completed_at: data.paymentCompletedAt,
+        revelator_status: data.revelatorStatus,
+        revelator_enterprise_id: data.revelatorEnterpriseId || 'Pending',
+        revelator_error: data.revelatorError || 'None',
+        application_submission_html: data.applicationSubmissionHtml,
+        application_submission_text: data.applicationSubmissionText,
+        admin_url: adminUrl,
+      },
+      "MessageStream": "outbound"
+    });
+
+    console.log('Admin payment complete notification sent successfully:', result.MessageID);
+    return result;
+  } catch (error) {
+    console.error('Failed to send admin payment complete notification:', error);
+    throw error;
+  }
+}
+
+export async function sendAdminPaymentCompleteEmailInline(data: AdminPaymentCompleteEmailData) {
+  if (!client) {
+    console.warn('Postmark server token not configured, skipping email send');
+    return;
+  }
+
+  try {
+    let htmlTemplate = '';
+
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const templatePath = path.join(process.cwd(), 'email-templates', 'admin-payment-complete.html');
+      htmlTemplate = await fs.readFile(templatePath, 'utf-8');
+    } catch {
+      console.warn('Could not read admin payment email template file, using fallback HTML');
+      htmlTemplate = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Payment Completed - True North</title>
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="color: white; margin: 0;">TRUE NORTH</h1>
+            <p style="color: white; margin: 8px 0 0 0; font-size: 14px; letter-spacing: 2px;">PAYMENT COMPLETED</p>
+          </div>
+          <div style="background: #f9f9f9; padding: 40px 20px; border-radius: 0 0 10px 10px;">
+            <h2>New Paid {{account_type_label}}</h2>
+            <p>A payment has been completed and the user account is now active.</p>
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p style="margin: 5px 0;"><strong>Applicant:</strong> {{first_name}} {{last_name}}</p>
+              <p style="margin: 5px 0;"><strong>Email:</strong> {{email}}</p>
+              <p style="margin: 5px 0;"><strong>{{entity_name_label}}:</strong> {{entity_name}}</p>
+              <p style="margin: 5px 0;"><strong>Application ID:</strong> {{application_id}}</p>
+              <p style="margin: 5px 0;"><strong>Profile ID:</strong> {{profile_id}}</p>
+              <p style="margin: 5px 0;"><strong>Stripe Customer:</strong> {{stripe_customer_id}}</p>
+              <p style="margin: 5px 0;"><strong>Stripe Subscription:</strong> {{stripe_subscription_id}}</p>
+              <p style="margin: 5px 0;"><strong>Payment Completed:</strong> {{payment_completed_at}}</p>
+              <p style="margin: 5px 0;"><strong>Revelator Status:</strong> {{revelator_status}}</p>
+              <p style="margin: 5px 0;"><strong>Revelator Enterprise ID:</strong> {{revelator_enterprise_id}}</p>
+              <p style="margin: 5px 0;"><strong>Revelator Error:</strong> {{revelator_error}}</p>
+            </div>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="{{admin_url}}" style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); color: #fff; padding: 14px 40px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px;">
+                Open Admin Panel
+              </a>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+    }
+
+    const accountTypeLabel = data.accountType === 'artist' ? 'Artist' : 'Label';
+    const entityNameLabel = data.accountType === 'artist' ? 'Artist Name' : 'Label Name';
+    const adminUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://truenorthdistro.com'}/admin`;
+    const adminEmails = (process.env.ADMIN_NOTIFICATION_EMAIL || '').split(',').map(e => e.trim()).filter(Boolean);
+
+    if (adminEmails.length === 0) {
+      console.log('No admin notification emails configured, skipping admin notification');
+      return;
+    }
+
+    htmlTemplate = htmlTemplate
+      .replace(/{{first_name}}/g, escapeHtml(data.firstName))
+      .replace(/{{last_name}}/g, escapeHtml(data.lastName))
+      .replace(/{{email}}/g, escapeHtml(data.email))
+      .replace(/{{account_type}}/g, escapeHtml(data.accountType))
+      .replace(/{{account_type_label}}/g, escapeHtml(accountTypeLabel))
+      .replace(/{{entity_name}}/g, escapeHtml(data.entityName))
+      .replace(/{{entity_name_label}}/g, escapeHtml(entityNameLabel))
+      .replace(/{{application_id}}/g, escapeHtml(data.applicationId))
+      .replace(/{{profile_id}}/g, escapeHtml(data.profileId))
+      .replace(/{{stripe_customer_id}}/g, escapeHtml(data.stripeCustomerId))
+      .replace(/{{stripe_subscription_id}}/g, escapeHtml(data.stripeSubscriptionId))
+      .replace(/{{payment_completed_at}}/g, escapeHtml(data.paymentCompletedAt))
+      .replace(/{{revelator_status}}/g, escapeHtml(data.revelatorStatus))
+      .replace(/{{revelator_enterprise_id}}/g, escapeHtml(data.revelatorEnterpriseId || 'Pending'))
+      .replace(/{{revelator_error}}/g, escapeHtml(data.revelatorError || 'None'))
+      .replace(/{{admin_url}}/g, escapeHtml(adminUrl))
+      .replace(/{{application_submission_html}}/g, data.applicationSubmissionHtml);
+
+    const result = await client.sendEmail({
+      "From": process.env.POSTMARK_FROM_EMAIL || "noreply@truenorthdistro.com",
+      "To": adminEmails.join(','),
+      "Subject": `Payment Completed - ${data.entityName}`,
+      "HtmlBody": htmlTemplate,
+      "TextBody": `Payment Completed - True North
+
+A payment has been completed and the user account is now active.
+
+Applicant: ${data.firstName} ${data.lastName}
+Email: ${data.email}
+Account Type: ${data.accountType}
+${entityNameLabel}: ${data.entityName}
+Application ID: ${data.applicationId}
+Profile ID: ${data.profileId}
+Stripe Customer ID: ${data.stripeCustomerId}
+Stripe Subscription ID: ${data.stripeSubscriptionId}
+Payment Completed: ${data.paymentCompletedAt}
+Revelator Status: ${data.revelatorStatus}
+Revelator Enterprise ID: ${data.revelatorEnterpriseId || 'Pending'}
+Revelator Error: ${data.revelatorError || 'None'}
+
+Original Application Submission:
+${data.applicationSubmissionText}
+
+Open Admin Panel: ${adminUrl}
+
+True North Music Distribution`,
+      "MessageStream": "outbound"
+    });
+
+    console.log('Admin payment complete notification sent successfully:', result.MessageID);
+    return result;
+  } catch (error) {
+    console.error('Failed to send admin payment complete notification:', error);
     throw error;
   }
 }
