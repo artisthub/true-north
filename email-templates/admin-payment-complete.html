@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Completed - True North</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #0a0a0a; color: #ffffff;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #0a0a0a;">
+    <tr>
+      <td align="center" style="padding: 40px 20px;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width: 600px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255, 20, 147, 0.2);">
+          <tr>
+            <td style="padding: 0;">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%);">
+                <tr>
+                  <td align="center" style="padding: 40px 20px;">
+                    <h1 style="margin: 0; font-size: 36px; font-weight: 700; color: #ffffff; letter-spacing: -1px;">TRUE NORTH</h1>
+                    <p style="margin: 8px 0 0 0; font-size: 13px; color: rgba(255, 255, 255, 0.9); letter-spacing: 2px; font-weight: 500;">PAYMENT COMPLETED</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 40px 40px 20px 40px;">
+              <h2 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 600; color: #ffffff;">New Paid {{account_type_label}}</h2>
+              <p style="margin: 0 0 24px 0; font-size: 16px; line-height: 1.6; color: #cccccc;">
+                A user has completed payment and their True North account has been activated.
+              </p>
+
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: rgba(0, 0, 0, 0.5); border-radius: 12px; border: 1px solid rgba(255, 20, 147, 0.1); margin: 24px 0;">
+                <tr>
+                  <td style="padding: 24px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px; width: 42%;">Applicant:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{first_name}} {{last_name}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Email:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{email}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Account Type:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px; text-transform: capitalize;">{{account_type}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">{{entity_name_label}}:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{entity_name}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Application ID:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{application_id}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Profile ID:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{profile_id}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Stripe Customer ID:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{stripe_customer_id}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Stripe Subscription ID:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{stripe_subscription_id}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Payment Completed:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{payment_completed_at}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Revelator Status:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px; text-transform: capitalize;">{{revelator_status}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Revelator Enterprise ID:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{revelator_enterprise_id}}</td></tr>
+                      <tr><td style="padding: 6px 0; color: #999999; font-size: 14px;">Revelator Error:</td><td style="padding: 6px 0; color: #ffffff; font-size: 14px;">{{revelator_error}}</td></tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 32px 0;">
+                <tr>
+                  <td align="center">
+                    <a href="{{admin_url}}" style="display: inline-block; padding: 14px 40px; background: linear-gradient(135deg, #FF1493 0%, #FF69B4 100%); color: #ffffff; text-decoration: none; border-radius: 30px; font-weight: 600; font-size: 16px;">
+                      Open Admin Panel
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <h3 style="margin: 36px 0 16px 0; font-size: 20px; font-weight: 600; color: #ffffff;">Original Application Submission</h3>
+              <p style="margin: 0 0 24px 0; font-size: 15px; line-height: 1.6; color: #cccccc;">
+                This is the full stored submission that led to this payment.
+              </p>
+
+              {{application_submission_html}}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding: 20px 40px 30px; border-top: 1px solid rgba(255, 20, 147, 0.1);">
+              <p style="margin: 0; font-size: 12px; color: #666666; text-align: center;">This is an automated notification from True North Music Distribution.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

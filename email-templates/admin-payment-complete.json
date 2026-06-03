@@ -1,0 +1,24 @@
+{
+  "TemplateAlias": "admin-payment-complete",
+  "Subject": "Payment Completed - {{entity_name}}",
+  "TestRenderModel": {
+    "first_name": "Jordan",
+    "last_name": "Miles",
+    "email": "jordan@example.com",
+    "account_type": "artist",
+    "account_type_label": "Artist",
+    "entity_name": "Jordan Miles",
+    "entity_name_label": "Artist Name",
+    "application_id": "6fcb844e-a1b1-4ef4-b52e-4c8220b3f0cc",
+    "profile_id": "e4f6b1d3-c6d8-4d05-9a66-d6f6d92bc8de",
+    "stripe_customer_id": "cus_123456789",
+    "stripe_subscription_id": "sub_123456789",
+    "payment_completed_at": "June 3, 2026, 3:15 PM GMT+2",
+    "revelator_status": "complete",
+    "revelator_enterprise_id": "123456",
+    "revelator_error": "None",
+    "application_submission_html": "<table role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\"><tr><td style=\"color:#ffffff;\">Contact Information<br>First Name: Jordan<br>Last Name: Miles<br>Email: jordan@example.com<br>Phone: +1 555 555 5555</td></tr></table><table role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\"><tr><td style=\"color:#ffffff;\">Artist Details<br>Artist Name: Jordan Miles<br>Artist Country: United States<br>Artist Spotify URL: https://open.spotify.com/artist/example<br>Artist Instagram Handle: @jordanmiles<br>Artist Genre: Pop<br>Artist Sub-Genre: Indie Pop<br>Artist Years Active: 6<br>Artist Releases Count: 12<br>Artist Monthly Listeners: 120000</td></tr></table><table role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\"><tr><td style=\"color:#ffffff;\">Business & Distribution Details<br>Catalog Size: 24 tracks<br>Current Distributor: DistroKid<br>Distribution Goals: Expand into editorial playlists and grow global audience.<br>Marketing Budget: $2,500 per release<br>Team Size: 3<br>Revenue Sources: Streaming, Sync, Merch</td></tr></table><table role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\"><tr><td style=\"color:#ffffff;\">Application Answers<br>Why True North: Better support and hands-on strategy.<br>Additional Info: Planning two major releases this year.</td></tr></table>",
+    "application_submission_text": "Contact Information\nFirst Name: Jordan\nLast Name: Miles\nEmail: jordan@example.com\nPhone: +1 555 555 5555\n\nArtist Details\nArtist Name: Jordan Miles\nArtist Country: United States\nArtist Spotify URL: https://open.spotify.com/artist/example\nArtist Instagram Handle: @jordanmiles\nArtist Genre: Pop\nArtist Sub-Genre: Indie Pop\nArtist Years Active: 6\nArtist Releases Count: 12\nArtist Monthly Listeners: 120000\n\nBusiness & Distribution Details\nCatalog Size: 24 tracks\nCurrent Distributor: DistroKid\nDistribution Goals: Expand into editorial playlists and grow global audience.\nMarketing Budget: $2,500 per release\nTeam Size: 3\nRevenue Sources: Streaming, Sync, Merch\n\nApplication Answers\nWhy True North: Better support and hands-on strategy.\nAdditional Info: Planning two major releases this year.",
+    "admin_url": "https://truenorthdistro.com/admin"
+  }
+}

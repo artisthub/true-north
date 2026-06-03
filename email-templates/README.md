@@ -96,11 +96,40 @@ If emails are not sending:
 
 ## Additional Templates
 
-You may want to add these templates in the future:
+Current admin/payment-related templates in this directory include:
 
-- Application Approved
-- Application Rejected  
-- Payment Confirmation
-- Welcome Onboarding
+- `application-accepted`
+- `admin-new-application`
+- `welcome-revelator`
+- `admin-payment-complete`
+
+### Admin Payment Complete (`admin-payment-complete`)
+
+Sent automatically to the addresses in `ADMIN_NOTIFICATION_EMAIL` when Stripe payment completion has been processed server-side.
+
+Template variables:
+
+- `first_name`
+- `last_name`
+- `email`
+- `account_type`
+- `account_type_label`
+- `entity_name`
+- `entity_name_label`
+- `application_id`
+- `profile_id`
+- `stripe_customer_id`
+- `stripe_subscription_id`
+- `payment_completed_at`
+- `revelator_status`
+- `revelator_enterprise_id`
+- `revelator_error`
+- `application_submission_html`
+- `application_submission_text`
+- `admin_url`
+
+You may still want to add these templates in the future:
+
+- Application Rejected
 - Password Reset
 - Account Verification
