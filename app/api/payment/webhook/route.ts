@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { createAdminClient } from '@/lib/supabase-auth';
+import { formatApplicationSubmission } from '@/lib/admin-payment-complete-email';
 import { stripe } from '@/lib/stripe';
 import { createAccount } from '@/lib/revelator';
-import { sendWelcomeRevelatorEmailInline } from '@/lib/email';
+import { sendAdminPaymentCompleteEmailInline, sendWelcomeRevelatorEmailInline } from '@/lib/email';
 import Stripe from 'stripe';
 
 import crypto from 'crypto';
@@ -168,6 +169,42 @@ export async function POST(request: Request) {
             console.error('Failed to send welcome email:', emailErr);
           });
 
+          const paymentCompletedAt = new Date(event.created * 1000).toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            timeZoneName: 'short'
+          });
+          const accountTypeForEmail = application.account_type as 'artist' | 'label';
+          const entityNameForEmail = accountTypeForEmail === 'artist'
+            ? (application.artist_name || `${application.first_name} ${application.last_name}`)
+            : (application.label_name || `${application.first_name} ${application.last_name}`);
+          const applicationSubmission = formatApplicationSubmission(application);
+
+          try {
+            await sendAdminPaymentCompleteEmailInline({
+              firstName: application.first_name || '',
+              lastName: application.last_name || '',
+              email: application.email,
+              accountType: accountTypeForEmail,
+              entityName: entityNameForEmail,
+              applicationId,
+              profileId: authUser.user.id,
+              stripeCustomerId: typeof session.customer === 'string' ? session.customer : 'Unavailable',
+              stripeSubscriptionId: typeof session.subscription === 'string' ? session.subscription : 'Unavailable',
+              paymentCompletedAt,
+              revelatorStatus: revelatorResult ? 'complete' : 'failed',
+              revelatorEnterpriseId: revelatorResult ? String(revelatorResult.enterpriseId) : undefined,
+              revelatorError: revelatorError || undefined,
+              applicationSubmissionHtml: applicationSubmission.html,
+              applicationSubmissionText: applicationSubmission.text,
+            });
+          } catch (emailErr) {
+            console.error('Failed to send admin payment complete email:', emailErr);
+          }
+
           // Send notification if Slack webhook is configured
           const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
           if (slackWebhookUrl) {
@@ -201,16 +238,20 @@ export async function POST(request: Request) {
               });
             }
 
-            await fetch(slackWebhookUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                text: revelatorError
-                  ? `New paid user (Revelator setup failed): ${application.email}`
-                  : `New paid user! ${application.email}`,
-                blocks: slackBlocks
-              })
-            });
+            try {
+              await fetch(slackWebhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  text: revelatorError
+                    ? `New paid user (Revelator setup failed): ${application.email}`
+                    : `New paid user! ${application.email}`,
+                  blocks: slackBlocks
+                })
+              });
+            } catch (slackError) {
+              console.error('Failed to send Slack notification for paid user:', slackError);
+            }
           }
         }
         break;
