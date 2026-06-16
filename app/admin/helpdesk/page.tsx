@@ -216,12 +216,21 @@ function RichMarkdownEditor({
   onChange: (value: string) => void;
 }) {
   const editorRef = useRef<HTMLDivElement | null>(null);
+  const renderedMarkdownRef = useRef<string | null>(null);
   const [mode, setMode] = useState<EditorMode>('visual');
-  const [editorHtml, setEditorHtml] = useState(() => markdownToEditorHtml(markdown));
 
   useEffect(() => {
-    setEditorHtml(markdownToEditorHtml(markdown));
-  }, [markdown]);
+    if (mode !== 'visual' || !editorRef.current) return;
+
+    const editor = editorRef.current;
+
+    if (document.activeElement === editor && renderedMarkdownRef.current !== null) {
+      return;
+    }
+
+    editor.innerHTML = markdownToEditorHtml(markdown);
+    renderedMarkdownRef.current = markdown;
+  }, [markdown, mode]);
 
   const syncMarkdown = () => {
     if (!editorRef.current) return;
@@ -277,30 +286,35 @@ function RichMarkdownEditor({
       {mode === 'visual' && (
         <>
           <div className={styles.editorToolbar} aria-label="Formatting toolbar">
-            <button onClick={() => runCommand('formatBlock', 'p')} type="button">
+            <button onMouseDown={(event) => event.preventDefault()} onClick={() => runCommand('formatBlock', 'p')} type="button">
               ¶
             </button>
-            <button onClick={() => runCommand('formatBlock', 'h2')} type="button">
+            <button onMouseDown={(event) => event.preventDefault()} onClick={() => runCommand('formatBlock', 'h2')} type="button">
               H2
             </button>
-            <button onClick={() => runCommand('formatBlock', 'h3')} type="button">
+            <button onMouseDown={(event) => event.preventDefault()} onClick={() => runCommand('formatBlock', 'h3')} type="button">
               H3
             </button>
             <span className={styles.toolbarDivider} />
-            <button aria-label="Bold" onClick={() => runCommand('bold')} type="button">
+            <button aria-label="Bold" onMouseDown={(event) => event.preventDefault()} onClick={() => runCommand('bold')} type="button">
               B
             </button>
-            <button aria-label="Italic" onClick={() => runCommand('italic')} type="button">
+            <button aria-label="Italic" onMouseDown={(event) => event.preventDefault()} onClick={() => runCommand('italic')} type="button">
               I
             </button>
-            <button aria-label="Bulleted list" onClick={() => runCommand('insertUnorderedList')} type="button">
+            <button
+              aria-label="Bulleted list"
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => runCommand('insertUnorderedList')}
+              type="button"
+            >
               • List
             </button>
             <span className={styles.toolbarDivider} />
-            <button onClick={addLink} type="button">
+            <button onMouseDown={(event) => event.preventDefault()} onClick={addLink} type="button">
               Link
             </button>
-            <button onClick={() => runCommand('unlink')} type="button">
+            <button onMouseDown={(event) => event.preventDefault()} onClick={() => runCommand('unlink')} type="button">
               Unlink
             </button>
           </div>
@@ -308,7 +322,6 @@ function RichMarkdownEditor({
             aria-label="Article body"
             className={styles.editorCanvas}
             contentEditable
-            dangerouslySetInnerHTML={{ __html: editorHtml }}
             id="article-body"
             onBlur={syncMarkdown}
             onInput={syncMarkdown}
