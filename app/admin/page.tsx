@@ -214,6 +214,9 @@ export default function AdminDashboard() {
                 True North Admin
               </Link>
               <nav>
+                <Link href="/admin/helpdesk" className="btn-secondary">
+                  Helpdesk CMS
+                </Link>
                 <Link href="/" className="btn-secondary">
                   Back to Site
                 </Link>
