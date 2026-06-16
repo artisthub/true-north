@@ -999,6 +999,9 @@ export default function AdminHelpdeskPage() {
                         Archive article
                       </button>
                     )}
+                  </div>
+
+                  <div className={styles.publicAction}>
                     <Link className={styles.secondaryButton} href="/helpdesk">
                       View public helpdesk
                     </Link>

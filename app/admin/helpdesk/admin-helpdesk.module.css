@@ -179,6 +179,12 @@
   align-items: center;
 }
 
+.publicAction {
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+}
+
 .button,
 .secondaryButton,
 .dangerButton {
