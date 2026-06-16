@@ -34,7 +34,7 @@ export function extractHeadings(markdown: string): MarkdownHeading[] {
 
 function renderInline(text: string): React.ReactNode[] {
   const nodes: React.ReactNode[] = [];
-  const pattern = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
+  const pattern = /(!\[[^\]]*]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
@@ -51,6 +51,13 @@ function renderInline(text: string): React.ReactNode[] {
       nodes.push(<em key={`${match.index}-em`}>{token.slice(1, -1)}</em>);
     } else if (token.startsWith('`')) {
       nodes.push(<code key={`${match.index}-code`}>{token.slice(1, -1)}</code>);
+    } else if (token.startsWith('![')) {
+      const imageMatch = /^!\[([^\]]*)]\(([^)]+)\)$/.exec(token);
+      if (imageMatch) {
+        nodes.push(
+          <img key={`${match.index}-image`} src={imageMatch[2]} alt={imageMatch[1]} />
+        );
+      }
     } else {
       const linkMatch = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(token);
       if (linkMatch) {

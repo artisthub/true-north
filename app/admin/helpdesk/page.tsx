@@ -66,6 +66,7 @@ function escapeHtml(value: string) {
 
 function inlineMarkdownToHtml(value: string) {
   return escapeHtml(value)
+    .replace(/!\[([^\]]*)]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
     .replace(/`([^`]+)`/g, '<code>$1</code>')
@@ -141,6 +142,11 @@ function inlineNodeToMarkdown(node: Node): string {
   const element = node as HTMLElement;
   const content = Array.from(element.childNodes).map(inlineNodeToMarkdown).join('');
 
+  if (element.tagName === 'IMG') {
+    const src = element.getAttribute('src') || '';
+    const alt = element.getAttribute('alt') || 'Uploaded image';
+    return src ? `![${alt}](${src})` : '';
+  }
   if (element.tagName === 'STRONG' || element.tagName === 'B') return `**${content}**`;
   if (element.tagName === 'EM' || element.tagName === 'I') return `*${content}*`;
   if (element.tagName === 'CODE') return `\`${content}\``;
@@ -216,8 +222,15 @@ function RichMarkdownEditor({
   onChange: (value: string) => void;
 }) {
   const editorRef = useRef<HTMLDivElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const renderedMarkdownRef = useRef<string | null>(null);
+  const savedSelectionRef = useRef<Range | null>(null);
   const [mode, setMode] = useState<EditorMode>('visual');
+  const [showLinkForm, setShowLinkForm] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  const [linkError, setLinkError] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [editorNotice, setEditorNotice] = useState('');
 
   useEffect(() => {
     if (mode !== 'visual' || !editorRef.current) return;
@@ -237,17 +250,122 @@ function RichMarkdownEditor({
     onChange(editorHtmlToMarkdown(editorRef.current));
   };
 
+  const captureSelection = () => {
+    if (!editorRef.current) return;
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    const range = selection.getRangeAt(0);
+    const container = editorRef.current;
+
+    if (container.contains(range.commonAncestorContainer)) {
+      savedSelectionRef.current = range.cloneRange();
+    }
+  };
+
+  const restoreSelection = () => {
+    if (!savedSelectionRef.current) return;
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    selection.removeAllRanges();
+    selection.addRange(savedSelectionRef.current);
+  };
+
   const runCommand = (command: string, value?: string) => {
     if (!editorRef.current) return;
+    restoreSelection();
     editorRef.current.focus();
     document.execCommand(command, false, value);
     syncMarkdown();
   };
 
-  const addLink = () => {
-    const url = window.prompt('Paste the destination URL');
-    if (!url) return;
-    runCommand('createLink', url);
+  const insertHtml = (html: string) => {
+    if (!editorRef.current) return;
+    restoreSelection();
+    editorRef.current.focus();
+    document.execCommand('insertHTML', false, html);
+    syncMarkdown();
+  };
+
+  const openLinkForm = () => {
+    captureSelection();
+    setEditorNotice('');
+    setLinkError('');
+    setLinkUrl('');
+    setShowLinkForm(true);
+  };
+
+  const applyLink = () => {
+    const url = linkUrl.trim();
+
+    if (!/^(https?:\/\/|mailto:|\/)/.test(url)) {
+      setLinkError('Use a full URL, mailto link, or site path.');
+      return;
+    }
+
+    restoreSelection();
+    const selection = window.getSelection();
+    const selectedText = selection?.toString();
+
+    if (selectedText) {
+      runCommand('createLink', url);
+    } else {
+      insertHtml(`<a href="${escapeHtml(url)}">${escapeHtml(url)}</a>`);
+    }
+
+    setShowLinkForm(false);
+    setLinkUrl('');
+    setLinkError('');
+  };
+
+  const openUploadPicker = () => {
+    captureSelection();
+    setEditorNotice('');
+    fileInputRef.current?.click();
+  };
+
+  const uploadFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+
+    if (!file) return;
+
+    setUploading(true);
+    setEditorNotice('');
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/admin/helpdesk/uploads', {
+        method: 'POST',
+        body: formData,
+      });
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'Upload failed');
+      }
+
+      const uploaded = payload.data as {
+        name: string;
+        url: string;
+        type: string;
+      };
+
+      if (uploaded.type.startsWith('image/')) {
+        insertHtml(`<img src="${escapeHtml(uploaded.url)}" alt="${escapeHtml(uploaded.name)}">`);
+      } else {
+        insertHtml(`<a href="${escapeHtml(uploaded.url)}">${escapeHtml(uploaded.name)}</a>`);
+      }
+
+      setEditorNotice(`${uploaded.name} uploaded.`);
+    } catch (error) {
+      setEditorNotice(error instanceof Error ? error.message : 'Upload failed');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const switchMode = (nextMode: EditorMode) => {
@@ -311,19 +429,61 @@ function RichMarkdownEditor({
               • List
             </button>
             <span className={styles.toolbarDivider} />
-            <button onMouseDown={(event) => event.preventDefault()} onClick={addLink} type="button">
+            <button onMouseDown={(event) => event.preventDefault()} onClick={openLinkForm} type="button">
               Link
             </button>
             <button onMouseDown={(event) => event.preventDefault()} onClick={() => runCommand('unlink')} type="button">
               Unlink
             </button>
+            <button onMouseDown={(event) => event.preventDefault()} onClick={openUploadPicker} type="button" disabled={uploading}>
+              {uploading ? 'Uploading...' : 'Upload'}
+            </button>
+            <input
+              ref={fileInputRef}
+              className={styles.fileInput}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml,application/pdf,text/plain,text/csv"
+              onChange={uploadFile}
+            />
           </div>
+          {showLinkForm && (
+            <div className={styles.linkPanel}>
+              <label htmlFor="article-link-url">Link URL</label>
+              <input
+                id="article-link-url"
+                value={linkUrl}
+                onChange={(event) => setLinkUrl(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    applyLink();
+                  }
+
+                  if (event.key === 'Escape') {
+                    setShowLinkForm(false);
+                    setLinkError('');
+                  }
+                }}
+                placeholder="https://example.com"
+              />
+              <button onClick={applyLink} type="button">
+                Apply link
+              </button>
+              <button onClick={() => setShowLinkForm(false)} type="button">
+                Cancel
+              </button>
+              {linkError && <span>{linkError}</span>}
+            </div>
+          )}
+          {editorNotice && <div className={styles.editorNotice}>{editorNotice}</div>}
           <div
             aria-label="Article body"
             className={styles.editorCanvas}
             contentEditable
             id="article-body"
             onBlur={syncMarkdown}
+            onKeyUp={captureSelection}
+            onMouseUp={captureSelection}
             onInput={syncMarkdown}
             ref={editorRef}
             role="textbox"
