@@ -13,6 +13,7 @@ export type HelpdeskTopic = {
 };
 
 export type HelpdeskArticleStatus = 'draft' | 'published' | 'archived';
+export type HelpdeskTag = { id: string; name: string; slug: string };
 
 export type HelpdeskArticle = {
   id: string;
@@ -23,7 +24,7 @@ export type HelpdeskArticle = {
   excerpt: string;
   body_markdown: string;
   topic_id: string | null;
-  tags: string[];
+  tags: HelpdeskTag[];
   status: HelpdeskArticleStatus;
   featured: boolean;
   view_count: number;
@@ -33,6 +34,7 @@ export type HelpdeskArticle = {
 export type HelpdeskData = {
   topics: HelpdeskTopic[];
   articles: HelpdeskArticle[];
+  tags: HelpdeskTag[];
 };
 
 const articleOrder = (a: HelpdeskArticle, b: HelpdeskArticle) => {
@@ -43,12 +45,12 @@ const articleOrder = (a: HelpdeskArticle, b: HelpdeskArticle) => {
   return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
 };
 
-function attachTopics(articles: HelpdeskArticle[], topics: HelpdeskTopic[]) {
+function attachTopics(articles: any[], topics: HelpdeskTopic[]) {
   const topicsById = new Map(topics.map((topic) => [topic.id, topic]));
 
   return articles.map((article) => ({
     ...article,
-    tags: article.tags || [],
+    tags: (article.kb_article_tags || []).map((item: any) => item.kb_tags).filter(Boolean),
     topic: article.topic_id ? topicsById.get(article.topic_id) || null : null,
   }));
 }
@@ -57,14 +59,14 @@ export async function getPublishedHelpdeskData(): Promise<HelpdeskData> {
   noStore();
 
   if (!supabase) {
-    return { topics: [], articles: [] };
+    return { topics: [], articles: [], tags: [] };
   }
 
   try {
     const [topicsResult, articlesResult] = await Promise.all([
       supabase
         .from('kb_topics')
-        .select('*')
+        .select('*, kb_article_tags(kb_tags(id,name,slug))')
         .eq('published', true)
         .order('sort_order', { ascending: true })
         .order('title', { ascending: true }),
@@ -79,12 +81,14 @@ export async function getPublishedHelpdeskData(): Promise<HelpdeskData> {
     if (articlesResult.error) throw articlesResult.error;
 
     const topics = (topicsResult.data || []) as HelpdeskTopic[];
-    const articles = attachTopics((articlesResult.data || []) as HelpdeskArticle[], topics).sort(articleOrder);
+    const articles = attachTopics(articlesResult.data || [], topics).sort(articleOrder);
+    const tags = Array.from(new Map(articles.flatMap((article) => article.tags).map((tag) => [tag.id, tag])).values())
+      .sort((a, b) => a.name.localeCompare(b.name));
 
-    return { topics, articles };
+    return { topics, articles, tags };
   } catch (error) {
     console.error('Helpdesk data fetch error:', error);
-    return { topics: [], articles: [] };
+    return { topics: [], articles: [], tags: [] };
   }
 }
 

@@ -76,6 +76,7 @@ export default async function HelpdeskTopicPage({ params }: { params: { slug: st
                   </div>
                   <h3>{article.title}</h3>
                   <p>{article.excerpt}</p>
+                  {article.tags.length > 0 && <div className={styles.cardTags}>{article.tags.map((tag) => <span key={tag.id}>#{tag.name}</span>)}</div>}
                 </Link>
               ))}
             </div>

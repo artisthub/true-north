@@ -2,12 +2,14 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import type { HelpdeskArticle, HelpdeskTopic } from '@/lib/helpdesk';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import type { HelpdeskArticle, HelpdeskTag, HelpdeskTopic } from '@/lib/helpdesk';
 import styles from '../helpdesk.module.css';
 
 type HelpdeskHomeProps = {
   topics: HelpdeskTopic[];
   articles: HelpdeskArticle[];
+  tags: HelpdeskTag[];
 };
 
 function formatDate(value: string) {
@@ -53,9 +55,28 @@ function searchArticles(articles: HelpdeskArticle[], query: string) {
   });
 }
 
-export default function HelpdeskHome({ topics, articles }: HelpdeskHomeProps) {
+export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomeProps) {
   const [query, setQuery] = useState('');
-  const filteredArticles = useMemo(() => searchArticles(articles, query), [articles, query]);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const selectedSlugs = useMemo(() => {
+    const requested = searchParams.getAll('tag').flatMap((value) => value.split(',')).filter(Boolean);
+    const valid = new Set(tags.map((tag) => tag.slug));
+    return Array.from(new Set(requested.filter((slug) => valid.has(slug))));
+  }, [searchParams, tags]);
+  const filteredArticles = useMemo(() => {
+    const searched = searchArticles(articles, query);
+    return selectedSlugs.length
+      ? searched.filter((article) => article.tags.some((tag) => selectedSlugs.includes(tag.slug)))
+      : searched;
+  }, [articles, query, selectedSlugs]);
+  const setTags = (slugs: string[]) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('tag');
+    slugs.forEach((slug) => params.append('tag', slug));
+    router.replace(params.size ? `${pathname}?${params}` : pathname, { scroll: false });
+  };
   const featuredArticles = filteredArticles.filter((article) => article.featured).slice(0, 5);
   const visibleArticles = featuredArticles.length ? featuredArticles : filteredArticles.slice(0, 8);
 
@@ -101,6 +122,17 @@ export default function HelpdeskHome({ topics, articles }: HelpdeskHomeProps) {
               />
             </label>
           </div>
+          {tags.length > 0 && (
+            <div className={styles.tagFilters} aria-label="Filter articles by tag">
+              <span>Filter by tag</span>
+              {tags.map((tag) => {
+                const active = selectedSlugs.includes(tag.slug);
+                return <button aria-pressed={active} className={active ? styles.tagActive : styles.tagButton} key={tag.id}
+                  onClick={() => setTags(active ? selectedSlugs.filter((slug) => slug !== tag.slug) : [...selectedSlugs, tag.slug])} type="button">{tag.name}</button>;
+              })}
+              {selectedSlugs.length > 0 && <button className={styles.clearTags} onClick={() => setTags([])} type="button">Clear all</button>}
+            </div>
+          )}
         </div>
       </section>
 
@@ -141,6 +173,7 @@ export default function HelpdeskHome({ topics, articles }: HelpdeskHomeProps) {
                     </div>
                     <h3>{article.title}</h3>
                     <p>{article.excerpt}</p>
+                    {article.tags.length > 0 && <div className={styles.cardTags}>{article.tags.map((tag) => <span key={tag.id}>#{tag.name}</span>)}</div>}
                   </Link>
                 ))}
               </div>

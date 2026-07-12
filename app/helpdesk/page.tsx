@@ -31,12 +31,12 @@ function HelpdeskHeader() {
 }
 
 export default async function HelpdeskPage() {
-  const { topics, articles } = await getPublishedHelpdeskData();
+  const { topics, articles, tags } = await getPublishedHelpdeskData();
 
   return (
     <main className={styles.shell}>
       <HelpdeskHeader />
-      <HelpdeskHome topics={topics} articles={articles} />
+      <HelpdeskHome topics={topics} articles={articles} tags={tags} />
     </main>
   );
 }

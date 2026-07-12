@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type React from 'react';
 import Link from 'next/link';
-import type { HelpdeskArticle, HelpdeskArticleStatus, HelpdeskTopic } from '@/lib/helpdesk';
+import type { HelpdeskArticle, HelpdeskArticleStatus, HelpdeskTag, HelpdeskTopic } from '@/lib/helpdesk';
 import { renderMarkdown } from '@/lib/markdown';
 import styles from './admin-helpdesk.module.css';
 
@@ -23,7 +23,7 @@ type ArticleForm = {
   excerpt: string;
   body_markdown: string;
   topic_id: string;
-  tags: string;
+  tag_ids: string[];
   status: HelpdeskArticleStatus;
   featured: boolean;
 };
@@ -42,7 +42,7 @@ const emptyArticle: ArticleForm = {
   excerpt: '',
   body_markdown: '## Overview\n\nWrite the support answer here.\n\n## Next steps\n\n- Add the first action.\n- Add the second action.',
   topic_id: '',
-  tags: '',
+  tag_ids: [],
   status: 'draft',
   featured: false,
 };
@@ -510,6 +510,8 @@ function RichMarkdownEditor({
 export default function AdminHelpdeskPage() {
   const [topics, setTopics] = useState<HelpdeskTopic[]>([]);
   const [articles, setArticles] = useState<HelpdeskArticle[]>([]);
+  const [tags, setTags] = useState<HelpdeskTag[]>([]);
+  const [tagQuery, setTagQuery] = useState('');
   const [topicForm, setTopicForm] = useState<TopicForm>(emptyTopic);
   const [articleForm, setArticleForm] = useState<ArticleForm>(emptyArticle);
   const [loading, setLoading] = useState(true);
@@ -524,22 +526,25 @@ export default function AdminHelpdeskPage() {
     setError('');
 
     try {
-      const [topicsResponse, articlesResponse] = await Promise.all([
+      const [topicsResponse, articlesResponse, tagsResponse] = await Promise.all([
         fetch('/api/admin/helpdesk/topics'),
         fetch('/api/admin/helpdesk/articles'),
+        fetch('/api/admin/helpdesk/tags'),
       ]);
 
-      if (!topicsResponse.ok || !articlesResponse.ok) {
+      if (!topicsResponse.ok || !articlesResponse.ok || !tagsResponse.ok) {
         throw new Error('Failed to load helpdesk content');
       }
 
-      const [topicsJson, articlesJson] = await Promise.all([
+      const [topicsJson, articlesJson, tagsJson] = await Promise.all([
         topicsResponse.json(),
         articlesResponse.json(),
+        tagsResponse.json(),
       ]);
 
       setTopics(topicsJson.data || []);
-      setArticles(articlesJson.data || []);
+      setArticles((articlesJson.data || []).map((article: any) => ({ ...article, tags: (article.kb_article_tags || []).map((item: any) => item.kb_tags).filter(Boolean) })));
+      setTags(tagsJson.data || []);
     } catch (loadError) {
       console.error(loadError);
       setError('Could not load helpdesk content. Confirm the Supabase migration has been applied.');
@@ -573,12 +578,25 @@ export default function AdminHelpdeskPage() {
       excerpt: article.excerpt,
       body_markdown: article.body_markdown,
       topic_id: article.topic_id || '',
-      tags: (article.tags || []).join(', '),
+      tag_ids: (article.tags || []).map((tag) => tag.id),
       status: article.status,
       featured: article.featured,
     });
     setMessage('');
     setError('');
+  };
+
+  const addTag = (tag: HelpdeskTag) => {
+    setArticleForm((current) => ({ ...current, tag_ids: Array.from(new Set([...current.tag_ids, tag.id])) }));
+    setTagQuery('');
+  };
+
+  const createTag = async () => {
+    const response = await fetch('/api/admin/helpdesk/tags', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: tagQuery }) });
+    const payload = await response.json();
+    if (!response.ok) { setError(payload.error || 'Failed to create tag'); return; }
+    setTags((current) => current.some((tag) => tag.id === payload.data.id) ? current : [...current, payload.data].sort((a, b) => a.name.localeCompare(b.name)));
+    addTag(payload.data);
   };
 
   const saveTopic = async (event: React.FormEvent) => {
@@ -960,13 +978,22 @@ export default function AdminHelpdeskPage() {
                   <div className={styles.row}>
                     <div className={styles.field}>
                       <label htmlFor="article-tags">Tags</label>
+                      <div className={styles.tagPicker}>
+                      <div className={styles.selectedTags}>{articleForm.tag_ids.map((id) => tags.find((tag) => tag.id === id)).filter(Boolean).map((tag) => (
+                        <button key={tag!.id} onClick={() => setArticleForm((current) => ({ ...current, tag_ids: current.tag_ids.filter((id) => id !== tag!.id) }))} type="button">{tag!.name}<span aria-hidden="true">×</span></button>
+                      ))}</div>
                       <input
                         className={styles.input}
                         id="article-tags"
-                        placeholder="metadata, stores, claims"
-                        value={articleForm.tags}
-                        onChange={(event) => setArticleForm((current) => ({ ...current, tags: event.target.value }))}
+                        placeholder="Search or create a tag"
+                        value={tagQuery}
+                        onChange={(event) => setTagQuery(event.target.value)}
                       />
+                      {tagQuery.trim() && <div className={styles.tagOptions}>
+                        {tags.filter((tag) => !articleForm.tag_ids.includes(tag.id) && tag.name.toLowerCase().includes(tagQuery.trim().toLowerCase())).slice(0, 6).map((tag) => <button key={tag.id} onClick={() => addTag(tag)} type="button">{tag.name}</button>)}
+                        {!tags.some((tag) => tag.name.toLowerCase() === tagQuery.trim().toLowerCase()) && <button onClick={createTag} type="button">Create “{tagQuery.trim()}”</button>}
+                      </div>}
+                      </div>
                     </div>
                     <label className={styles.checkRow}>
                       <input

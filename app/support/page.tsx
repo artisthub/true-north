@@ -101,6 +101,17 @@ const FORMS: SupportForm[] = [
     link: 'https://docs.google.com/forms/d/e/1FAIpQLSeUy0Oy41nPsjLGS3hPHfANRCDDzu4YQLycQqv5jW39i_Vdzw/viewform?usp=publish-editor',
     category: 'audio',
   },
+  {
+    id: 9,
+    name: 'Editorial Pitches / Marketing Drivers',
+    services: [],
+    purpose:
+      'Submit priority releases for additional promotional and editorial opportunities across multiple DSPs.',
+    whenNeeded:
+      'For True North releases with strong editorial potential. Submit 4–6 weeks before release or promotion, with a maximum of three submissions per week.',
+    link: 'https://docs.google.com/forms/d/e/1FAIpQLScEqvXCOLOqJtvgOmHrIRziQzt433zOmkP0we0MFqlYSPI_1Q/viewform?usp=header',
+    category: 'audio',
+  },
 ];
 
 function ServiceBadge({ service }: { service: ServiceIcon }) {

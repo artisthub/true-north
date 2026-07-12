@@ -13,15 +13,8 @@ function normalizeSlug(value: string) {
     .replace(/^-+|-+$/g, '');
 }
 
-function parseTags(value: unknown) {
-  if (Array.isArray(value)) {
-    return value.map((tag) => String(tag).trim()).filter(Boolean);
-  }
-
-  return String(value || '')
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter(Boolean);
+function parseTagIds(value: unknown) {
+  return Array.isArray(value) ? Array.from(new Set(value.map(String).filter(Boolean))) : [];
 }
 
 function parseStatus(value: unknown): HelpdeskArticleStatus {
@@ -36,7 +29,7 @@ export async function GET() {
   try {
     const { data, error } = await supabase
       .from('kb_articles')
-      .select('*')
+      .select('*, kb_article_tags(kb_tags(id,name,slug))')
       .order('updated_at', { ascending: false });
 
     if (error) throw error;
@@ -62,20 +55,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Title and slug are required' }, { status: 400 });
     }
 
-    const { data, error } = await supabase
-      .from('kb_articles')
-      .insert({
-        title,
-        slug,
-        excerpt: String(body.excerpt || '').trim(),
-        body_markdown: String(body.body_markdown || ''),
-        topic_id: body.topic_id || null,
-        tags: parseTags(body.tags),
-        status: parseStatus(body.status),
-        featured: Boolean(body.featured),
-      })
-      .select('*')
-      .single();
+    const { data, error } = await supabase.rpc('save_kb_article', {
+      p_id: null, p_title: title, p_slug: slug, p_excerpt: String(body.excerpt || '').trim(),
+      p_body_markdown: String(body.body_markdown || ''), p_topic_id: body.topic_id || null,
+      p_status: parseStatus(body.status), p_featured: Boolean(body.featured), p_tag_ids: parseTagIds(body.tag_ids),
+    });
 
     if (error) throw error;
 

@@ -73,6 +73,9 @@ export default async function HelpdeskArticlePage({ params }: { params: { slug: 
                 <span>Updated {formatDate(article.updated_at)}</span>
               </div>
               <p className={styles.articleExcerpt}>{article.excerpt}</p>
+              {article.tags.length > 0 && <div className={styles.cardTags}>{article.tags.map((tag) => (
+                <Link href={`/helpdesk?tag=${encodeURIComponent(tag.slug)}`} key={tag.id}>#{tag.name}</Link>
+              ))}</div>}
             </header>
 
             <div className={styles.articleBody}>{renderMarkdown(article.body_markdown)}</div>
