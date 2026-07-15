@@ -4,7 +4,9 @@ import {
   PUBLIC_ARTICLE_DETAIL_SELECT,
   PUBLIC_ARTICLE_SUMMARY_SELECT,
   PUBLIC_TOPIC_SELECT,
+  PUBLIC_TOPIC_WITH_COUNT_SELECT,
   normalizePublishedArticles,
+  normalizePublishedTopics,
 } from './helpdesk-query';
 import { getHelpdeskPageWindow, HELPDESK_PAGE_SIZE } from './helpdesk-pagination';
 
@@ -17,6 +19,7 @@ export type HelpdeskTopic = {
   description: string;
   sort_order: number;
   published: boolean;
+  article_count?: number;
 };
 
 export type HelpdeskArticleStatus = 'draft' | 'published' | 'archived';
@@ -143,12 +146,13 @@ export async function getPublishedHelpdeskIndex(options: HelpdeskIndexOptions): 
 
   try {
     const [topicsResult, tags] = await Promise.all([
-      supabase.from('kb_topics').select(PUBLIC_TOPIC_SELECT).eq('published', true)
+      supabase.from('kb_topics').select(PUBLIC_TOPIC_WITH_COUNT_SELECT).eq('published', true)
+        .eq('kb_articles.status', 'published')
         .order('sort_order', { ascending: true }).order('title', { ascending: true }),
       getPublicTags(),
     ]);
     if (topicsResult.error) throw topicsResult.error;
-    const topics = (topicsResult.data || []) as HelpdeskTopic[];
+    const topics = normalizePublishedTopics(topicsResult.data || []);
 
     if (options.view === 'featured') {
       let result = await createArticleSummaryQuery(options).eq('featured', true)

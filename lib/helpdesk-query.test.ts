@@ -3,7 +3,9 @@ import {
   PUBLIC_ARTICLE_DETAIL_SELECT,
   PUBLIC_ARTICLE_SUMMARY_SELECT,
   PUBLIC_TOPIC_SELECT,
+  PUBLIC_TOPIC_WITH_COUNT_SELECT,
   normalizePublishedArticles,
+  normalizePublishedTopics,
 } from './helpdesk-query';
 
 describe('public helpdesk query', () => {
@@ -27,5 +29,26 @@ describe('public helpdesk query', () => {
       topic: { id: 'topic-1', title: 'Releases' },
       tags: [{ id: 'tag-1', name: 'Stores', slug: 'stores' }],
     }]);
+  });
+
+  it('normalizes the published article aggregate on topics', () => {
+    expect(PUBLIC_TOPIC_WITH_COUNT_SELECT).toContain('kb_articles(count)');
+    expect(normalizePublishedTopics([{
+      id: 'topic-1',
+      title: 'Releases',
+      kb_articles: [{ count: 4 }],
+    }])).toEqual([{
+      id: 'topic-1',
+      title: 'Releases',
+      article_count: 4,
+    }]);
+  });
+
+  it('sorts topics by article count before their configured order', () => {
+    expect(normalizePublishedTopics([
+      { id: 'empty', title: 'Empty', sort_order: 1, kb_articles: [{ count: 0 }] },
+      { id: 'popular-b', title: 'Popular B', sort_order: 20, kb_articles: [{ count: 8 }] },
+      { id: 'popular-a', title: 'Popular A', sort_order: 10, kb_articles: [{ count: 8 }] },
+    ]).map((topic) => topic.id)).toEqual(['popular-a', 'popular-b', 'empty']);
   });
 });

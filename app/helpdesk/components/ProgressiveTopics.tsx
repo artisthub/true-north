@@ -16,8 +16,13 @@ export default function ProgressiveTopics({ topics, pageSize = 5 }: { topics: He
       <div className={styles.topicList}>
         {visibleTopics.map((topic) => (
           <Link className={styles.topicItem} data-testid="topic-link" href={`/helpdesk/topics/${topic.slug}`} key={topic.id}>
-            <strong>{topic.title}</strong>
-            <span>{topic.description}</span>
+            <div className={styles.topicTitleRow}>
+              <strong>{topic.title}</strong>
+              <span className={styles.topicCount}>
+                {topic.article_count || 0} {topic.article_count === 1 ? 'article' : 'articles'}
+              </span>
+            </div>
+            <span className={styles.topicDescription}>{topic.description}</span>
           </Link>
         ))}
       </div>

@@ -1,9 +1,20 @@
 import type { HelpdeskArticle, HelpdeskTopic } from './helpdesk';
 
 export const PUBLIC_TOPIC_SELECT = '*';
+export const PUBLIC_TOPIC_WITH_COUNT_SELECT = '*,kb_articles(count)';
 export const PUBLIC_ARTICLE_SUMMARY_SELECT = 'id,created_at,updated_at,title,slug,excerpt,topic_id,status,featured,view_count,kb_article_tags(kb_tags(id,name,slug))';
 export const PUBLIC_ARTICLE_DETAIL_SELECT = `${PUBLIC_ARTICLE_SUMMARY_SELECT},body_markdown`;
 export const PUBLIC_ARTICLE_SELECT = PUBLIC_ARTICLE_DETAIL_SELECT;
+
+export function normalizePublishedTopics(topics: any[]): HelpdeskTopic[] {
+  return (topics.map(({ kb_articles: articleCounts, ...topic }) => ({
+    ...topic,
+    article_count: Number(articleCounts?.[0]?.count || 0),
+  })) as HelpdeskTopic[]).sort((a, b) =>
+    (b.article_count || 0) - (a.article_count || 0)
+    || a.sort_order - b.sort_order
+    || a.title.localeCompare(b.title));
+}
 
 export function normalizePublishedArticles(
   articles: any[],

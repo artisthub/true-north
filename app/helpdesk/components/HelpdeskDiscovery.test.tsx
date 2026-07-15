@@ -17,6 +17,7 @@ const topics = Array.from({ length: 12 }, (_, index) => ({
   title: `Topic ${index + 1}`,
   slug: `topic-${index + 1}`,
   description: `Description ${index + 1}`,
+  article_count: index === 0 ? 1 : 5,
 })) as HelpdeskTopic[];
 
 describe('HelpdeskFilters', () => {
@@ -58,6 +59,8 @@ describe('ProgressiveTopics', () => {
     render(<ProgressiveTopics topics={topics} />);
 
     expect(screen.getAllByTestId('topic-link')).toHaveLength(5);
+    expect(screen.getByText('1 article')).toBeInTheDocument();
+    expect(screen.getAllByText('5 articles')).toHaveLength(4);
     fireEvent.click(screen.getByRole('button', { name: 'Load 5 more topics' }));
     expect(screen.getAllByTestId('topic-link')).toHaveLength(10);
   });
