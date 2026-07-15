@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { extractHeadings, renderMarkdown } from '@/lib/markdown';
 import { getPublishedArticle } from '@/lib/helpdesk';
+import ArticleNavigation from '../../components/ArticleNavigation';
+import ArticleReadingBar from '../../components/ArticleReadingBar';
 import styles from '../../helpdesk.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -53,6 +55,8 @@ export default async function HelpdeskArticlePage({ params }: { params: { slug: 
         </div>
       </header>
 
+      <ArticleReadingBar introductionId="article-introduction" title={article.title} />
+
       <div className={styles.container}>
         <nav className={styles.breadcrumbs} aria-label="Breadcrumbs">
           <Link href="/helpdesk">Helpdesk</Link>
@@ -66,7 +70,7 @@ export default async function HelpdeskArticlePage({ params }: { params: { slug: 
 
         <div className={styles.articleLayout}>
           <article>
-            <header className={styles.articleHeader}>
+            <header className={styles.articleHeader} id="article-introduction">
               {article.topic && <span className={styles.badge}>{article.topic.title}</span>}
               <h1 className={styles.articleTitle}>{article.title}</h1>
               <div className={styles.articleMeta}>
@@ -111,22 +115,7 @@ export default async function HelpdeskArticlePage({ params }: { params: { slug: 
             </section>
           </article>
 
-          {headings.length > 0 && (
-            <aside className={styles.toc} aria-labelledby="article-toc">
-              <h2 id="article-toc">On this page</h2>
-              <nav>
-                {headings.map((heading) => (
-                  <a
-                    href={`#${heading.id}`}
-                    className={heading.level === 3 ? styles.tocChild : undefined}
-                    key={`${heading.level}-${heading.id}`}
-                  >
-                    {heading.text}
-                  </a>
-                ))}
-              </nav>
-            </aside>
-          )}
+          {headings.length > 0 && <ArticleNavigation headings={headings} />}
         </div>
       </div>
     </main>
