@@ -27,7 +27,7 @@ export default function ArticleNavigation({ headings }: { headings: ArticleHeadi
     const observer = new IntersectionObserver(() => {
       const positions = elements.map((element) => ({ id: element.id, top: element.getBoundingClientRect().top }));
       setActiveId(resolveActiveHeading(positions));
-    }, { rootMargin: '-148px 0px -65% 0px', threshold: [0, 1] });
+    }, { rootMargin: '-148px 0px 0px 0px', threshold: [0, 1] });
     elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
   }, [headings]);

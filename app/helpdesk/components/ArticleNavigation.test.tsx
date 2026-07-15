@@ -16,9 +16,11 @@ class TestIntersectionObserver {
   root = null;
   rootMargin = '0px';
   thresholds = [0];
+  options?: IntersectionObserverInit;
 
-  constructor(callback: ObserverCallback) {
+  constructor(callback: ObserverCallback, options?: IntersectionObserverInit) {
     this.callback = callback;
+    this.options = options;
     TestIntersectionObserver.instances.push(this);
   }
 
@@ -65,6 +67,16 @@ describe('resolveActiveHeading', () => {
 });
 
 describe('ArticleNavigation', () => {
+  it('observes the full reading viewport so fast scrolling cannot skip sections', () => {
+    headings.forEach((heading) => {
+      const element = document.createElement('h2');
+      element.id = heading.id;
+      document.body.appendChild(element);
+    });
+    render(<ArticleNavigation headings={headings} />);
+    expect(TestIntersectionObserver.instances[0].options?.rootMargin).toBe('-148px 0px 0px 0px');
+  });
+
   it('opens accessibly and closes after selecting a section', () => {
     headings.forEach((heading) => {
       const element = document.createElement(heading.level === 2 ? 'h2' : 'h3');
