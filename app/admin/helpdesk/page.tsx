@@ -5,6 +5,7 @@ import type React from 'react';
 import Link from 'next/link';
 import type { HelpdeskArticle, HelpdeskArticleStatus, HelpdeskTag, HelpdeskTopic } from '@/lib/helpdesk';
 import { renderMarkdown } from '@/lib/markdown';
+import CollapsibleAdminList from './CollapsibleAdminList';
 import styles from './admin-helpdesk.module.css';
 
 type TopicForm = {
@@ -751,7 +752,7 @@ export default function AdminHelpdeskPage() {
                 ) : topics.length === 0 ? (
                   <div className={styles.message}>No topics yet.</div>
                 ) : (
-                  <div className={styles.topicList}>
+                  <CollapsibleAdminList itemCount={topics.length} label="Topics">
                     {topics.map((topic) => (
                       <button
                         className={`${styles.topicItem} ${topicForm.id === topic.id ? styles.selected : ''}`}
@@ -768,7 +769,7 @@ export default function AdminHelpdeskPage() {
                         </div>
                       </button>
                     ))}
-                  </div>
+                  </CollapsibleAdminList>
                 )}
               </div>
             </section>
@@ -786,7 +787,7 @@ export default function AdminHelpdeskPage() {
                 ) : articles.length === 0 ? (
                   <div className={styles.message}>No articles yet.</div>
                 ) : (
-                  <div className={styles.articleList}>
+                  <CollapsibleAdminList itemCount={articles.length} label="Articles">
                     {articles.map((article) => (
                       <button
                         className={`${styles.articleItem} ${articleForm.id === article.id ? styles.selected : ''}`}
@@ -802,7 +803,7 @@ export default function AdminHelpdeskPage() {
                         </div>
                       </button>
                     ))}
-                  </div>
+                  </CollapsibleAdminList>
                 )}
               </div>
             </section>
