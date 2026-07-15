@@ -112,6 +112,39 @@ const FORMS: SupportForm[] = [
     link: 'https://docs.google.com/forms/d/e/1FAIpQLScEqvXCOLOqJtvgOmHrIRziQzt433zOmkP0we0MFqlYSPI_1Q/viewform?usp=header',
     category: 'audio',
   },
+  {
+    id: 10,
+    name: 'Luminate Artist Registration',
+    services: [],
+    purpose:
+      'Register an artist in Luminate so their profile and catalog can be matched correctly for chart and consumption reporting.',
+    whenNeeded:
+      'When onboarding a new artist or correcting how an artist appears in Luminate before releases are tracked for charts.',
+    link: 'https://luminatedata.com/artist-registration/',
+    category: 'audio',
+  },
+  {
+    id: 11,
+    name: 'Luminate Song Title Registration',
+    services: [],
+    purpose:
+      'Register a song title and ISRC with Luminate so streams, sales, and other consumption can be attributed to the correct recording.',
+    whenNeeded:
+      'When a new track needs to be recognized in Luminate for official chart tracking, or when an existing title/ISRC mapping needs to be set up.',
+    link: 'https://luminatedata.com/song-title-registration/',
+    category: 'audio',
+  },
+  {
+    id: 12,
+    name: 'Luminate Focus Release Campaign',
+    services: [],
+    purpose:
+      'Notify Luminate about a focus release or eligible event (such as a pop-up or in-store) so reported activity can count toward official charts.',
+    whenNeeded:
+      'Before a focus campaign or chart-eligible sales event. Submit early enough for Luminate approval (often at least 72 hours ahead for pop-up events).',
+    link: 'https://docs.google.com/forms/d/e/1FAIpQLSdFaaLZq89F55HH8Fj5_BR8YpkhxqljOzeMgYtya5V4im3HFQ/viewform',
+    category: 'audio',
+  },
 ];
 
 function ServiceBadge({ service }: { service: ServiceIcon }) {
