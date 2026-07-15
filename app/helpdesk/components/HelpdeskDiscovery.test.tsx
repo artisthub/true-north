@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { HelpdeskArticle, HelpdeskTag, HelpdeskTopic } from '@/lib/helpdesk';
+import type { HelpdeskTag, HelpdeskTopic } from '@/lib/helpdesk';
 import HelpdeskFilters, { summarizeArticleTags } from './HelpdeskFilters';
 import ProgressiveTopics from './ProgressiveTopics';
 
@@ -9,13 +9,8 @@ const tags: HelpdeskTag[] = Array.from({ length: 16 }, (_, index) => ({
   id: `tag-${index + 1}`,
   name: `Platform ${String(index + 1).padStart(2, '0')}`,
   slug: `platform-${index + 1}`,
+  article_count: index === 1 ? 99 : index,
 }));
-
-const articles = tags.map((tag, index) => ({
-  id: `article-${index + 1}`,
-  title: `Article ${index + 1}`,
-  tags: index < 4 ? [tag, tags[0]] : [tag],
-})) as HelpdeskArticle[];
 
 const topics = Array.from({ length: 12 }, (_, index) => ({
   id: `topic-${index + 1}`,
@@ -26,14 +21,15 @@ const topics = Array.from({ length: 12 }, (_, index) => ({
 
 describe('HelpdeskFilters', () => {
   it('shows eight popular tags without rendering the full vocabulary', () => {
-    render(<HelpdeskFilters articles={articles} onChange={() => undefined} selectedSlugs={[]} tags={tags} />);
+    render(<HelpdeskFilters onChange={() => undefined} selectedSlugs={[]} tags={tags} />);
 
     expect(screen.getAllByTestId('popular-tag')).toHaveLength(8);
-    expect(screen.queryByText('Platform 16')).not.toBeInTheDocument();
+    expect(screen.getAllByTestId('popular-tag')[0]).toHaveTextContent('Platform 02');
+    expect(screen.queryByText('Platform 09')).not.toBeInTheDocument();
   });
 
   it('searches after two characters and caps results at twelve', () => {
-    render(<HelpdeskFilters articles={articles} onChange={() => undefined} selectedSlugs={[]} tags={tags} />);
+    render(<HelpdeskFilters onChange={() => undefined} selectedSlugs={[]} tags={tags} />);
     fireEvent.click(screen.getByRole('button', { name: 'More filters' }));
     const input = screen.getByRole('searchbox', { name: 'Search article tags' });
 
@@ -46,13 +42,13 @@ describe('HelpdeskFilters', () => {
 
   it('selects and removes a tag through the real control callbacks', () => {
     const onChange = vi.fn();
-    const { rerender } = render(<HelpdeskFilters articles={articles} onChange={onChange} selectedSlugs={[]} tags={tags} />);
+    const { rerender } = render(<HelpdeskFilters onChange={onChange} selectedSlugs={[]} tags={tags} />);
 
     fireEvent.click(screen.getAllByTestId('popular-tag')[0]);
-    expect(onChange).toHaveBeenCalledWith(['platform-1']);
+    expect(onChange).toHaveBeenCalledWith(['platform-2']);
 
-    rerender(<HelpdeskFilters articles={articles} onChange={onChange} selectedSlugs={['platform-1']} tags={tags} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Remove Platform 01 filter' }));
+    rerender(<HelpdeskFilters onChange={onChange} selectedSlugs={['platform-2']} tags={tags} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Remove Platform 02 filter' }));
     expect(onChange).toHaveBeenLastCalledWith([]);
   });
 });

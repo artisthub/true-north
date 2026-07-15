@@ -1,17 +1,23 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { HelpdeskArticle, HelpdeskTag, HelpdeskTopic } from '@/lib/helpdesk';
 import HelpdeskFilters, { summarizeArticleTags } from './HelpdeskFilters';
 import ProgressiveTopics from './ProgressiveTopics';
+import ArticlePagination, { buildHelpdeskHref } from './ArticlePagination';
 import styles from '../helpdesk.module.css';
 
 type HelpdeskHomeProps = {
   topics: HelpdeskTopic[];
   articles: HelpdeskArticle[];
   tags: HelpdeskTag[];
+  total: number;
+  page: number;
+  pageCount: number;
+  initialQuery: string;
+  view: 'featured' | 'all';
 };
 
 function formatDate(value: string) {
@@ -35,30 +41,8 @@ function SearchIcon() {
   );
 }
 
-function searchArticles(articles: HelpdeskArticle[], query: string) {
-  const term = query.trim().toLowerCase();
-
-  if (!term) {
-    return articles;
-  }
-
-  return articles.filter((article) => {
-    const haystack = [
-      article.title,
-      article.excerpt,
-      article.body_markdown,
-      article.topic?.title || '',
-      ...(article.tags || []),
-    ]
-      .join(' ')
-      .toLowerCase();
-
-    return haystack.includes(term);
-  });
-}
-
-export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomeProps) {
-  const [query, setQuery] = useState('');
+export default function HelpdeskHome({ topics, articles, tags, total, page, pageCount, initialQuery, view }: HelpdeskHomeProps) {
+  const [query, setQuery] = useState(initialQuery);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -67,20 +51,32 @@ export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomePro
     const valid = new Set(tags.map((tag) => tag.slug));
     return Array.from(new Set(requested.filter((slug) => valid.has(slug))));
   }, [searchParams, tags]);
-  const filteredArticles = useMemo(() => {
-    const searched = searchArticles(articles, query);
-    return selectedSlugs.length
-      ? searched.filter((article) => article.tags.some((tag) => selectedSlugs.includes(tag.slug)))
-      : searched;
-  }, [articles, query, selectedSlugs]);
+  useEffect(() => setQuery(initialQuery), [initialQuery]);
+  useEffect(() => {
+    if (query === initialQuery) return;
+    const timeout = window.setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      const value = query.trim();
+      if (value) {
+        params.set('q', value);
+        params.set('view', 'all');
+      } else {
+        params.delete('q');
+      }
+      params.delete('page');
+      router.replace(params.size ? `${pathname}?${params}` : pathname, { scroll: false });
+    }, 300);
+    return () => window.clearTimeout(timeout);
+  }, [initialQuery, pathname, query, router, searchParams]);
   const setTags = (slugs: string[]) => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete('tag');
     slugs.forEach((slug) => params.append('tag', slug));
+    params.delete('page');
+    if (slugs.length) params.set('view', 'all');
     router.replace(params.size ? `${pathname}?${params}` : pathname, { scroll: false });
   };
-  const featuredArticles = filteredArticles.filter((article) => article.featured).slice(0, 5);
-  const visibleArticles = featuredArticles.length ? featuredArticles : filteredArticles.slice(0, 8);
+  const search = searchParams.toString();
 
   return (
     <>
@@ -119,7 +115,7 @@ export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomePro
               />
             </label>
           </div>
-          {tags.length > 0 && <HelpdeskFilters articles={articles} onChange={setTags} selectedSlugs={selectedSlugs} tags={tags} />}
+          {tags.length > 0 && <HelpdeskFilters onChange={setTags} selectedSlugs={selectedSlugs} tags={tags} />}
         </div>
       </section>
 
@@ -133,19 +129,29 @@ export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomePro
           </aside>
 
           <div>
-            <h2 className={styles.sectionTitle}>
-              {query ? `${filteredArticles.length} matching articles` : 'Featured articles'}
-            </h2>
+            <div className={styles.articleListHeader}>
+              <div>
+                <h2 className={styles.sectionTitle}>
+                  {query || selectedSlugs.length ? `${total} matching articles` : view === 'all' ? `${total} articles` : 'Featured articles'}
+                </h2>
+                {view === 'all' && total > 0 && <p>Page {page} of {pageCount}</p>}
+              </div>
+              <div className={styles.articleViewSwitch} aria-label="Article view">
+                <Link aria-current={view === 'featured' ? 'page' : undefined} href={buildHelpdeskHref(pathname, search, { view: 'featured', page: null })}>Featured</Link>
+                <Link aria-current={view === 'all' ? 'page' : undefined} href={buildHelpdeskHref(pathname, search, { view: 'all', page: null })}>All articles</Link>
+              </div>
+            </div>
 
-            {visibleArticles.length === 0 ? (
+            {articles.length === 0 ? (
               <div className={styles.empty}>
                 {query
                   ? 'No articles matched your search. Try a different term or open the support forms.'
                   : 'No published articles are available yet. Once the knowledge base migration is applied, published articles will appear here.'}
               </div>
             ) : (
+              <>
               <div className={styles.articleStack}>
-                {visibleArticles.map((article) => {
+                {articles.map((article) => {
                   const tagSummary = summarizeArticleTags(article.tags);
                   return <Link className={styles.articleLink} href={`/helpdesk/articles/${article.slug}`} key={article.id}>
                     <div className={styles.articleMeta}>
@@ -158,6 +164,8 @@ export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomePro
                   </Link>;
                 })}
               </div>
+              {view === 'all' && <ArticlePagination page={page} pageCount={pageCount} pathname={pathname} search={search} />}
+              </>
             )}
           </div>
         </div>

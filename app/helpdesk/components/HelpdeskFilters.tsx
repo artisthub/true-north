@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useId, useMemo, useState } from 'react';
-import type { HelpdeskArticle, HelpdeskTag } from '@/lib/helpdesk';
+import type { HelpdeskTag } from '@/lib/helpdesk';
 import styles from '../helpdesk.module.css';
 
 type HelpdeskFiltersProps = {
   tags: HelpdeskTag[];
-  articles: HelpdeskArticle[];
   selectedSlugs: string[];
   onChange: (slugs: string[]) => void;
 };
@@ -18,18 +17,13 @@ export function summarizeArticleTags(tags: HelpdeskTag[]) {
   };
 }
 
-export default function HelpdeskFilters({ tags, articles, selectedSlugs, onChange }: HelpdeskFiltersProps) {
+export default function HelpdeskFilters({ tags, selectedSlugs, onChange }: HelpdeskFiltersProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const panelId = useId();
   const counts = useMemo(() => {
-    const next = new Map<string, number>();
-    articles.forEach((article) => {
-      const unique = new Set(article.tags.map((tag) => tag.slug));
-      unique.forEach((slug) => next.set(slug, (next.get(slug) || 0) + 1));
-    });
-    return next;
-  }, [articles]);
+    return new Map(tags.map((tag) => [tag.slug, tag.article_count || 0]));
+  }, [tags]);
   const popularTags = useMemo(() => [...tags]
     .sort((a, b) => (counts.get(b.slug) || 0) - (counts.get(a.slug) || 0) || a.name.localeCompare(b.name))
     .slice(0, 8), [counts, tags]);

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { getPublishedHelpdeskData } from '@/lib/helpdesk';
+import { getPublishedHelpdeskIndex } from '@/lib/helpdesk';
+import { parseHelpdeskPage } from '@/lib/helpdesk-pagination';
 import HelpdeskHome from './components/HelpdeskHome';
 import styles from './helpdesk.module.css';
 
@@ -30,13 +31,20 @@ function HelpdeskHeader() {
   );
 }
 
-export default async function HelpdeskPage() {
-  const { topics, articles, tags } = await getPublishedHelpdeskData();
+type HelpdeskSearchParams = Record<string, string | string[] | undefined>;
+
+export default async function HelpdeskPage({ searchParams }: { searchParams: HelpdeskSearchParams }) {
+  const view = searchParams.view === 'all' ? 'all' : 'featured';
+  const query = (Array.isArray(searchParams.q) ? searchParams.q[0] : searchParams.q || '').slice(0, 120);
+  const rawTags = Array.isArray(searchParams.tag) ? searchParams.tag : searchParams.tag ? [searchParams.tag] : [];
+  const tagSlugs = rawTags.flatMap((value) => value.split(',')).filter(Boolean);
+  const requestedPage = parseHelpdeskPage(Array.isArray(searchParams.page) ? searchParams.page[0] : searchParams.page);
+  const data = await getPublishedHelpdeskIndex({ view, page: requestedPage, query, tagSlugs });
 
   return (
     <main className={styles.shell}>
       <HelpdeskHeader />
-      <HelpdeskHome topics={topics} articles={articles} tags={tags} />
+      <HelpdeskHome {...data} initialQuery={query} view={view} />
     </main>
   );
 }
