@@ -67,13 +67,13 @@
 }
 
 .hero {
-  padding: 72px 0 36px;
+  padding: 44px 0 24px;
 }
 
 .heroGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 44px;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 36px;
   align-items: end;
 }
 
@@ -90,20 +90,34 @@
 .title {
   max-width: 780px;
   color: #ffffff;
-  font-size: clamp(2.5rem, 7vw, 5.75rem);
-  line-height: 0.98;
+  font-size: 56px;
+  line-height: 1.02;
   letter-spacing: -0.035em;
   text-wrap: balance;
 }
 
 .subtitle {
   max-width: 680px;
-  margin-top: 22px;
+  margin-top: 16px;
   color: #d8d8df;
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: 17px;
+  line-height: 1.6;
   text-wrap: pretty;
 }
+
+.supportUtility {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 18px 0;
+}
+
+.supportUtility h2 { margin-bottom: 5px; font-size: 15px; }
+.supportUtility p { color: #c9c9d1; font-size: 13px; line-height: 1.5; }
+.supportUtility a { flex: 0 0 auto; white-space: nowrap; }
 
 .quickPanel {
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -165,19 +179,32 @@
 }
 
 .searchPanel {
-  margin-top: 42px;
+  margin-top: 28px;
   border: 1px solid rgba(255, 20, 147, 0.22);
-  border-radius: 16px;
+  border-radius: 12px;
   background: #111115;
   padding: 12px;
 }
-.tagFilters { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:16px; color:#c9c9d1; font-size:13px; }
-.tagButton, .tagActive, .clearTags { min-height:32px; border-radius:999px; padding:0 12px; cursor:pointer; font:inherit; font-size:13px; font-weight:700; }
-.tagButton { border:1px solid rgba(255,255,255,.16); background:#101013; color:#d8d8df; }
-.tagActive { border:1px solid #ff1493; background:rgba(255,20,147,.18); color:#fff; }
-.clearTags { border:0; background:transparent; color:#ff9bd2; }
-.tagButton:focus-visible, .tagActive:focus-visible, .clearTags:focus-visible { outline:2px solid #ff1493; outline-offset:2px; }
-.cardTags { display:flex; flex-wrap:wrap; gap:7px; color:#ff9bd2; font-size:12px; font-weight:700; }
+.filters { position: relative; margin-top: 16px; }
+.filterHeading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 10px; color: #c9c9d1; font-size: 13px; font-weight: 700; }
+.popularTags, .selectedFilters { display: flex; flex-wrap: wrap; gap: 7px; }
+.tagButton, .tagActive, .moreFiltersButton, .selectedFilters button, .clearFilters { min-height: 30px; border-radius: 999px; padding: 0 11px; cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; }
+.tagButton { border: 1px solid rgba(255, 255, 255, 0.14); background: #101013; color: #d8d8df; }
+.tagActive, .selectedFilters button:not(.clearFilters) { border: 1px solid rgba(255, 20, 147, 0.62); background: rgba(255, 20, 147, 0.14); color: #ffffff; }
+.moreFiltersButton, .clearFilters { border: 0; background: transparent; color: #ff9bd2; }
+.selectedFilters { align-items: center; margin-top: 10px; }
+.selectedFilters span { margin-left: 6px; color: #ff9bd2; font-size: 16px; }
+.filterPanel { position: absolute; z-index: 30; top: calc(100% + 10px); right: 0; width: min(420px, 100%); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 12px; padding: 14px; background: #101013; box-shadow: 0 18px 48px rgba(0, 0, 0, 0.38); }
+.filterPanel label { display: block; margin-bottom: 8px; color: #ffffff; font-size: 13px; font-weight: 700; }
+.filterPanel input { width: 100%; min-height: 42px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 8px; padding: 0 11px; outline: none; background: #070709; color: #ffffff; font: inherit; font-size: 14px; }
+.filterPanel input::placeholder { color: #aaaab4; }
+.filterPanel input:focus { border-color: #ff1493; box-shadow: 0 0 0 2px rgba(255, 20, 147, 0.18); }
+.filterPanel > p { margin: 12px 2px 2px; color: #c9c9d1; font-size: 13px; }
+.filterResults { display: grid; max-height: 280px; margin-top: 8px; overflow-y: auto; }
+.filterResults button { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 40px; border: 0; border-radius: 7px; padding: 0 9px; background: transparent; color: #ffffff; cursor: pointer; text-align: left; }
+.filterResults button:hover, .filterResults button:focus-visible, .filterResults button[aria-pressed='true'] { background: rgba(255, 20, 147, 0.12); }
+.filterResults small { color: #b9b9c2; white-space: nowrap; }
+.cardTags { display: flex; flex-wrap: wrap; gap: 7px; color: #ff9bd2; font-size: 12px; font-weight: 700; }
 
 .searchForm {
   display: flex;
@@ -217,9 +244,9 @@
 
 .contentGrid {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: 32px;
-  padding: 40px 0 84px;
+  padding: 32px 0 84px;
 }
 
 .sidebar {
@@ -237,21 +264,17 @@
 
 .topicList {
   display: grid;
-  gap: 10px;
 }
 
 .topicItem {
   display: block;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 14px;
-  background: #101013;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 2px;
 }
 
 .topicItem:hover,
 .topicItem:focus-visible {
-  border-color: rgba(255, 20, 147, 0.48);
-  background: #151519;
+  color: #ff9bd2;
 }
 
 .topicItem strong {
@@ -262,29 +285,33 @@
 }
 
 .topicItem span {
+  display: -webkit-box;
+  overflow: hidden;
   color: #b9b9c2;
   font-size: 13px;
   line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
+
+.loadMoreButton { width: 100%; min-height: 38px; margin-top: 12px; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 999px; background: transparent; color: #ffffff; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; }
+.loadMoreButton:hover, .loadMoreButton:focus-visible { border-color: rgba(255, 20, 147, 0.6); background: rgba(255, 20, 147, 0.08); }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 
 .articleStack {
   display: grid;
-  gap: 14px;
 }
 
 .articleLink {
   display: grid;
   gap: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
-  padding: 20px;
-  background: #101013;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 22px 4px;
 }
 
 .articleLink:hover,
 .articleLink:focus-visible {
-  border-color: rgba(255, 20, 147, 0.48);
-  background: #151519;
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .articleMeta {

@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { HelpdeskArticle, HelpdeskTag, HelpdeskTopic } from '@/lib/helpdesk';
+import HelpdeskFilters, { summarizeArticleTags } from './HelpdeskFilters';
+import ProgressiveTopics from './ProgressiveTopics';
 import styles from '../helpdesk.module.css';
 
 type HelpdeskHomeProps = {
@@ -94,17 +96,12 @@ export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomePro
               </p>
             </div>
 
-            <aside className={styles.quickPanel} aria-labelledby="support-next-steps">
-              <h2 id="support-next-steps">Need the forms page?</h2>
-              <p>
-                The existing support forms remain available for claim reviews, channel requests,
-                VEVO, Apple Motion Artwork, and platform-specific intake.
-              </p>
-              <div className={styles.quickActions}>
-                <Link href="/support" className={styles.primaryButton}>
-                  Open support forms
-                </Link>
+            <aside className={styles.supportUtility} aria-labelledby="support-next-steps">
+              <div>
+                <h2 id="support-next-steps">Need a human review?</h2>
+                <p>Claims, channel requests, and platform-specific intake still use support forms.</p>
               </div>
+              <Link href="/support" className={styles.secondaryButton}>Open support forms</Link>
             </aside>
           </div>
 
@@ -122,17 +119,7 @@ export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomePro
               />
             </label>
           </div>
-          {tags.length > 0 && (
-            <div className={styles.tagFilters} aria-label="Filter articles by tag">
-              <span>Filter by tag</span>
-              {tags.map((tag) => {
-                const active = selectedSlugs.includes(tag.slug);
-                return <button aria-pressed={active} className={active ? styles.tagActive : styles.tagButton} key={tag.id}
-                  onClick={() => setTags(active ? selectedSlugs.filter((slug) => slug !== tag.slug) : [...selectedSlugs, tag.slug])} type="button">{tag.name}</button>;
-              })}
-              {selectedSlugs.length > 0 && <button className={styles.clearTags} onClick={() => setTags([])} type="button">Clear all</button>}
-            </div>
-          )}
+          {tags.length > 0 && <HelpdeskFilters articles={articles} onChange={setTags} selectedSlugs={selectedSlugs} tags={tags} />}
         </div>
       </section>
 
@@ -142,14 +129,7 @@ export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomePro
             <h2 className={styles.sectionTitle} id="helpdesk-topics">
               Topics
             </h2>
-            <div className={styles.topicList}>
-              {topics.map((topic) => (
-                <Link className={styles.topicItem} href={`/helpdesk/topics/${topic.slug}`} key={topic.id}>
-                  <strong>{topic.title}</strong>
-                  <span>{topic.description}</span>
-                </Link>
-              ))}
-            </div>
+            <ProgressiveTopics topics={topics} />
           </aside>
 
           <div>
@@ -165,17 +145,18 @@ export default function HelpdeskHome({ topics, articles, tags }: HelpdeskHomePro
               </div>
             ) : (
               <div className={styles.articleStack}>
-                {visibleArticles.map((article) => (
-                  <Link className={styles.articleLink} href={`/helpdesk/articles/${article.slug}`} key={article.id}>
+                {visibleArticles.map((article) => {
+                  const tagSummary = summarizeArticleTags(article.tags);
+                  return <Link className={styles.articleLink} href={`/helpdesk/articles/${article.slug}`} key={article.id}>
                     <div className={styles.articleMeta}>
                       {article.topic && <span className={styles.badge}>{article.topic.title}</span>}
                       <span>Updated {formatDate(article.updated_at)}</span>
                     </div>
                     <h3>{article.title}</h3>
                     <p>{article.excerpt}</p>
-                    {article.tags.length > 0 && <div className={styles.cardTags}>{article.tags.map((tag) => <span key={tag.id}>#{tag.name}</span>)}</div>}
-                  </Link>
-                ))}
+                    {tagSummary.visible.length > 0 && <div className={styles.cardTags}>{tagSummary.visible.map((tag) => <span key={tag.id}>#{tag.name}</span>)}{tagSummary.remaining > 0 && <span>+{tagSummary.remaining}</span>}</div>}
+                  </Link>;
+                })}
               </div>
             )}
           </div>
