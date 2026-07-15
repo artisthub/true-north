@@ -1,5 +1,10 @@
 import { unstable_noStore as noStore } from 'next/cache';
 import { supabase } from './supabase';
+import {
+  PUBLIC_ARTICLE_SELECT,
+  PUBLIC_TOPIC_SELECT,
+  normalizePublishedArticles,
+} from './helpdesk-query';
 
 export type HelpdeskTopic = {
   id: string;
@@ -45,16 +50,6 @@ const articleOrder = (a: HelpdeskArticle, b: HelpdeskArticle) => {
   return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
 };
 
-function attachTopics(articles: any[], topics: HelpdeskTopic[]) {
-  const topicsById = new Map(topics.map((topic) => [topic.id, topic]));
-
-  return articles.map((article) => ({
-    ...article,
-    tags: (article.kb_article_tags || []).map((item: any) => item.kb_tags).filter(Boolean),
-    topic: article.topic_id ? topicsById.get(article.topic_id) || null : null,
-  }));
-}
-
 export async function getPublishedHelpdeskData(): Promise<HelpdeskData> {
   noStore();
 
@@ -66,13 +61,13 @@ export async function getPublishedHelpdeskData(): Promise<HelpdeskData> {
     const [topicsResult, articlesResult] = await Promise.all([
       supabase
         .from('kb_topics')
-        .select('*, kb_article_tags(kb_tags(id,name,slug))')
+        .select(PUBLIC_TOPIC_SELECT)
         .eq('published', true)
         .order('sort_order', { ascending: true })
         .order('title', { ascending: true }),
       supabase
         .from('kb_articles')
-        .select('*')
+        .select(PUBLIC_ARTICLE_SELECT)
         .eq('status', 'published')
         .order('updated_at', { ascending: false }),
     ]);
@@ -81,7 +76,7 @@ export async function getPublishedHelpdeskData(): Promise<HelpdeskData> {
     if (articlesResult.error) throw articlesResult.error;
 
     const topics = (topicsResult.data || []) as HelpdeskTopic[];
-    const articles = attachTopics(articlesResult.data || [], topics).sort(articleOrder);
+    const articles = normalizePublishedArticles(articlesResult.data || [], topics).sort(articleOrder);
     const tags = Array.from(new Map(articles.flatMap((article) => article.tags).map((tag) => [tag.id, tag])).values())
       .sort((a, b) => a.name.localeCompare(b.name));
 

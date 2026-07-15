@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run"
   },
   "dependencies": {
     "@stripe/stripe-js": "^8.7.0",
@@ -36,6 +37,7 @@
     "@types/react-dom": "18.2.18",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.4",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "vitest": "^2.1.9"
   }
 }
