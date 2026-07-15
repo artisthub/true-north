@@ -1,7 +1,9 @@
 import type { HelpdeskArticle, HelpdeskTopic } from './helpdesk';
 
 export const PUBLIC_TOPIC_SELECT = '*';
-export const PUBLIC_ARTICLE_SELECT = '*, kb_article_tags(kb_tags(id,name,slug))';
+export const PUBLIC_ARTICLE_SUMMARY_SELECT = 'id,created_at,updated_at,title,slug,excerpt,topic_id,status,featured,view_count,kb_article_tags(kb_tags(id,name,slug))';
+export const PUBLIC_ARTICLE_DETAIL_SELECT = `${PUBLIC_ARTICLE_SUMMARY_SELECT},body_markdown`;
+export const PUBLIC_ARTICLE_SELECT = PUBLIC_ARTICLE_DETAIL_SELECT;
 
 export function normalizePublishedArticles(
   articles: any[],
