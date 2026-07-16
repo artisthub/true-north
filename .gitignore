@@ -21,3 +21,4 @@ user-cookies.txt
 *.cookie
 *.cookies
 .env*.local
+.worktrees/
