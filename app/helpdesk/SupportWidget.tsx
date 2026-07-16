@@ -1,8 +1,19 @@
 'use client';
 
 import Script from 'next/script';
+import { useEffect, useState } from 'react';
 
 export function SupportWidget() {
+  const [styleUrl, setStyleUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    setStyleUrl(`${window.location.origin}/support-widget.css`);
+  }, []);
+
+  if (!styleUrl) {
+    return null;
+  }
+
   return (
     <>
       <Script
@@ -14,7 +25,7 @@ export function SupportWidget() {
         data-label="Need help?"
         data-title="True North support chat"
         data-position="right"
-        data-style-url="/support-widget.css"
+        data-style-url={styleUrl}
       />
       <style jsx global>{`
         body .support-rag-host {
