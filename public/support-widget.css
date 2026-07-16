@@ -1,0 +1,132 @@
+/* True North support chat: this stylesheet is loaded inside the support iframe. */
+.widget {
+  --accent: #ff1493;
+  --surface: #101013;
+  --surface-muted: #070709;
+  --text: #ffffff;
+  --text-muted: #c9c9d1;
+  --border: rgba(255, 255, 255, 0.14);
+  --radius-panel: 20px;
+  --radius-message: 16px;
+  --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  color: var(--text);
+  background: var(--surface);
+  font-family: var(--font);
+}
+
+.widget__header {
+  min-height: 72px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #070709, #171117);
+  color: #ffffff;
+}
+
+.widget__header strong,
+.widget__header h1,
+.widget__header h2,
+.widget__header h3 {
+  color: #ffffff;
+}
+
+.widget__actions .icon-button,
+.icon-button {
+  color: #ffffff;
+}
+
+.messages,
+.history,
+.welcome,
+.center-state,
+.error,
+.skeleton {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+
+.welcome,
+.center-state,
+.error,
+.status,
+.handoff,
+.composer__meta,
+.history,
+.history__list {
+  color: var(--text-muted);
+}
+
+.message > p,
+.sources,
+.handoff,
+.status,
+.identity,
+.history {
+  border-color: var(--border);
+  background: #111115;
+  box-shadow: none;
+}
+
+.message--visitor > p,
+.send,
+.primary,
+.history__heading button {
+  border-color: #ff1493;
+  background: #ff1493;
+  color: #ffffff;
+}
+
+.message--assistant > p,
+.message--agent > p,
+.message--system > p {
+  color: #ffffff;
+}
+
+.suggestions button {
+  border-color: rgba(255, 20, 147, 0.44);
+  background: rgba(255, 20, 147, 0.1);
+  color: #ffffff;
+}
+
+.suggestions button:hover,
+.suggestions button:focus-visible,
+.send:hover,
+.send:focus-visible,
+.primary:hover,
+.primary:focus-visible,
+.history__heading button:hover,
+.history__heading button:focus-visible {
+  border-color: #ff48aa;
+  background: #ff48aa;
+}
+
+.sources a,
+.handoff a,
+.status a {
+  color: #ff9bd2;
+}
+
+.composer {
+  border-color: var(--border);
+  background: #101013;
+}
+
+.composer textarea,
+.composer input,
+.identity input {
+  border-color: var(--border);
+  background: #070709;
+  color: #ffffff;
+}
+
+.composer textarea:focus,
+.composer input:focus,
+.identity input:focus,
+.icon-button:focus-visible,
+.suggestions button:focus-visible,
+.sources a:focus-visible,
+.handoff a:focus-visible,
+.status a:focus-visible {
+  outline: 2px solid #ff1493;
+  outline-offset: 2px;
+}
