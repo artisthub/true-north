@@ -7,8 +7,8 @@ const globals = readFileSync(resolve(root, 'app/globals.css'), 'utf8');
 const widget = readFileSync(resolve(root, 'app/helpdesk/SupportWidget.tsx'), 'utf8');
 
 const expectedTheme = {
-  '--support-rag-accent': '#ff1493',
-  '--support-rag-accent-contrast': '#09090b',
+  '--support-rag-accent': '#4a1536',
+  '--support-rag-accent-contrast': '#ff9bd2',
   '--support-rag-surface': '#101013',
   '--support-rag-canvas': '#070709',
   '--support-rag-text': '#ffffff',

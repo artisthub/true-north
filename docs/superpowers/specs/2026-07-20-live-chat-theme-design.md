@@ -15,8 +15,8 @@ Style the externally embedded support widget so it feels native to True North's 
 
 The widget will use the helpdesk's restrained dark presentation:
 
-- True North hot pink (`#ff1493`) for the launcher, header, visitor messages, and primary actions.
-- Near-black text over the pink accent to provide accessible contrast.
+- A deep berry tint (`#4a1536`) inspired by the helpdesk tags for the launcher, header, visitor messages, and primary actions.
+- Soft pink (`#ff9bd2`) over the berry accent, keeping bright pink to text and smaller details instead of large surfaces.
 - Near-black panel and composer surfaces (`#101013`) over a deeper transcript canvas (`#070709`).
 - White primary text, cool-gray secondary text, subtle neutral borders, and an accessible coral error color.
 - Inter typography at a compact 14px base size.
@@ -31,7 +31,7 @@ No widget internals or iframe selectors will be targeted. No unsupported custom 
 
 ## Accessibility
 
-- Use `#09090b` over `#ff1493` for an accent contrast ratio of approximately 5.47:1.
+- Use `#ff9bd2` over `#4a1536` for an accent contrast ratio of approximately 7.49:1.
 - Use white and `#b9b9c2` on `#101013` for primary and muted text contrast above 4.5:1.
 - Keep borders distinguishable from both dark surfaces.
 - Leave focus, forced-colors, reduced-motion, zoom, and responsive behavior to the widget's supported implementation rather than overriding internals.

@@ -14,7 +14,7 @@
 - Use only the documented `--support-rag-*` presentation variables.
 - Do not target the widget iframe or internal `.widget*` and `.support-rag-host*` selectors.
 - Do not change widget positioning, dimensions, routing, authentication, identity, safety, or conversation behavior.
-- Use `#ff1493` with `#09090b` for approximately 5.47:1 accent contrast.
+- Use `#4a1536` with `#ff9bd2` for approximately 7.49:1 accent contrast.
 - Preserve the existing untracked `articles-export/` directory and local dev-server logs.
 
 ---
@@ -45,8 +45,8 @@ const globals = readFileSync(resolve(root, 'app/globals.css'), 'utf8');
 const widget = readFileSync(resolve(root, 'app/helpdesk/SupportWidget.tsx'), 'utf8');
 
 const expectedTheme = {
-  '--support-rag-accent': '#ff1493',
-  '--support-rag-accent-contrast': '#09090b',
+  '--support-rag-accent': '#4a1536',
+  '--support-rag-accent-contrast': '#ff9bd2',
   '--support-rag-surface': '#101013',
   '--support-rag-canvas': '#070709',
   '--support-rag-text': '#ffffff',
@@ -99,8 +99,8 @@ Insert this block at the top of `app/globals.css`, before the universal selector
 
 ```css
 :root {
-    --support-rag-accent: #ff1493;
-    --support-rag-accent-contrast: #09090b;
+    --support-rag-accent: #4a1536;
+    --support-rag-accent-contrast: #ff9bd2;
     --support-rag-surface: #101013;
     --support-rag-canvas: #070709;
     --support-rag-text: #ffffff;
@@ -179,4 +179,3 @@ Reload `http://localhost:3000/helpdesk`, confirm the helpdesk layout is unchange
 git add app/globals.css app/helpdesk/SupportWidget.tsx app/helpdesk/support-widget-theme.test.ts public/support-widget.css docs/superpowers/plans/2026-07-20-live-chat-theme.md
 git commit -m "Style support widget with True North theme"
 ```
-
