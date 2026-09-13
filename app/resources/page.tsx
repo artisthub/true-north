@@ -8,6 +8,7 @@ interface Resource {
   description: string;
   color: string;
   logo: string | null;
+  logoBackground?: string;
   heroImage: string | null;
   link: string;
   cta: string;
@@ -21,7 +22,7 @@ const RESOURCES: Resource[] = [
     description:
       'The place to BE... BE Creative. BE Artistic. BE Valued. Your artist management partner, providing unique, cost-effective resources to help you build a solid business foundation for your career.',
     color: '#385B83',
-    logo: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/BamGTransparentWhite(1)_53d8934d.png',
+    logo: '/resources/blue-avenue-white.png',
     heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-blue-avenue_a046bf7e.png',
     link: 'https://www.blueavemusic.com',
     cta: 'Start Your Journey',
@@ -33,7 +34,7 @@ const RESOURCES: Resource[] = [
     description:
       'Grow your streams and sales with smart music links and fan outreach tools. Build hype with pre-saves, reach your fans directly, and track your growth with powerful analytics.',
     color: '#9C27B0',
-    logo: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/AHLogoWordmarkonBlack(3)_b80caf84.png',
+    logo: '/resources/artisthub-wordmark.svg',
     heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-artisthub_fe62dfd9.png',
     link: 'https://artisthub.io',
     cta: 'Grow Your Audience',
@@ -45,7 +46,7 @@ const RESOURCES: Resource[] = [
     description:
       'Global distribution to 100+ DSPs with clean splits and fast data. Drop once, live everywhere. Ship to Spotify, Apple Music, YouTube Music, Amazon Music, TikTok, and more from a single dashboard.',
     color: '#FF00A3',
-    logo: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/TrueNorthFaviconPink_Black_4218a425.png',
+    logo: '/resources/true-north-pink-black.png',
     heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-true-north_6cf119d1.png',
     link: 'https://truenorthdistro.com',
     cta: 'Distribute Your Music',
@@ -57,7 +58,7 @@ const RESOURCES: Resource[] = [
     description:
       'Protect and manage your music rights with modern contracts and rights management. Create and manage music contracts, and track your ownership across all of your collaborations.',
     color: '#FF035A',
-    logo: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/nvoko_logo_fb_1ee693b5.png',
+    logo: '/resources/nvoko-transparent.png',
     heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-nvoko_baa10d49.png',
     link: 'https://nvoko.com',
     cta: 'Protect Your Rights',
@@ -69,7 +70,7 @@ const RESOURCES: Resource[] = [
     description:
       'Unlock new revenue streams through sync licensing. Get your music placed in films, TV shows, commercials, and more with our specialized sync licensing network.',
     color: '#4A90E2',
-    logo: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/BlueSapphireSync_BlueAve_aa648770.gif',
+    logo: '/resources/sapphire-sync-blue-ave.gif',
     heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-sapphire-sync-Su6z3dpcYxpT8qNifDpTm2.png',
     link: '/sapphire-sync',
     cta: 'Get Synced',
@@ -81,7 +82,8 @@ const RESOURCES: Resource[] = [
     description:
       'Register your music and manage your publishing rights. Ensure you receive all royalties and maintain control of your intellectual property across all platforms.',
     color: '#2C5AA0',
-    logo: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/BlueIndi-GoPublishing_BlueAve_00a6603e.png',
+    logo: '/resources/indi-go-publishing.png',
+    logoBackground: '#ffffff',
     heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-indi-go-publishing-KXXZedvs3XaQbJLye6a7gf.webp',
     link: '/indi-go-waitlist',
     cta: 'Join the Waiting List',
@@ -211,7 +213,7 @@ export default function ResourcesPage() {
                               maxWidth: '180px',
                               maxHeight: '56px',
                               objectFit: 'contain',
-                              filter: 'brightness(1.1) drop-shadow(0 0 20px rgba(255,255,255,0.3))',
+                              backgroundColor: resource.logoBackground,
                             }}
                           />
                         </div>
