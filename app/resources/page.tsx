@@ -9,7 +9,6 @@ interface Resource {
   color: string;
   logo: string | null;
   logoBackground?: string;
-  heroImage: string | null;
   link: string;
   cta: string;
   isExternal: boolean;
@@ -23,7 +22,6 @@ const RESOURCES: Resource[] = [
       'The place to BE... BE Creative. BE Artistic. BE Valued. Your artist management partner, providing unique, cost-effective resources to help you build a solid business foundation for your career.',
     color: '#385B83',
     logo: '/resources/blue-avenue-white.png',
-    heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-blue-avenue_a046bf7e.png',
     link: 'https://www.blueavemusic.com',
     cta: 'Start Your Journey',
     isExternal: true,
@@ -35,7 +33,6 @@ const RESOURCES: Resource[] = [
       'Grow your streams and sales with smart music links and fan outreach tools. Build hype with pre-saves, reach your fans directly, and track your growth with powerful analytics.',
     color: '#9C27B0',
     logo: '/resources/artisthub-wordmark.svg',
-    heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-artisthub_fe62dfd9.png',
     link: 'https://artisthub.io',
     cta: 'Grow Your Audience',
     isExternal: true,
@@ -47,7 +44,6 @@ const RESOURCES: Resource[] = [
       'Global distribution to 100+ DSPs with clean splits and fast data. Drop once, live everywhere. Ship to Spotify, Apple Music, YouTube Music, Amazon Music, TikTok, and more from a single dashboard.',
     color: '#FF00A3',
     logo: '/resources/true-north-pink-black.png',
-    heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-true-north_6cf119d1.png',
     link: 'https://truenorthdistro.com',
     cta: 'Distribute Your Music',
     isExternal: true,
@@ -59,7 +55,6 @@ const RESOURCES: Resource[] = [
       'Protect and manage your music rights with modern contracts and rights management. Create and manage music contracts, and track your ownership across all of your collaborations.',
     color: '#FF035A',
     logo: '/resources/nvoko-transparent.png',
-    heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-nvoko_baa10d49.png',
     link: 'https://nvoko.com',
     cta: 'Protect Your Rights',
     isExternal: true,
@@ -71,7 +66,6 @@ const RESOURCES: Resource[] = [
       'Unlock new revenue streams through sync licensing. Get your music placed in films, TV shows, commercials, and more with our specialized sync licensing network.',
     color: '#4A90E2',
     logo: '/resources/sapphire-sync-blue-ave.gif',
-    heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-sapphire-sync-Su6z3dpcYxpT8qNifDpTm2.png',
     link: '/sapphire-sync',
     cta: 'Get Synced',
     isExternal: false,
@@ -84,7 +78,6 @@ const RESOURCES: Resource[] = [
     color: '#2C5AA0',
     logo: '/resources/indi-go-publishing.png',
     logoBackground: '#ffffff',
-    heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-indi-go-publishing-KXXZedvs3XaQbJLye6a7gf.webp',
     link: '/indi-go-waitlist',
     cta: 'Join the Waiting List',
     isExternal: false,
@@ -96,8 +89,7 @@ const RESOURCES: Resource[] = [
       'Learn the music industry business foundations, join Artist Branding workshops, participate in weekly Q&As with industry experts, and meet other professionals building their careers.',
     color: '#9C27B0',
     logo: null,
-    heroImage: 'https://d2xsxph8kpxj0f.cloudfront.net/310519663431631342/Xb4huRgtYfGUxqpYLgzpFU/hero-onbeat-convergence-AZAFWfmL7BNyJAo9N2JfF3.webp',
-    link: 'https://community.blueavemusic.com/join?invitation_token=6227d1a338176e60d1b1ab89640596b74487a156-f0a80ccc-edd9-46e6-82bc-071c3b624ca9',
+    link: 'https://community.blueavemusic.com/join?invitation_token=6166c796012666e387acd1ff9788d76914eb2676-4f0b4111-c292-47ed-bf32-7d9f53d9a433',
     cta: 'Join the Community',
     isExternal: true,
   },
@@ -182,27 +174,11 @@ export default function ResourcesPage() {
             </div>
           </section>
 
-          <section className="section">
+          <section className="section" style={{ paddingTop: '24px' }}>
             <div className="container-wide">
               <div className="resources-grid">
                 {RESOURCES.map((resource) => (
                   <div className="resource-card" key={resource.name}>
-                    <div
-                      className="resource-card-image"
-                      style={{
-                        backgroundImage: `url(${resource.heroImage})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
-                    >
-                      <div
-                        className="resource-card-overlay"
-                        style={{
-                          background: `linear-gradient(135deg, ${resource.color}00 0%, ${resource.color}40 100%)`,
-                        }}
-                      />
-                    </div>
-
                     <div className="resource-card-content">
                       {resource.logo && (
                         <div className="resource-card-logo">
@@ -211,7 +187,7 @@ export default function ResourcesPage() {
                             alt={resource.name}
                             style={{
                               maxWidth: '180px',
-                              maxHeight: '56px',
+                              maxHeight: '88px',
                               objectFit: 'contain',
                               backgroundColor: resource.logoBackground,
                             }}
@@ -219,18 +195,10 @@ export default function ResourcesPage() {
                         </div>
                       )}
 
-                      {!resource.logo && (
-                        <h3
-                          className="resource-card-name"
-                          style={{ color: resource.color }}
-                        >
-                          {resource.name}
-                        </h3>
-                      )}
+                      <h2 className="resource-card-name">{resource.name}</h2>
 
                       <p
                         className="resource-card-tagline"
-                        style={{ color: resource.color }}
                       >
                         {resource.tagline}
                       </p>

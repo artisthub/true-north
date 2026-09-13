@@ -2423,19 +2423,6 @@ footer {
     opacity: 1;
 }
 
-.resource-card-image {
-    width: 100%;
-    height: 180px;
-    position: relative;
-    overflow: hidden;
-}
-
-.resource-card-overlay {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-}
-
 .resource-card-content {
     padding: 28px 24px 24px;
     flex: 1;
@@ -2446,8 +2433,8 @@ footer {
 }
 
 .resource-card-logo {
-    margin-bottom: 16px;
-    min-height: 40px;
+    margin-bottom: 24px;
+    min-height: 88px;
     display: flex;
     align-items: center;
 }
@@ -2455,11 +2442,13 @@ footer {
 .resource-card-name {
     font-size: 22px;
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 10px;
     letter-spacing: -0.3px;
+    color: #fff;
 }
 
 .resource-card-tagline {
+    color: #ccc;
     font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
@@ -2515,10 +2504,6 @@ footer {
 @media (max-width: 640px) {
     .resources-grid {
         grid-template-columns: 1fr;
-    }
-
-    .resource-card-image {
-        height: 160px;
     }
 
     .resources-hero {
